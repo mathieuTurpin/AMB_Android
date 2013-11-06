@@ -14,7 +14,7 @@ public class MainActivity extends MapActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main); //Essayer de commenter
+		setContentView(R.layout.activity_main);
 
 		//Create map with tiles from OpenStreetMap and make overlays with tiles from OpenSeaMap
 		mapView = new MyMapView(this, new MapnikTileDownloader());
