@@ -42,6 +42,11 @@ public class MySensorListener implements SensorEventListener {
 	private Display display;
 	private float currentRunX = 0;
 	
+	/**
+	 * Sera utilisé plus tard dans le projet
+	 * @param myMapViewer
+	 * @param sensorManager
+	 */
 	public MySensorListener(MainActivity myMapViewer,SensorManager sensorManager){
 		this.myMapViewer = myMapViewer;
 		// Instantiate the SensorManager

@@ -3,7 +3,6 @@ package org.mapsforge.android.maps;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
-import org.mapsforge.android.maps.mapgenerator.FileSystemTileCache;
 import org.mapsforge.android.maps.mapgenerator.InMemoryTileCache;
 import org.mapsforge.android.maps.mapgenerator.JobParameters;
 import org.mapsforge.android.maps.mapgenerator.JobQueue;
@@ -21,6 +20,8 @@ import org.mapsforge.core.MapPosition;
 import org.mapsforge.core.MercatorProjection;
 import org.mapsforge.core.Tile;
 
+import turpin.mathieu.almanachdumarinbreton.maps.FileSystemTileCacheOpenSeaMap;
+import turpin.mathieu.almanachdumarinbreton.maps.InMemoryTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.MyMapWorker;
 import turpin.mathieu.almanachdumarinbreton.maps.OpenSeaMapTileDownloader;
 
@@ -62,15 +63,18 @@ public class MyMapView extends MapView {
 	//MyMapWorker that controls download tiles from OpenStreetMap Server
 	private final MapWorker myMapWorker;
 	
+	//Cache for OpenStreetMap
+	private final InMemoryTileCache inMemoryTileCacheOpenStreetMap;
+
 	//Cache for OpenSeaMap
-	private final InMemoryTileCache inMemoryTileCacheOpenSeaMap;
-	private final FileSystemTileCache fileSystemTileCacheOpenSeaMap;
+	private final InMemoryTileCacheOpenSeaMap inMemoryTileCacheOpenSeaMap;
+	private final FileSystemTileCacheOpenSeaMap fileSystemTileCacheOpenSeaMap;
 	
 	//MyMapWorker that controls download tiles from OpenSeaMap Server
 	private final MyMapWorker mapWorkerOpenSeaMap;
 	
 	//ArrayItemizedOverlay that gets overlay make with tiles from OpenSeaMap Server for the current zoom
-	private ArrayItemizedOverlay overlayOpenSeaMap;
+	private ArrayItemizedOverlay overlayOpenSeaMap;	
 	private byte zoomCache;
 
 	/**
@@ -109,15 +113,19 @@ public class MyMapView extends MapView {
 		super(context, mapGenerator);
 		this.myJobParameters = new JobParameters(MapView.DEFAULT_RENDER_THEME, DEFAULT_TEXT_SCALE);
 		
+		//Initialize cache for OpenStreetMap
+		this.inMemoryTileCacheOpenStreetMap = new InMemoryTileCache(50);
+		this.getFileSystemTileCache().setCapacity(200);
+		
 		//Initialize MapWorker that gets tiles from OpenStreetMap Server
 		this.myMapWorker = new MapWorker(this);
 		this.myMapWorker.setMapGenerator(mapGenerator);
 		this.myMapWorker.start();
 
 		//Initialize cache for OpenSeaMap
-		this.inMemoryTileCacheOpenSeaMap = new InMemoryTileCache(DEFAULT_TILE_CACHE_SIZE_IN_MEMORY);
+		this.inMemoryTileCacheOpenSeaMap = new InMemoryTileCacheOpenSeaMap(DEFAULT_TILE_CACHE_SIZE_IN_MEMORY);
 		MapActivity mapActivity = (MapActivity) context;
-		this.fileSystemTileCacheOpenSeaMap = new FileSystemTileCache(DEFAULT_TILE_CACHE_SIZE_FILE_SYSTEM,mapActivity.getMapViewId());
+		this.fileSystemTileCacheOpenSeaMap = new FileSystemTileCacheOpenSeaMap(DEFAULT_TILE_CACHE_SIZE_FILE_SYSTEM,mapActivity.getMapViewId());
 		
 		//Initialize MyMapWorker that gets tiles from OpenSeaMap Server
 		this.mapWorkerOpenSeaMap = new MyMapWorker(this);
@@ -183,7 +191,7 @@ public class MyMapView extends MapView {
 			cacheIdOpenSeaMap = OpenSeaMapTileDownloader.getInstance().getHostName();
 		} else {
 			cacheId = this.getMapFile();
-			// Need code here
+			// Need code here for offline
 			cacheIdOpenSeaMap = null;
 		}
 
@@ -197,8 +205,8 @@ public class MyMapView extends MapView {
 				MapGeneratorJob mapGeneratorJob = new MapGeneratorJob(tile, cacheId, myJobParameters,
 						this.getDebugSettings());
 				
-				if (this.getInMemoryTileCache().containsKey(mapGeneratorJob)) {
-					Bitmap bitmap = this.getInMemoryTileCache().get(mapGeneratorJob);
+				if (this.inMemoryTileCacheOpenStreetMap.containsKey(mapGeneratorJob)) {
+					Bitmap bitmap = this.inMemoryTileCacheOpenStreetMap.get(mapGeneratorJob);
 					this.getFrameBuffer().drawBitmap(mapGeneratorJob.tile, bitmap);
 
 				} else if (this.getFileSystemTileCache().containsKey(mapGeneratorJob)) {
@@ -206,7 +214,7 @@ public class MyMapView extends MapView {
 
 					if (bitmap != null) {
 						this.getFrameBuffer().drawBitmap(mapGeneratorJob.tile, bitmap);
-						this.getInMemoryTileCache().put(mapGeneratorJob, bitmap);
+						this.inMemoryTileCacheOpenStreetMap.put(mapGeneratorJob, bitmap);
 					} else {
 						// the image data could not be read from the cache
 						this.getJobQueue().addJob(mapGeneratorJob);
@@ -220,19 +228,17 @@ public class MyMapView extends MapView {
 				MapGeneratorJob mapGeneratorJobOpenSeaMap = new MapGeneratorJob(tile, cacheIdOpenSeaMap, myJobParameters,
 						this.getDebugSettings());
 				
-				/*
-				 * Need to improve for cache tiles for OpenSeaMap
-				 * if (this.inMemoryTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
+				if (this.inMemoryTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
 					Bitmap bitmapOpenSeaMap = this.inMemoryTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
-					OverlayItem a = test(tile, bitmapOpenSeaMap);
-					overlayOpenSeaMap.addItem(a);
+					OverlayItem a = tileToOverlayItem(tile, bitmapOpenSeaMap);
+					this.addOverlayOpenSeaMap(a);
 
 				} else if (this.fileSystemTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
 					Bitmap bitmapOpenSeaMap = this.fileSystemTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
 					
 					if (bitmapOpenSeaMap != null) {
-						OverlayItem a = test(tile, bitmapOpenSeaMap);
-						overlayOpenSeaMap.addItem(a);
+						OverlayItem a = tileToOverlayItem(tile, bitmapOpenSeaMap);
+						this.addOverlayOpenSeaMap(a);
 						this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJobOpenSeaMap, bitmapOpenSeaMap);
 					} else {
 						// the image data could not be read from the cache
@@ -241,10 +247,7 @@ public class MyMapView extends MapView {
 				} else {
 					// cache miss: need to download
 					this.jobQueueOpenSeaMap.addJob(mapGeneratorJobOpenSeaMap);
-				}*/
-				
-				// Need to download tile for OpenSeaMap
-				this.jobQueueOpenSeaMap.addJob(mapGeneratorJobOpenSeaMap);
+				}
 			}
 		}
 
@@ -321,11 +324,16 @@ public class MyMapView extends MapView {
 		return this.jobQueueOpenSeaMap;
 	}
 	
-	public InMemoryTileCache getInMemoryTileCacheOpenSeaMap(){
+	@Override
+	public InMemoryTileCache getInMemoryTileCache(){
+		return this.inMemoryTileCacheOpenStreetMap;
+	}
+	
+	public InMemoryTileCacheOpenSeaMap getInMemoryTileCacheOpenSeaMap(){
 		return this.inMemoryTileCacheOpenSeaMap;
 	}
 	
-	public FileSystemTileCache getFileSystemTileCacheOpenSeaMap(){
+	public FileSystemTileCacheOpenSeaMap getFileSystemTileCacheOpenSeaMap(){
 		return this.fileSystemTileCacheOpenSeaMap;
 	}
 

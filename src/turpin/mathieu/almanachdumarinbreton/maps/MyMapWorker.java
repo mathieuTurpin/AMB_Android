@@ -5,6 +5,7 @@ import org.mapsforge.android.maps.mapgenerator.JobQueue;
 import org.mapsforge.android.maps.mapgenerator.MapGenerator;
 import org.mapsforge.android.maps.mapgenerator.MapGeneratorJob;
 import org.mapsforge.android.maps.mapgenerator.MapWorker;
+import org.mapsforge.android.maps.mapgenerator.TileCache;
 //import org.mapsforge.android.maps.mapgenerator.TileCache;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.mapsforge.core.Tile;
@@ -17,8 +18,8 @@ import android.graphics.Bitmap;
  */
 public class MyMapWorker extends MapWorker{
 	
-	//private final TileCache fileSystemTileCacheOpenSeaMap;
-	//private final TileCache inMemoryTileCacheOpenSeaMap;
+	private final TileCache fileSystemTileCacheOpenSeaMap;
+	private final TileCache inMemoryTileCacheOpenSeaMap;
 	private final JobQueue jobQueueOpenSeaMap;
 	private MapGenerator mapGeneratorOpenSeaMap;
 	private Bitmap tileBitmap;
@@ -33,8 +34,8 @@ public class MyMapWorker extends MapWorker{
 
 		this.jobQueueOpenSeaMap = mapView.getJobQueueOpenSeaMap();
 		this.mapView = mapView;
-		//this.inMemoryTileCacheOpenSeaMap = mapView.getInMemoryTileCacheOpenSeaMap();
-		//this.fileSystemTileCacheOpenSeaMap = mapView.getFileSystemTileCacheOpenSeaMap();
+		this.inMemoryTileCacheOpenSeaMap = mapView.getInMemoryTileCacheOpenSeaMap();
+		this.fileSystemTileCacheOpenSeaMap = mapView.getFileSystemTileCacheOpenSeaMap();
 	}
 	
 	@Override
@@ -47,25 +48,20 @@ public class MyMapWorker extends MapWorker{
 		this.tileBitmap = Bitmap.createBitmap(Tile.TILE_SIZE, Tile.TILE_SIZE, Bitmap.Config.ARGB_8888);
 		MapGeneratorJob mapGeneratorJob = this.jobQueueOpenSeaMap.poll();
 
-		/*
-		 * Need to improve for cache tiles for OpenSeaMap
-			if (this.inMemoryTileCacheOpenSeaMap.containsKey(mapGeneratorJob)) {
-				return;
-			} else if (this.fileSystemTileCacheOpenSeaMap.containsKey(mapGeneratorJob)) {
-				return;
-			}
-		*/
+		if (this.inMemoryTileCacheOpenSeaMap.containsKey(mapGeneratorJob)) {
+			return;
+		} else if (this.fileSystemTileCacheOpenSeaMap.containsKey(mapGeneratorJob)) {
+			return;
+		}
 
 		boolean success = this.mapGeneratorOpenSeaMap.executeJob(mapGeneratorJob, this.tileBitmap);
 
 		if (!isInterrupted() && success) {
 			OverlayItem item = this.mapView.tileToOverlayItem(mapGeneratorJob.tile, this.tileBitmap);
 			this.mapView.addOverlayOpenSeaMap(item);
-			/*
-			 * Need to improve for cache tiles for OpenSeaMap
-				//this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJob, this.tileBitmap);
-				//this.fileSystemTileCacheOpenSeaMap.put(mapGeneratorJob, this.tileBitmap);
-			*/
+			
+			this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJob, this.tileBitmap);
+			this.fileSystemTileCacheOpenSeaMap.put(mapGeneratorJob, this.tileBitmap);
 		}
 	}
 
