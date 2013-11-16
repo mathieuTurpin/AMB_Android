@@ -19,9 +19,12 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 public class MainActivity extends MapActivity{
 	private static final int DIALOG_LOCATION_PROVIDER_DISABLED = 2;
@@ -46,6 +49,8 @@ public class MainActivity extends MapActivity{
 	TextView infoPosition;
 	TextView infoSpeed;
 	TextView infoBearing;
+
+	private ToggleButton snapToLocationView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,18 @@ public class MainActivity extends MapActivity{
 		mapView = new MyMapView(this, new MapnikTileDownloader());
 		relative.addView(mapView);
         configureMap();
+        
+        this.snapToLocationView = (ToggleButton) findViewById(R.id.snapToLocationView);
+		this.snapToLocationView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (isSnapToLocationEnabled()) {
+					disableSnapToLocation();
+				} else {
+					enableSnapToLocation();
+				}
+			}
+		});
 
  	}
 	
