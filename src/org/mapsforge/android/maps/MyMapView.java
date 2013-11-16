@@ -22,6 +22,7 @@ import org.mapsforge.core.Tile;
 
 import turpin.mathieu.almanachdumarinbreton.maps.FileSystemTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.InMemoryTileCacheOpenSeaMap;
+import turpin.mathieu.almanachdumarinbreton.maps.MyArrayItemizedOverlay;
 import turpin.mathieu.almanachdumarinbreton.maps.MyMapWorker;
 import turpin.mathieu.almanachdumarinbreton.maps.OpenSeaMapTileDownloader;
 
@@ -74,7 +75,7 @@ public class MyMapView extends MapView {
 	private final MyMapWorker mapWorkerOpenSeaMap;
 	
 	//ArrayItemizedOverlay that gets overlay make with tiles from OpenSeaMap Server for the current zoom
-	private ArrayItemizedOverlay overlayOpenSeaMap;	
+	private MyArrayItemizedOverlay overlayOpenSeaMap;	
 	private byte zoomCache;
 
 	/**
@@ -133,7 +134,7 @@ public class MyMapView extends MapView {
 		this.mapWorkerOpenSeaMap.start();
 		
 		//Initialize overlay that gets tiles from OpenSeaMap Server
-		overlayOpenSeaMap = new ArrayItemizedOverlay(null);
+		overlayOpenSeaMap = new MyArrayItemizedOverlay(null);
 		this.getOverlays().add(MyMapView.DEFAULT_OVERLAY,overlayOpenSeaMap);
 		
 		//Initialize zoomCache
@@ -162,7 +163,7 @@ public class MyMapView extends MapView {
 					this.zoomCache = mapPosition.zoomLevel;
 
 					// Clear overlay for OpenSeaMap
-					overlayOpenSeaMap = new ArrayItemizedOverlay(null);
+					overlayOpenSeaMap = new MyArrayItemizedOverlay(null);
 					this.getOverlays().set(MyMapView.DEFAULT_OVERLAY,overlayOpenSeaMap);
 
 				}
@@ -231,14 +232,14 @@ public class MyMapView extends MapView {
 				if (this.inMemoryTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
 					Bitmap bitmapOpenSeaMap = this.inMemoryTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
 					OverlayItem a = tileToOverlayItem(tile, bitmapOpenSeaMap);
-					this.addOverlayOpenSeaMap(a);
+					this.addOverlayOpenSeaMap(a,tile.zoomLevel);
 
 				} else if (this.fileSystemTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
 					Bitmap bitmapOpenSeaMap = this.fileSystemTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
 					
 					if (bitmapOpenSeaMap != null) {
 						OverlayItem a = tileToOverlayItem(tile, bitmapOpenSeaMap);
-						this.addOverlayOpenSeaMap(a);
+						this.addOverlayOpenSeaMap(a,tile.zoomLevel);
 						this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJobOpenSeaMap, bitmapOpenSeaMap);
 					} else {
 						// the image data could not be read from the cache
@@ -274,9 +275,17 @@ public class MyMapView extends MapView {
 	 * @param item
 	 * 			the {@link OverlayItem} to add in the {@link ArrayItemizedOverlay} overlayOpenSeaMap
 	 */
-	public void addOverlayOpenSeaMap(OverlayItem item){
-		overlayOpenSeaMap.addItem(item);
-		this.postInvalidate();
+	public void addOverlayOpenSeaMap(OverlayItem item,int zoomLevel){
+		MapPosition mapPosition = this.getMapPosition().getMapPosition();
+		if (mapPosition == null) {
+			return;
+		}
+
+		if(mapPosition.zoomLevel == zoomLevel && !overlayOpenSeaMap.checkContains(item)){
+			overlayOpenSeaMap.addItem(item);
+			this.postInvalidate();
+		}
+		
 	}
 	
 	/**
@@ -313,8 +322,9 @@ public class MyMapView extends MapView {
 		// Create a item that contains the tile
 		Drawable tileMarker = new BitmapDrawable(getResources(),tileBitmap);
 		ItemizedOverlay.boundCenterBottom(tileMarker);
-		OverlayItem item = new OverlayItem(geoPointTile,"aa","aaaa");
-		//item.setPoint(geoPointTile);
+		OverlayItem item = new OverlayItem();
+		item.setPoint(geoPointTile);
+		item.setTitle(tile.toString());
 		item.setMarker(tileMarker);
  		
  		return item;

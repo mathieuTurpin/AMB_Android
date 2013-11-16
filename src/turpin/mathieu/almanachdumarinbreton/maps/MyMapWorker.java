@@ -58,7 +58,7 @@ public class MyMapWorker extends MapWorker{
 
 		if (!isInterrupted() && success) {
 			OverlayItem item = this.mapView.tileToOverlayItem(mapGeneratorJob.tile, this.tileBitmap);
-			this.mapView.addOverlayOpenSeaMap(item);
+			this.mapView.addOverlayOpenSeaMap(item,mapGeneratorJob.tile.zoomLevel);
 			
 			this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJob, this.tileBitmap);
 			this.fileSystemTileCacheOpenSeaMap.put(mapGeneratorJob, this.tileBitmap);
