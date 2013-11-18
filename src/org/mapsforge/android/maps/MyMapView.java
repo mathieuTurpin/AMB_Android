@@ -229,25 +229,27 @@ public class MyMapView extends MapView {
 				MapGeneratorJob mapGeneratorJobOpenSeaMap = new MapGeneratorJob(tile, cacheIdOpenSeaMap, myJobParameters,
 						this.getDebugSettings());
 				
-				if (this.inMemoryTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
-					Bitmap bitmapOpenSeaMap = this.inMemoryTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
-					OverlayItem a = tileToOverlayItem(tile, bitmapOpenSeaMap);
-					this.addOverlayOpenSeaMap(a,tile.zoomLevel);
-
-				} else if (this.fileSystemTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
-					Bitmap bitmapOpenSeaMap = this.fileSystemTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
-					
-					if (bitmapOpenSeaMap != null) {
+				if(mapPosition.zoomLevel == tile.zoomLevel && !overlayOpenSeaMap.checkContains(tile.toString())){		
+					if (this.inMemoryTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
+						Bitmap bitmapOpenSeaMap = this.inMemoryTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
 						OverlayItem a = tileToOverlayItem(tile, bitmapOpenSeaMap);
 						this.addOverlayOpenSeaMap(a,tile.zoomLevel);
-						this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJobOpenSeaMap, bitmapOpenSeaMap);
+	
+					} else if (this.fileSystemTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
+						Bitmap bitmapOpenSeaMap = this.fileSystemTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
+						
+						if (bitmapOpenSeaMap != null) {
+							OverlayItem a = tileToOverlayItem(tile, bitmapOpenSeaMap);
+							this.addOverlayOpenSeaMap(a,tile.zoomLevel);
+							this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJobOpenSeaMap, bitmapOpenSeaMap);
+						} else {
+							// the image data could not be read from the cache
+							this.jobQueueOpenSeaMap.addJob(mapGeneratorJobOpenSeaMap);
+						}
 					} else {
-						// the image data could not be read from the cache
+						// cache miss: need to download
 						this.jobQueueOpenSeaMap.addJob(mapGeneratorJobOpenSeaMap);
 					}
-				} else {
-					// cache miss: need to download
-					this.jobQueueOpenSeaMap.addJob(mapGeneratorJobOpenSeaMap);
 				}
 			}
 		}
@@ -281,10 +283,7 @@ public class MyMapView extends MapView {
 			return;
 		}
 
-		if(mapPosition.zoomLevel == zoomLevel && !overlayOpenSeaMap.checkContains(item)){
-			overlayOpenSeaMap.addItem(item);
-			this.postInvalidate();
-		}
+		
 		
 	}
 	

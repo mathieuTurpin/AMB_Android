@@ -26,11 +26,11 @@ public class MyArrayItemizedOverlay extends ArrayItemizedOverlay {
 		super(defaultMarker,alignMarker);
 	}
 	
-	public boolean checkContains(OverlayItem item){
+	public boolean checkContains(String title){
 		int i = 0;
 		OverlayItem currentItem = createItem(i);
 		while(currentItem!=null){
-			if(currentItem.getTitle().equals(item.getTitle())){
+			if(currentItem.getTitle().equals(title)){
 				return true;
 			}
 			i++;
