@@ -177,7 +177,7 @@ public class MyMapView extends MapView {
 						}
 					}
 					//Hidden balise
-					else if(mapPosition.zoomLevel == 15){
+					else if(mapPosition.zoomLevel < 16){
 						this.getOverlays().remove(baliseOverlay);
 					}
 				}
@@ -245,29 +245,33 @@ public class MyMapView extends MapView {
 				}
 				
 				/******************** Get tile for OpenSeaMap *******************************/
-				MapGeneratorJob mapGeneratorJobOpenSeaMap = new MapGeneratorJob(tile, cacheIdOpenSeaMap, myJobParameters,
-						this.getDebugSettings());
-				
-				if(mapPosition.zoomLevel == tile.zoomLevel && !overlayOpenSeaMap.checkContains(tile.toString())){		
-					if (this.inMemoryTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
-						Bitmap bitmapOpenSeaMap = this.inMemoryTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
-						OverlayItem a = tileToOverlayItem(tile, bitmapOpenSeaMap);
-						this.addOverlayOpenSeaMap(a);
-	
-					} else if (this.fileSystemTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
-						Bitmap bitmapOpenSeaMap = this.fileSystemTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
-						
-						if (bitmapOpenSeaMap != null) {
+				//Only zoom > 8 have tile
+				if(tile.zoomLevel > 8){
+					MapGeneratorJob mapGeneratorJobOpenSeaMap = new MapGeneratorJob(tile, cacheIdOpenSeaMap, myJobParameters,
+							this.getDebugSettings());
+					
+					if(mapPosition.zoomLevel == tile.zoomLevel && !overlayOpenSeaMap.checkContains(tile.toString())){		
+						if (this.inMemoryTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
+							Bitmap bitmapOpenSeaMap = this.inMemoryTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
 							OverlayItem a = tileToOverlayItem(tile, bitmapOpenSeaMap);
 							this.addOverlayOpenSeaMap(a);
-							this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJobOpenSeaMap, bitmapOpenSeaMap);
+		
+						} else if (this.fileSystemTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
+							Bitmap bitmapOpenSeaMap = this.fileSystemTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
+							
+							if (bitmapOpenSeaMap != null) {
+								Bitmap test = Bitmap.createBitmap(bitmapOpenSeaMap);
+								OverlayItem a = tileToOverlayItem(tile, test);
+								this.addOverlayOpenSeaMap(a);
+								this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJobOpenSeaMap, test);
+							} else {
+								// the image data could not be read from the cache
+								this.jobQueueOpenSeaMap.addJob(mapGeneratorJobOpenSeaMap);
+							}
 						} else {
-							// the image data could not be read from the cache
+							// cache miss: need to download
 							this.jobQueueOpenSeaMap.addJob(mapGeneratorJobOpenSeaMap);
 						}
-					} else {
-						// cache miss: need to download
-						this.jobQueueOpenSeaMap.addJob(mapGeneratorJobOpenSeaMap);
 					}
 				}
 			}

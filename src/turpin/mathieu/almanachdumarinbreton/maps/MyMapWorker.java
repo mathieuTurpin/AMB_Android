@@ -1,5 +1,8 @@
 package turpin.mathieu.almanachdumarinbreton.maps;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.mapsforge.android.maps.MyMapView;
 import org.mapsforge.android.maps.mapgenerator.JobQueue;
 import org.mapsforge.android.maps.mapgenerator.MapGenerator;
@@ -24,6 +27,7 @@ public class MyMapWorker extends MapWorker{
 	private MapGenerator mapGeneratorOpenSeaMap;
 	private Bitmap tileBitmap;
 	private final MyMapView mapView;
+	private final List<String> tileNotFound;
 	
 	/**
 	 * @param mapView
@@ -36,6 +40,8 @@ public class MyMapWorker extends MapWorker{
 		this.mapView = mapView;
 		this.inMemoryTileCacheOpenSeaMap = mapView.getInMemoryTileCacheOpenSeaMap();
 		this.fileSystemTileCacheOpenSeaMap = mapView.getFileSystemTileCacheOpenSeaMap();
+		tileNotFound = new LinkedList<String>();
+
 	}
 	
 	@Override
@@ -53,16 +59,24 @@ public class MyMapWorker extends MapWorker{
 		} else if (this.fileSystemTileCacheOpenSeaMap.containsKey(mapGeneratorJob)) {
 			return;
 		}
-
-		boolean success = this.mapGeneratorOpenSeaMap.executeJob(mapGeneratorJob, this.tileBitmap);
-
-		if (!isInterrupted() && success) {
-			OverlayItem item = this.mapView.tileToOverlayItem(mapGeneratorJob.tile, this.tileBitmap);
-			this.mapView.addOverlayOpenSeaMap(item);
-			
-			this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJob, this.tileBitmap);
-			this.fileSystemTileCacheOpenSeaMap.put(mapGeneratorJob, this.tileBitmap);
+		else if(this.tileNotFound.contains(mapGeneratorJob.tile.toString())){
+			return;
 		}
+		
+		boolean success = this.mapGeneratorOpenSeaMap.executeJob(mapGeneratorJob, this.tileBitmap);
+		if(success){
+			if (!isInterrupted()) {
+				OverlayItem item = this.mapView.tileToOverlayItem(mapGeneratorJob.tile, this.tileBitmap);
+				this.mapView.addOverlayOpenSeaMap(item);
+				
+				this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJob, this.tileBitmap);
+				this.fileSystemTileCacheOpenSeaMap.put(mapGeneratorJob, this.tileBitmap);
+			}
+		}
+		else{
+			this.tileNotFound.add(mapGeneratorJob.tile.toString());
+		}
+		
 	}
 
 	/**

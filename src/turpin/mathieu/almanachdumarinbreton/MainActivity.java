@@ -11,7 +11,6 @@ import org.mapsforge.android.maps.overlay.OverlayCircle;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 
 import turpin.mathieu.almanachdumarinbreton.maps.MyItemizedOverlay;
-import turpin.mathieu.almanachdumarinbreton.maps.MyXmlParser;
 
 import android.content.Context;
 import android.graphics.Color;
