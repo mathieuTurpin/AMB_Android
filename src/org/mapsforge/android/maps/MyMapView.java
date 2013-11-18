@@ -55,7 +55,6 @@ public class MyMapView extends MapView {
 	
 	//Position where should put Overlay for OpenSeaMap in a MyMapView
 	private final static int DEFAULT_OVERLAY = 0;
-	//modif Test
 	
 	//Job Queue for OpenSeaMap
 	private final JobQueue jobQueueOpenSeaMap = new JobQueue(this);
