@@ -49,6 +49,7 @@ import android.util.AttributeSet;
  * of the map, add it to the list returned by {@link #getOverlays()}.
  */
 public class MyMapView extends MapView {
+  // Philippe TANGUY : juste pour tester...
 	private static final float DEFAULT_TEXT_SCALE = 1;
 	private static final int DEFAULT_TILE_CACHE_SIZE_FILE_SYSTEM = 100;
 	private static final int DEFAULT_TILE_CACHE_SIZE_IN_MEMORY = 20;
