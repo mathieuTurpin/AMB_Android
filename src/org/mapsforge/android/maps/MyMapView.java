@@ -23,7 +23,9 @@ import org.mapsforge.core.Tile;
 import turpin.mathieu.almanachdumarinbreton.maps.FileSystemTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.InMemoryTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.MyArrayItemizedOverlay;
+import turpin.mathieu.almanachdumarinbreton.maps.MyItemizedOverlay;
 import turpin.mathieu.almanachdumarinbreton.maps.MyMapWorker;
+import turpin.mathieu.almanachdumarinbreton.maps.MyXmlParser;
 import turpin.mathieu.almanachdumarinbreton.maps.OpenSeaMapTileDownloader;
 
 import android.content.Context;
@@ -77,6 +79,9 @@ public class MyMapView extends MapView {
 	//ArrayItemizedOverlay that gets overlay make with tiles from OpenSeaMap Server for the current zoom
 	private MyArrayItemizedOverlay overlayOpenSeaMap;	
 	private byte zoomCache;
+	private boolean enableShowBalise;
+	private MyItemizedOverlay baliseOverlay;
+	private MyXmlParser xmlParser;
 
 	/**
 	 * Need to test
@@ -112,6 +117,7 @@ public class MyMapView extends MapView {
 	 */
 	public MyMapView(Context context, MapGenerator mapGenerator) {
 		super(context, mapGenerator);
+		xmlParser = new MyXmlParser(context);
 		this.myJobParameters = new JobParameters(MapView.DEFAULT_RENDER_THEME, DEFAULT_TEXT_SCALE);
 		
 		//Initialize cache for OpenStreetMap
@@ -157,16 +163,29 @@ public class MyMapView extends MapView {
 		}
 
 		synchronized( this.getOverlays()) {
-			for (int i = 0, n = this.getOverlays().size(); i < n; ++i) {
-				if(mapPosition.zoomLevel != this.zoomCache && i == MyMapView.DEFAULT_OVERLAY){
-					// Initialize zoomCache
-					this.zoomCache = mapPosition.zoomLevel;
-
-					// Clear overlay for OpenSeaMap
-					overlayOpenSeaMap = new MyArrayItemizedOverlay(null);
-					this.getOverlays().set(MyMapView.DEFAULT_OVERLAY,overlayOpenSeaMap);
-
+			if(mapPosition.zoomLevel != this.zoomCache){
+				// Clear overlay for OpenSeaMap
+				overlayOpenSeaMap = new MyArrayItemizedOverlay(null);
+				this.getOverlays().set(MyMapView.DEFAULT_OVERLAY,overlayOpenSeaMap);
+				
+				//Display balise
+				if(this.enableShowBalise){
+					if(mapPosition.zoomLevel == 16 && this.zoomCache<16){
+						baliseOverlay = xmlParser.getBalises();
+						if(baliseOverlay != null){
+							this.getOverlays().add(baliseOverlay);
+						}
+					}
+					//Hidden balise
+					else if(mapPosition.zoomLevel == 15){
+						this.getOverlays().remove(baliseOverlay);
+					}
 				}
+				// Initialize zoomCache
+				this.zoomCache = mapPosition.zoomLevel;
+			}
+			
+			for (int i = 0, n = this.getOverlays().size(); i < n; ++i) {
 				this.getOverlays().get(i).requestRedraw();
 			}
 		}
@@ -338,6 +357,26 @@ public class MyMapView extends MapView {
 	
 	public FileSystemTileCacheOpenSeaMap getFileSystemTileCacheOpenSeaMap(){
 		return this.fileSystemTileCacheOpenSeaMap;
+	}
+	
+	public void showBalise(){
+		MapPosition mapPosition = this.getMapPosition().getMapPosition();
+		if (mapPosition == null) {
+			return;
+		}
+		baliseOverlay = xmlParser.getBalises();
+		
+		if(baliseOverlay != null){
+			this.enableShowBalise = true;
+			if(mapPosition.zoomLevel >= 16){
+				this.getOverlays().add(baliseOverlay);
+			}
+		}
+	}
+	
+	public void hiddenBalise(){
+		this.enableShowBalise = false;
+		this.getOverlays().remove(baliseOverlay);
 	}
 
 }

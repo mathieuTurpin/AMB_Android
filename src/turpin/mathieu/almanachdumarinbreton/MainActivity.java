@@ -56,8 +56,6 @@ public class MainActivity extends MapActivity{
 	MyItemizedOverlay baliseOverlay;
 
 	private ToggleButton snapToLocationView;
-
-	private MyXmlParser xmlParser;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +69,6 @@ public class MainActivity extends MapActivity{
 		//Create map with tiles from OpenStreetMap and make overlays with tiles from OpenSeaMap
 		mapView = new MyMapView(this, new MapnikTileDownloader());
 		relative.addView(mapView);
-		
-		xmlParser = new MyXmlParser(this);
 
         configureMap();
         
@@ -123,18 +119,10 @@ public class MainActivity extends MapActivity{
 		//this.mySensorListener = new MySensorListener(this,sensorManager);
 		
 		showMyLocation(true);
-		showBalise();
+		
+		this.mapView.showBalise();
 		
 		//enableSnapToLocation();
-	}
-	
-	private void showBalise(){
-		baliseOverlay = xmlParser.getBalises();
-		if(baliseOverlay != null) this.mapView.getOverlays().add(baliseOverlay);
-	}
-	
-	private void hiddenBalise(){
-		this.mapView.getOverlays().remove(baliseOverlay);
 	}
 	
 	private void showMyLocation(boolean centerAtFirstFix){
