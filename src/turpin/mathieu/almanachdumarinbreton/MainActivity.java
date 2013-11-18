@@ -10,6 +10,9 @@ import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.android.maps.overlay.OverlayCircle;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 
+import turpin.mathieu.almanachdumarinbreton.maps.MyItemizedOverlay;
+import turpin.mathieu.almanachdumarinbreton.maps.MyXmlParser;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -49,8 +52,12 @@ public class MainActivity extends MapActivity{
 	TextView infoPosition;
 	TextView infoSpeed;
 	TextView infoBearing;
+	
+	MyItemizedOverlay baliseOverlay;
 
 	private ToggleButton snapToLocationView;
+
+	private MyXmlParser xmlParser;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +71,9 @@ public class MainActivity extends MapActivity{
 		//Create map with tiles from OpenStreetMap and make overlays with tiles from OpenSeaMap
 		mapView = new MyMapView(this, new MapnikTileDownloader());
 		relative.addView(mapView);
+		
+		xmlParser = new MyXmlParser(this);
+
         configureMap();
         
         this.snapToLocationView = (ToggleButton) findViewById(R.id.snapToLocationView);
@@ -77,9 +87,9 @@ public class MainActivity extends MapActivity{
 				}
 			}
 		});
-
+		
  	}
-	
+		
 	private void configureMap(){
 		this.mapView.setClickable(true);
         
@@ -113,8 +123,18 @@ public class MainActivity extends MapActivity{
 		//this.mySensorListener = new MySensorListener(this,sensorManager);
 		
 		showMyLocation(true);
+		showBalise();
 		
 		//enableSnapToLocation();
+	}
+	
+	private void showBalise(){
+		baliseOverlay = xmlParser.getBalises();
+		if(baliseOverlay != null) this.mapView.getOverlays().add(baliseOverlay);
+	}
+	
+	private void hiddenBalise(){
+		this.mapView.getOverlays().remove(baliseOverlay);
 	}
 	
 	private void showMyLocation(boolean centerAtFirstFix){

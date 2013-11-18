@@ -233,14 +233,14 @@ public class MyMapView extends MapView {
 					if (this.inMemoryTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
 						Bitmap bitmapOpenSeaMap = this.inMemoryTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
 						OverlayItem a = tileToOverlayItem(tile, bitmapOpenSeaMap);
-						this.addOverlayOpenSeaMap(a,tile.zoomLevel);
+						this.addOverlayOpenSeaMap(a);
 	
 					} else if (this.fileSystemTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
 						Bitmap bitmapOpenSeaMap = this.fileSystemTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
 						
 						if (bitmapOpenSeaMap != null) {
 							OverlayItem a = tileToOverlayItem(tile, bitmapOpenSeaMap);
-							this.addOverlayOpenSeaMap(a,tile.zoomLevel);
+							this.addOverlayOpenSeaMap(a);
 							this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJobOpenSeaMap, bitmapOpenSeaMap);
 						} else {
 							// the image data could not be read from the cache
@@ -277,14 +277,8 @@ public class MyMapView extends MapView {
 	 * @param item
 	 * 			the {@link OverlayItem} to add in the {@link ArrayItemizedOverlay} overlayOpenSeaMap
 	 */
-	public void addOverlayOpenSeaMap(OverlayItem item,int zoomLevel){
-		MapPosition mapPosition = this.getMapPosition().getMapPosition();
-		if (mapPosition == null) {
-			return;
-		}
-
-		
-		
+	public void addOverlayOpenSeaMap(OverlayItem item){
+		overlayOpenSeaMap.addItem(item);
 	}
 	
 	/**

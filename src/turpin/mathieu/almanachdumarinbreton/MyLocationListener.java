@@ -1,5 +1,6 @@
 package turpin.mathieu.almanachdumarinbreton;
 
+import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.core.GeoPoint;
 
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -41,6 +43,9 @@ public class MyLocationListener implements LocationListener {
 			}
 			if(location.hasBearing() && location.getBearing()!=0.0){
 				this.myMapViewer.infoBearing.setText(location.getBearing()+ "°");
+				Drawable c = rotateDrawable(location.getBearing());
+                myMapViewer.overlayItem.setMarker(ItemizedOverlay.boundCenter(c));
+        		myMapViewer.itemizedOverlay.requestRedraw();
 			}
 			this.myMapViewer.infoPosition.setText("lat: "+location.getLatitude()+"°, lon: "+location.getLongitude()+"°");
 		}
