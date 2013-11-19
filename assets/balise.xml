@@ -1,9 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<balises>
-	<balise>
-		<type>essence</type>
+<services>
+	<service>
+		<type>carburant</type>
 		<lat>48.377833</lat>
 		<lon>-4.489533</lon>
-		<description>Essence</description>
-	</balise>
-</balises>
+		<description>Carburant</description>
+	</service>
+	<service>
+		<type>ordure</type>
+		<lat>48.378883</lat>
+		<lon>-4.486483</lon>
+		<description>Récupération des ordures ménagères</description>
+	</service>
+	<service>
+		<type>ordure</type>
+		<lat>48.380883</lat>
+		<lon>-4.490665</lon>
+		<description>Récupération des ordures ménagères</description>
+	</service>
+	<service>
+		<type>wc</type>
+		<lat>48.378583</lat>
+		<lon>-4.4869</lon>
+		<description>Toilettes</description>
+	</service>
+	<service>
+		<type>wc</type>
+		<lat>48.38065</lat>
+		<lon>-4.4899</lon>
+		<description>Toilettes</description>
+	</service>
+	<service>
+		<type>douche</type>
+		<lat>48.3809</lat>
+		<lon>-4.4897</lon>
+		<description>Douches</description>
+	</service>
+	<service>
+		<type>douche</type>
+		<lat>48.378233</lat>
+		<lon>-4.486466</lon>
+		<description>Douches</description>
+	</service>
+	<service>
+		<type>supermarche</type>
+		<lat>48.380216</lat>
+		<lon>-4.491166</lon>
+		<description>Supermarché</description>
+	</service>
+	<service>
+		<type>supermarche</type>
+		<lat>48.380366</lat>
+		<lon>-4.490766</lon>
+		<description>Supermarché</description>
+	</service>
+	<service>
+		<type>inconnue1</type>
+		<lat>48.3797</lat>
+		<lon>-4.4913</lon>
+		<description></description>
+	</service>
+	<service>
+		<type>capitainerie</type>
+		<lat>48.380816</lat>
+		<lon>-4.49</lon>
+		<description>Capitainerie</description>
+	</service>
+	<service>
+		<type>capitainerie</type>
+		<lat>48.3824</lat>
+		<lon>-4.486216</lon>
+		<description>Douane</description>
+	</service>
+	<service>
+		<type>parking</type>
+		<lat>48.38046</lat>
+		<lon>-4.4911</lon>
+		<description>Parking</description>
+	</service>
+	<service>
+		<type>inconnue2</type>
+		<lat>48.37815</lat>
+		<lon>-4.4879</lon>
+		<description></description>
+	</service>
+	<service>
+		<type>inconnue2</type>
+		<lat>48.377266</lat>
+		<lon>-4.48905</lon>
+		<description></description>
+	</service>
+	<service>
+		<type>inconnue3</type>
+		<lat>48.3823</lat>
+		<lon>-4.48655</lon>
+		<description></description>
+	</service>
+</services>

@@ -59,7 +59,7 @@ public class MyXmlParser {
                     break;
                 case XmlPullParser.START_TAG:
                     name = parser.getName();
-                    if (name.equals("balise")){
+                    if (name.equals("service")){
                         currentBalise = new OverlayItem();
                     } else if (currentBalise != null){
                         if (name.equals("description")){
@@ -70,14 +70,46 @@ public class MyXmlParser {
                         	lon = Float.parseFloat(parser.nextText());
                         }  
                         else if (name.equals("type")){
-                        	currentBalise.setTitle(parser.nextText());
-                        	currentBalise.setMarker(ItemizedOverlay.boundCenterBottom(context.getResources().getDrawable(R.drawable.marker_green)));
+                        	String type = parser.nextText();
+                        	currentBalise.setTitle(type);
+                        	int i = -1;
+                        	if(type.equals("carburant")){
+                        		i = R.drawable.carburants;
+                        	}
+                        	else if(type.equals("ordure")){
+                        		i = R.drawable.ordures;
+                        	}
+                        	else if(type.equals("wc")){
+                        		i = R.drawable.toilettes;
+                        	}
+                        	else if(type.equals("douche")){
+                        		i = R.drawable.douches;
+                        	}
+                        	else if(type.equals("supermarche")){
+                        		i = R.drawable.supermaches;
+                        	}
+                        	else if(type.equals("inconnue1")){
+                        		i = R.drawable.inconnu1;
+                        	}
+                        	else if(type.equals("capitainerie")){
+                        		i = R.drawable.capitainerie;
+                        	}
+                        	else if(type.equals("parking")){
+                        		i = R.drawable.parking;
+                        	}
+                        	else if(type.equals("inconnue2")){
+                        		i = R.drawable.inconnue2;
+                        	}
+                        	else if(type.equals("inconnue3")){
+                        		i = R.drawable.inconnue3;
+                        	}
+                        	if(i!=-1) currentBalise.setMarker(ItemizedOverlay.boundCenterBottom(context.getResources().getDrawable(i)));
                         }  
                     }
                     break;
                 case XmlPullParser.END_TAG:
                     name = parser.getName();
-                    if (name.equalsIgnoreCase("balise") && currentBalise != null && lat != 0.000000 && lon != 0.000000){
+                    if (name.equalsIgnoreCase("service") && currentBalise != null && lat != 0.000000 && lon != 0.000000){
                     	currentBalise.setPoint(new GeoPoint(lat,lon));
                     	balises.addItem(currentBalise);
                     	lat = 0.000000;
