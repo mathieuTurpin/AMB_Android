@@ -20,6 +20,7 @@ import org.mapsforge.core.MapPosition;
 import org.mapsforge.core.MercatorProjection;
 import org.mapsforge.core.Tile;
 
+import turpin.mathieu.almanachdumarinbreton.R;
 import turpin.mathieu.almanachdumarinbreton.maps.FileSystemTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.InMemoryTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.MyArrayItemizedOverlay;
@@ -166,11 +167,20 @@ public class MyMapView extends MapView {
 			if(mapPosition.zoomLevel != this.zoomCache){
 				// Clear overlay for OpenSeaMap
 				overlayOpenSeaMap = new MyArrayItemizedOverlay(null);
+				
+				if(mapPosition.zoomLevel >= 16){
+					//Add balise manquante sur la carte
+					GeoPoint positionBalise = new GeoPoint(48.3772,-4.4953);
+					Drawable baliseIcon = this.getContext().getResources().getDrawable(R.drawable.balise);
+					OverlayItem baliseItem = new OverlayItem(positionBalise,"","",ItemizedOverlay.boundCenterBottom(baliseIcon));
+					overlayOpenSeaMap.addItem(baliseItem);
+				}	
+				
 				this.getOverlays().set(MyMapView.DEFAULT_OVERLAY,overlayOpenSeaMap);
 				
 				//Display balise
 				if(this.enableShowBalise){
-					if(mapPosition.zoomLevel == 16 && this.zoomCache<16){
+					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
 						baliseOverlay = xmlParser.getBalises();
 						if(baliseOverlay != null){
 							this.getOverlays().add(baliseOverlay);
