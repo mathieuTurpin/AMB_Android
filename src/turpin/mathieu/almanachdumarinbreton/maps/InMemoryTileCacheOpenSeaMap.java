@@ -125,6 +125,7 @@ public class InMemoryTileCacheOpenSeaMap extends InMemoryTileCache {
 			}
 			
 			Bitmap pooledBitmap = this.myBitmapPool.remove(this.myBitmapPool.size() - 1);
+			this.myByteBuffer.rewind();
 			bitmap.copyPixelsToBuffer(this.myByteBuffer);
 			this.myByteBuffer.rewind();
 			pooledBitmap.copyPixelsFromBuffer(this.myByteBuffer);
