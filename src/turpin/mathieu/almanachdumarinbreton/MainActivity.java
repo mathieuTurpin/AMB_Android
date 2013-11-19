@@ -1,7 +1,6 @@
 package turpin.mathieu.almanachdumarinbreton;
 
 import org.mapsforge.android.maps.MapActivity;
-import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MyMapView;
 import org.mapsforge.android.maps.mapgenerator.tiledownloader.MapnikTileDownloader;
 import org.mapsforge.android.maps.overlay.ArrayCircleOverlay;
@@ -34,7 +33,6 @@ public class MainActivity extends MapActivity{
 	public MyMapView mapView;
 	private LocationManager locationManager;
 	private MyLocationListener myLocationListener;
-	public MapController mapController;
 	
 	ArrayCircleOverlay circleOverlay;
 	ArrayItemizedOverlay itemizedOverlay;
@@ -67,9 +65,9 @@ public class MainActivity extends MapActivity{
 	
 		//Create map with tiles from OpenStreetMap and make overlays with tiles from OpenSeaMap
 		mapView = new MyMapView(this, new MapnikTileDownloader());
-		relative.addView(mapView);
 
         configureMap();
+		relative.addView(mapView);
         
         this.snapToLocationView = (ToggleButton) findViewById(R.id.snapToLocationView);
 		this.snapToLocationView.setOnClickListener(new OnClickListener() {
@@ -94,9 +92,8 @@ public class MainActivity extends MapActivity{
         //Display scale on the map
         this.mapView.getMapScaleBar().setShowMapScaleBar(true);
 		
-        // get the map controller for this MapView
-		this.mapController = this.mapView.getController();
-		
+        this.mapView.getController().setZoom(14);
+        
 		// get the pointers to different system services
 		this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		this.myLocationListener = new MyLocationListener(this);
@@ -120,6 +117,7 @@ public class MainActivity extends MapActivity{
 		showMyLocation(true);
 		
 		this.mapView.showBalise();
+		this.mapView.showText();
 		
 		//enableSnapToLocation();
 	}

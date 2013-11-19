@@ -37,7 +37,7 @@ public class MyLocationListener implements LocationListener {
 		//Center the map on myPosition
 		if (this.centerAtFirstFix || this.myMapViewer.isSnapToLocationEnabled()) {
 			this.centerAtFirstFix = false;
-			this.myMapViewer.mapController.setCenter(point);
+			this.myMapViewer.mapView.getController().setCenter(point);
 			if(location.hasSpeed() && location.getSpeed()!=0.0){
 				this.myMapViewer.infoSpeed.setText(location.getSpeed()+" m/s");
 			}

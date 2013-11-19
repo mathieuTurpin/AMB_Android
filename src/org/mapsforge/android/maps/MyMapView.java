@@ -21,6 +21,7 @@ import org.mapsforge.core.MercatorProjection;
 import org.mapsforge.core.Tile;
 
 import turpin.mathieu.almanachdumarinbreton.R;
+import turpin.mathieu.almanachdumarinbreton.maps.ArrayTextOverlay;
 import turpin.mathieu.almanachdumarinbreton.maps.FileSystemTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.InMemoryTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.MyArrayItemizedOverlay;
@@ -28,6 +29,7 @@ import turpin.mathieu.almanachdumarinbreton.maps.MyItemizedOverlay;
 import turpin.mathieu.almanachdumarinbreton.maps.MyMapWorker;
 import turpin.mathieu.almanachdumarinbreton.maps.MyXmlParser;
 import turpin.mathieu.almanachdumarinbreton.maps.OpenSeaMapTileDownloader;
+import turpin.mathieu.almanachdumarinbreton.maps.TextDrawable;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -80,9 +82,12 @@ public class MyMapView extends MapView {
 	//ArrayItemizedOverlay that gets overlay make with tiles from OpenSeaMap Server for the current zoom
 	private MyArrayItemizedOverlay overlayOpenSeaMap;	
 	private byte zoomCache;
-	private boolean enableShowBalise;
+	private boolean isEnableShowBalise;
 	private MyItemizedOverlay baliseOverlay;
 	private MyXmlParser xmlParser;
+	private ArrayTextOverlay textOverlay;
+	private boolean isEnableShowText;
+
 
 	/**
 	 * Need to test
@@ -178,8 +183,8 @@ public class MyMapView extends MapView {
 				
 				this.getOverlays().set(MyMapView.DEFAULT_OVERLAY,overlayOpenSeaMap);
 				
-				//Display balise
-				if(this.enableShowBalise){
+				if(this.isEnableShowBalise){
+					//Display balise
 					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
 						baliseOverlay = xmlParser.getBalises();
 						if(baliseOverlay != null){
@@ -189,6 +194,27 @@ public class MyMapView extends MapView {
 					//Hidden balise
 					else if(mapPosition.zoomLevel < 16){
 						this.getOverlays().remove(baliseOverlay);
+					}
+				}
+				
+				if(this.isEnableShowText){
+					//Display Text
+					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
+						textOverlay = new ArrayTextOverlay(null);
+						if(textOverlay != null){
+							GeoPoint positionTest = new GeoPoint(48.3772,-4.4953);
+							OverlayItem testItem = new OverlayItem();
+							TextDrawable test = new TextDrawable(testItem,"TEST");
+							testItem.setPoint(positionTest);
+							testItem.setMarker(test);
+							textOverlay.addItem(testItem);
+							
+							this.getOverlays().add(textOverlay);
+						}
+					}
+					//Hidden text
+					else if(mapPosition.zoomLevel < 16){
+						this.getOverlays().remove(textOverlay);
 					}
 				}
 				// Initialize zoomCache
@@ -381,7 +407,7 @@ public class MyMapView extends MapView {
 		baliseOverlay = xmlParser.getBalises();
 		
 		if(baliseOverlay != null){
-			this.enableShowBalise = true;
+			this.isEnableShowBalise = true;
 			if(mapPosition.zoomLevel >= 16){
 				this.getOverlays().add(baliseOverlay);
 			}
@@ -389,8 +415,27 @@ public class MyMapView extends MapView {
 	}
 	
 	public void hiddenBalise(){
-		this.enableShowBalise = false;
+		this.isEnableShowBalise = false;
 		this.getOverlays().remove(baliseOverlay);
 	}
-
+	
+	public void showText(){
+		MapPosition mapPosition = this.getMapPosition().getMapPosition();
+		if (mapPosition == null) {
+			return;
+		}
+		textOverlay = new ArrayTextOverlay(null);
+		
+		if(textOverlay != null){
+			this.isEnableShowText = true;
+			if(mapPosition.zoomLevel >= 16){
+				this.getOverlays().add(textOverlay);
+			}
+		}
+	}
+	
+	public void hiddenText(){
+		this.isEnableShowText = false;
+		this.getOverlays().remove(textOverlay);
+	}
 }
