@@ -29,7 +29,6 @@ import turpin.mathieu.almanachdumarinbreton.maps.MyItemizedOverlay;
 import turpin.mathieu.almanachdumarinbreton.maps.MyMapWorker;
 import turpin.mathieu.almanachdumarinbreton.maps.MyXmlParser;
 import turpin.mathieu.almanachdumarinbreton.maps.OpenSeaMapTileDownloader;
-import turpin.mathieu.almanachdumarinbreton.maps.TextDrawable;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -200,15 +199,8 @@ public class MyMapView extends MapView {
 				if(this.isEnableShowText){
 					//Display Text
 					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
-						textOverlay = new ArrayTextOverlay(null);
+						textOverlay = this.xmlParser.getText();
 						if(textOverlay != null){
-							GeoPoint positionTest = new GeoPoint(48.3772,-4.4953);
-							OverlayItem testItem = new OverlayItem();
-							TextDrawable test = new TextDrawable(testItem,"TEST");
-							testItem.setPoint(positionTest);
-							testItem.setMarker(test);
-							textOverlay.addItem(testItem);
-							
 							this.getOverlays().add(textOverlay);
 						}
 					}
@@ -424,7 +416,7 @@ public class MyMapView extends MapView {
 		if (mapPosition == null) {
 			return;
 		}
-		textOverlay = new ArrayTextOverlay(null);
+		textOverlay = this.xmlParser.getText();
 		
 		if(textOverlay != null){
 			this.isEnableShowText = true;

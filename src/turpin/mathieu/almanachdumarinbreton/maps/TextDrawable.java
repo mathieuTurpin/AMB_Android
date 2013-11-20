@@ -15,8 +15,8 @@ public class TextDrawable extends Drawable {
     private final String text;
     private final Paint paint;
 	private final OverlayItem item;
-	private float positionX;
-	private float positionY;
+	private float positionX = 0;
+	private float positionY = 0;
 
     public TextDrawable(OverlayItem item,String text) {
     	this.item = item;
@@ -38,7 +38,7 @@ public class TextDrawable extends Drawable {
 		positionX = pixelLeft - longitude;
 		positionY = pixelTop - latitude;
     }
-
+    
     @Override
     public void draw(Canvas canvas) {
     	canvas.drawText(text, positionX, positionY, paint);

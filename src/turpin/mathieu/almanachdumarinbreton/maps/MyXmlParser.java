@@ -17,6 +17,8 @@ import android.content.Context;
 public class MyXmlParser {
 	
 	private final String baliseXML = "balise.xml";
+	private final String textXML = "text.xml";
+
 	private Context context;
 	
 	public MyXmlParser(Context context){
@@ -34,6 +36,26 @@ public class MyXmlParser {
 	            parser.setInput(in_s, null);
 
 	            return parseXMLToBalise(parser);
+
+		} catch (XmlPullParserException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public ArrayTextOverlay getText(){
+		XmlPullParserFactory pullParserFactory;
+		try {
+			pullParserFactory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = pullParserFactory.newPullParser();
+
+			    InputStream in_s = context.getAssets().open(textXML);
+		        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+	            parser.setInput(in_s, null);
+
+	            return parseXMLToText(parser);
 
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
@@ -65,9 +87,9 @@ public class MyXmlParser {
                         if (name.equals("description")){
                         	currentBalise.setSnippet(parser.nextText());
                         } else if (name.equals("lat")){
-                        	lat = Float.parseFloat(parser.nextText());
+                        	lat = Double.parseDouble(parser.nextText());
                         } else if (name.equals("lon")){
-                        	lon = Float.parseFloat(parser.nextText());
+                        	lon = Double.parseDouble(parser.nextText());
                         }  
                         else if (name.equals("type")){
                         	String type = parser.nextText();
@@ -119,5 +141,48 @@ public class MyXmlParser {
             eventType = parser.next();
         }
         return balises;
+	}
+	
+	private ArrayTextOverlay parseXMLToText(XmlPullParser parser) throws XmlPullParserException,IOException
+	{
+		ArrayTextOverlay texts = null;
+        int eventType = parser.getEventType();
+        OverlayItem currentBalise = null;
+        double lat = 0.000000;
+        double lon = 0.000000;
+
+        while (eventType != XmlPullParser.END_DOCUMENT){
+            String name = null;
+            switch (eventType){
+                case XmlPullParser.START_DOCUMENT:
+                	texts = new ArrayTextOverlay(null);
+                    break;
+                case XmlPullParser.START_TAG:
+                    name = parser.getName();
+                    if (name.equals("text")){
+                        currentBalise = new OverlayItem();
+                    } else if (currentBalise != null){
+                        if (name.equals("description")){
+                        	TextDrawable textMarker = new TextDrawable(currentBalise, parser.nextText());
+                        	currentBalise.setMarker(textMarker);
+                        } else if (name.equals("lat")){
+                        	lat = Double.parseDouble(parser.nextText());
+                        } else if (name.equals("lon")){
+                        	lon = Double.parseDouble(parser.nextText());
+                        } 
+                    }
+                    break;
+                case XmlPullParser.END_TAG:
+                    name = parser.getName();
+                    if (name.equalsIgnoreCase("text") && currentBalise != null && lat != 0.000000 && lon != 0.000000 && currentBalise.getMarker() != null){
+                    	currentBalise.setPoint(new GeoPoint(lat,lon));
+                    	texts.addItem(currentBalise);
+                    	lat = 0.000000;
+                    	lon = 0.000000;
+                    } 
+            }
+            eventType = parser.next();
+        }
+        return texts;
 	}
 }
