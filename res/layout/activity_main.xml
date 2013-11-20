@@ -3,74 +3,91 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context=".MainActivity" >
-	<TextView
-	    android:id="@+id/infoPositionLabel"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="My position: "
-	    android:textStyle="bold" >
-	</TextView>
-	<TextView
-	    android:id="@+id/infoPosition"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="N.C. "
-	     android:layout_toRightOf="@id/infoPositionLabel"
-	    android:textStyle="bold" >
-	</TextView>
+
     <TextView
-	    android:id="@+id/infoSpeedLabel"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="My speed: "
-	    android:layout_toRightOf="@id/infoPosition"
-	    android:textStyle="bold" >
-	</TextView>
-	<TextView
-	    android:id="@+id/infoSpeed"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="N.C. "
-	     android:layout_toRightOf="@id/infoSpeedLabel"
-	    android:textStyle="bold" >
-	</TextView>
-	<TextView
-	    android:id="@+id/infoBearingLabel"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="My bearing: "
-	    android:layout_toRightOf="@id/infoSpeed"
-	    android:textStyle="bold" >
-	</TextView>
-	<TextView
-	    android:id="@+id/infoBearing"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="N.C. "
-	    android:layout_toRightOf="@id/infoBearingLabel"
-	    android:textStyle="bold" >
-	</TextView>
-	
-	<RelativeLayout
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@id/infoSpeed">
-	    
-	    <RelativeLayout
-	    android:id="@+id/mapViewLayout"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    />
-	    
-	    <ToggleButton
-        android:id="@+id/snapToLocationView"
+        android:id="@+id/infoPositionLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/snap_to_position"
-        android:textOff=""
-        android:textOn="" 
-        />
-	</RelativeLayout>
+        android:text="My position: "
+        android:textStyle="bold" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/infoPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/infoPositionLabel"
+        android:text="N.C. "
+        android:textStyle="bold" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/infoSpeedLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/infoPosition"
+        android:text="My speed: "
+        android:textStyle="bold" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/infoSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/infoSpeedLabel"
+        android:text="N.C. "
+        android:textStyle="bold" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/infoBearingLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/infoSpeed"
+        android:text="My bearing: "
+        android:textStyle="bold" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/infoBearing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/infoBearingLabel"
+        android:text="N.C. "
+        android:textStyle="bold" >
+    </TextView>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/infoSpeed" >
+
+        <RelativeLayout
+            android:id="@+id/mapViewLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        
+        <ImageView
+        android:id="@+id/roseDesVents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:contentDescription="rose des vents"
+        android:src="@drawable/rose_des_vent" />
+
+        <ToggleButton
+            android:id="@+id/snapToLocationView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:textOn=""
+            android:textOff=""
+            android:background="@drawable/snap_to_position" />
+
+    </RelativeLayout>
+
+    
+
 </RelativeLayout>
-
-

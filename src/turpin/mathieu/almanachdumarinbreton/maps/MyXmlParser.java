@@ -97,8 +97,8 @@ public class MyXmlParser {
                         	else if(type.equals("parking")){
                         		i = R.drawable.parking;
                         	}
-                        	else if(type.equals("inconnue2")){
-                        		i = R.drawable.inconnue2;
+                        	else if(type.equals("visiteur")){
+                        		i = R.drawable.visiteurs;
                         	}
                         	else if(type.equals("inconnue3")){
                         		i = R.drawable.inconnue3;

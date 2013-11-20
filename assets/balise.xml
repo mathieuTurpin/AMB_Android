@@ -79,13 +79,13 @@
 		<description>Parking</description>
 	</service>
 	<service>
-		<type>inconnue2</type>
+		<type>visiteur</type>
 		<lat>48.37815</lat>
 		<lon>-4.4879</lon>
 		<description></description>
 	</service>
 	<service>
-		<type>inconnue2</type>
+		<type>visiteur</type>
 		<lat>48.377266</lat>
 		<lon>-4.48905</lon>
 		<description></description>
