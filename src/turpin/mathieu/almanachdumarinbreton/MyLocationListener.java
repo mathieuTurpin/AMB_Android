@@ -16,8 +16,13 @@ import android.os.Bundle;
 public class MyLocationListener implements LocationListener {
 	private final MainActivity myMapViewer;
 	private boolean centerAtFirstFix;
+	private Location positionMarina;
+	
 	public MyLocationListener(MainActivity myMapViewer) {
 		this.myMapViewer = myMapViewer;
+		this.positionMarina = new Location("");
+		this.positionMarina.setLatitude(48.3794);
+		this.positionMarina.setLongitude(-4.4926);
 	}
 
 	@Override
@@ -48,6 +53,23 @@ public class MyLocationListener implements LocationListener {
         		myMapViewer.itemizedOverlay.requestRedraw();
 			}
 			this.myMapViewer.infoPosition.setText("lat: "+location.getLatitude()+"°, lon: "+location.getLongitude()+"°");
+			
+			//Echelle en fonction de la distance
+			if(location.distanceTo(positionMarina) < 250){
+				if(this.myMapViewer.mapView.getMapPosition().getMapPosition().zoomLevel != 18){
+					this.myMapViewer.mapView.getController().setZoom(18);
+				}
+			}
+			else if(location.distanceTo(positionMarina) < 500){
+				if(this.myMapViewer.mapView.getMapPosition().getMapPosition().zoomLevel != 17){
+					this.myMapViewer.mapView.getController().setZoom(17);
+				}
+			}
+			else if(location.distanceTo(positionMarina) < 1000){
+				if(this.myMapViewer.mapView.getMapPosition().getMapPosition().zoomLevel != 16){
+					this.myMapViewer.mapView.getController().setZoom(16);
+				}
+			}
 		}
 		
 	}
