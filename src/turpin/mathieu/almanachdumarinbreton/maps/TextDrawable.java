@@ -17,6 +17,7 @@ public class TextDrawable extends Drawable {
 	private final OverlayItem item;
 	private float positionX = 0;
 	private float positionY = 0;
+	private float rotation = 0;
 
     public TextDrawable(OverlayItem item,String text) {
     	this.item = item;
@@ -31,6 +32,10 @@ public class TextDrawable extends Drawable {
         paint.setTextAlign(Paint.Align.LEFT);
     }
     
+    public void setRotation(float rotation){
+    	this.rotation = rotation;
+    }
+    
     public void setPosition(float longitude,float latitude,byte zoomLevel){
     	float pixelLeft = (float) MercatorProjection.longitudeToPixelX(item.getPoint().getLongitude(), zoomLevel);
 		float pixelTop = (float) MercatorProjection.latitudeToPixelY(item.getPoint().getLatitude(),zoomLevel);
@@ -41,7 +46,10 @@ public class TextDrawable extends Drawable {
     
     @Override
     public void draw(Canvas canvas) {
+    	canvas.save();
+    	canvas.rotate(rotation, positionX, positionY);
     	canvas.drawText(text, positionX, positionY, paint);
+    	canvas.restore();
     }
 
     @Override

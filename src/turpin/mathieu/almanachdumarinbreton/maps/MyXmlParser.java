@@ -150,6 +150,7 @@ public class MyXmlParser {
         OverlayItem currentBalise = null;
         double lat = 0.000000;
         double lon = 0.000000;
+        float rot = 0;
 
         while (eventType != XmlPullParser.END_DOCUMENT){
             String name = null;
@@ -169,16 +170,21 @@ public class MyXmlParser {
                         	lat = Double.parseDouble(parser.nextText());
                         } else if (name.equals("lon")){
                         	lon = Double.parseDouble(parser.nextText());
-                        } 
+	                    } else if (name.equals("rot")){
+	                    	rot = Float.parseFloat(parser.nextText());
+	                    } 
                     }
                     break;
                 case XmlPullParser.END_TAG:
                     name = parser.getName();
                     if (name.equalsIgnoreCase("text") && currentBalise != null && lat != 0.000000 && lon != 0.000000 && currentBalise.getMarker() != null){
                     	currentBalise.setPoint(new GeoPoint(lat,lon));
+                    	((TextDrawable)(currentBalise.getMarker())).setRotation(rot);
+                    	
                     	texts.addItem(currentBalise);
                     	lat = 0.000000;
                     	lon = 0.000000;
+                    	rot = 0;
                     } 
             }
             eventType = parser.next();
