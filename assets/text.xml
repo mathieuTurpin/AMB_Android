@@ -1,9 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <texts>
+<!-- pontoon letters in Marina du Chateau -->
 	<text>
-		<lat>48.3772</lat>
-		<lon>-4.4953</lon>
-		<rot>30.5</rot>
-		<description>Test</description>
+		<lat>48.379191</lat>
+		<lon>-4.487321</lon>
+		<rot>0</rot>
+		<description>A</description>
 	</text>
+	<text>
+		<lat>48.378998</lat>
+		<lon>-4.487632</lon>
+		<rot>0</rot>
+		<description>B</description>
+	</text>
+	<text>
+		<lat>48.378820</lat>
+		<lon>-4.487932</lon>
+		<rot>0</rot>
+		<description>C</description>
+	</text>
+	<text>
+		<lat>48.379925</lat>
+		<lon>-4.489917</lon>
+		<rot>0</rot>
+		<description>D</description>
+	</text>
+	<text>
+		<lat>48.379697</lat>
+		<lon>-4.489606</lon>
+		<rot>0</rot>
+		<description>E</description>
+	</text>
+	<text>
+		<lat>48.378720</lat>
+		<lon>-4.488490</lon>
+		<rot>0</rot>
+		<description>F</description>
+	</text>
+	<text>
+		<lat>48.378571</lat>
+		<lon>-4.488898</lon>
+		<rot>0</rot>
+		<description>G</description>
+	</text>
+	<text>
+		<lat>48.378371</lat>
+		<lon>-4.489456</lon>
+		<rot>0</rot>
+		<description>H</description>
+	</text>
+	<text>
+		<lat>48.379127</lat>
+		<lon>-4.490593</lon>
+		<rot>0</rot>
+		<description>I</description>
+	</text>
+	<text>
+		<lat>48.379290</lat>
+		<lon>-4.490850</lon>
+		<rot>0</rot>
+		<description>J</description>
+	</text>
+	<text>
+		<lat>48.378115</lat>
+		<lon>-4.489971</lon>
+		<rot>0</rot>
+		<description>M</description>
+	</text>
+	<text>
+		<lat>48.377993 </lat>
+		<lon>-4.490550</lon>
+		<rot>0</rot>
+		<description>N</description>
+	</text>		
 </texts>
