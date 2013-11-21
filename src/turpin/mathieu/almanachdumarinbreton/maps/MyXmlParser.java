@@ -11,6 +11,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import turpin.mathieu.almanachdumarinbreton.R;
+import turpin.mathieu.almanachdumarinbreton.overlay.MyOverlay;
+import turpin.mathieu.almanachdumarinbreton.overlay.TextDrawable;
 
 import android.content.Context;
 
@@ -147,7 +149,7 @@ public class MyXmlParser {
 	{
 		ArrayTextOverlay texts = null;
         int eventType = parser.getEventType();
-        OverlayItem currentBalise = null;
+        MyOverlay currentBalise = null;
         double lat = 0.000000;
         double lon = 0.000000;
         float rot = 0;
@@ -161,10 +163,10 @@ public class MyXmlParser {
                 case XmlPullParser.START_TAG:
                     name = parser.getName();
                     if (name.equals("text")){
-                        currentBalise = new OverlayItem();
+                        currentBalise = new MyOverlay();
                     } else if (currentBalise != null){
                         if (name.equals("description")){
-                        	TextDrawable textMarker = new TextDrawable(currentBalise, parser.nextText());
+                        	TextDrawable textMarker = new TextDrawable(parser.nextText());
                         	currentBalise.setMarker(textMarker);
                         } else if (name.equals("lat")){
                         	lat = Double.parseDouble(parser.nextText());
@@ -179,7 +181,7 @@ public class MyXmlParser {
                     name = parser.getName();
                     if (name.equalsIgnoreCase("text") && currentBalise != null && lat != 0.000000 && lon != 0.000000 && currentBalise.getMarker() != null){
                     	currentBalise.setPoint(new GeoPoint(lat,lon));
-                    	((TextDrawable)(currentBalise.getMarker())).setRotation(rot);
+                    	currentBalise.setRotationMarker(rot);
                     	
                     	texts.addItem(currentBalise);
                     	lat = 0.000000;
