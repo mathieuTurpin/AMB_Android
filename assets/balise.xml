@@ -55,10 +55,10 @@
 		<description>Supermarché</description>
 	</service>
 	<service>
-		<type>inconnue1</type>
+		<type>manutention</type>
 		<lat>48.3797</lat>
 		<lon>-4.4913</lon>
-		<description></description>
+		<description>Zone de manutention</description>
 	</service>
 	<service>
 		<type>capitainerie</type>
@@ -91,9 +91,9 @@
 		<description></description>
 	</service>
 	<service>
-		<type>inconnue3</type>
+		<type>administration</type>
 		<lat>48.3823</lat>
 		<lon>-4.48655</lon>
-		<description></description>
+		<description>administration</description>
 	</service>
 </services>

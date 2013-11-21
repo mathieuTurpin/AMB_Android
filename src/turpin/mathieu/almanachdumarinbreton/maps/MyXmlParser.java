@@ -112,8 +112,8 @@ public class MyXmlParser {
                         	else if(type.equals("supermarche")){
                         		i = R.drawable.supermaches;
                         	}
-                        	else if(type.equals("inconnue1")){
-                        		i = R.drawable.inconnu1;
+                        	else if(type.equals("manutention")){
+                        		i = R.drawable.manutention;
                         	}
                         	else if(type.equals("capitainerie")){
                         		i = R.drawable.capitainerie;
@@ -124,8 +124,8 @@ public class MyXmlParser {
                         	else if(type.equals("visiteur")){
                         		i = R.drawable.visiteurs;
                         	}
-                        	else if(type.equals("inconnue3")){
-                        		i = R.drawable.inconnue3;
+                        	else if(type.equals("administration")){
+                        		i = R.drawable.administration;
                         	}
                         	if(i!=-1) currentBalise.setMarker(ItemizedOverlay.boundCenterBottom(context.getResources().getDrawable(i)));
                         }  
