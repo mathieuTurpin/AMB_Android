@@ -8,9 +8,9 @@ import org.mapsforge.android.maps.overlay.ArrayItemizedOverlay;
 import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.android.maps.overlay.OverlayCircle;
 import org.mapsforge.android.maps.overlay.OverlayItem;
+import org.mapsforge.core.GeoPoint;
 
 import turpin.mathieu.almanachdumarinbreton.maps.MyItemizedOverlay;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -92,7 +92,9 @@ public class MainActivity extends MapActivity{
         //Display scale on the map
         this.mapView.getMapScaleBar().setShowMapScaleBar(true);
 		
-        this.mapView.getController().setZoom(14);
+        this.mapView.getController().setZoom(17);
+        
+        this.mapView.setCenter(new GeoPoint(48.377972, -4.491666));
         
 		// get the pointers to different system services
 		this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -117,7 +119,8 @@ public class MainActivity extends MapActivity{
 		showMyLocation(true);
 		
 		this.mapView.showBalise();
-		this.mapView.showText();
+//		this.mapView.showText();
+//		this.mapView.showSounding();
 		
 		//enableSnapToLocation();
 	}

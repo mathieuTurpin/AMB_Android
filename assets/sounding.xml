@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soundings>
+<!-- soundings in Marina du Chateau -->
+	<sounding>
+		<lat>48.377972</lat>
+		<lon>-4.491666</lon>
+		<rot>0</rot>
+		<description>2,2</description>
+	</sounding>
+	<sounding>
+		<lat>48.377459 </lat>
+		<lon>-4.490861</lon>
+		<rot>0</rot>
+		<description>7,4</description>
+	</sounding>
+	<sounding>
+		<lat>48.377808</lat>
+		<lon>-4.490346</lon>
+		<rot>0</rot>
+		<description>2,2</description>
+	</sounding>
+	<sounding>
+		<lat>48.377251</lat>
+		<lon>-4.489589</lon>
+		<rot>0</rot>
+		<description>6,7</description>
+	</sounding>
+	<sounding>
+		<lat>48.377839</lat>
+		<lon>-4.489025</lon>
+		<rot>0</rot>
+		<description>2,3</description>
+	</sounding>
+	<sounding>
+		<lat>48.377365</lat>
+		<lon>-4.488714</lon>
+		<rot>0</rot>
+		<description>5,9 </description>
+	</sounding>
+	<sounding>
+		<lat>48.378199</lat>
+		<lon>-4.487974</lon>
+		<rot>0</rot>
+		<description>3,6</description>
+	</sounding>
+	<sounding>
+		<lat>48.378217</lat>
+		<lon>-4.487041</lon>
+		<rot>0</rot>
+		<description>1,1</description>
+	</sounding>
+	<sounding>
+		<lat>48.378299 </lat>
+		<lon>-4.490603</lon>
+		<rot>0</rot>
+		<description>5,7</description>
+	</sounding>
+	<sounding>
+		<lat>48.378862  </lat>
+		<lon>-4.491370 </lon>
+		<rot>0 </rot>
+		<description>2,7 </description>
+	</sounding>
+	<sounding>
+		<lat>48.378762</lat>
+		<lon>-4.492056</lon>
+		<rot>0 </rot>
+		<description> 1,8</description>
+	</sounding>
+</soundings>

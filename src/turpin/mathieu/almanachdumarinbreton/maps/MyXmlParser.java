@@ -20,6 +20,7 @@ public class MyXmlParser {
 	
 	private final String baliseXML = "balise.xml";
 	private final String textXML = "text.xml";
+	private final String soundingXML = "sounding.xml";
 
 	private Context context;
 	
@@ -58,6 +59,26 @@ public class MyXmlParser {
 	            parser.setInput(in_s, null);
 
 	            return parseXMLToText(parser);
+
+		} catch (XmlPullParserException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public ArrayTextOverlay getSounding(){
+		XmlPullParserFactory pullParserFactory;
+		try {
+			pullParserFactory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = pullParserFactory.newPullParser();
+
+			    InputStream in_s = context.getAssets().open(soundingXML);
+		        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+	            parser.setInput(in_s, null);
+
+	            return parseXMLToSounding(parser);
 
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
@@ -193,4 +214,55 @@ public class MyXmlParser {
         }
         return texts;
 	}
+	
+	private ArrayTextOverlay parseXMLToSounding(XmlPullParser parser) throws XmlPullParserException,IOException
+	{
+		ArrayTextOverlay soundings = null;
+        int eventType = parser.getEventType();
+        MyOverlay currentBalise = null;
+        double lat = 0.000000;
+        double lon = 0.000000;
+        float rot = 0;
+
+        while (eventType != XmlPullParser.END_DOCUMENT){
+            String name = null;
+            switch (eventType){
+                case XmlPullParser.START_DOCUMENT:
+                	soundings = new ArrayTextOverlay(null);
+                    break;
+                case XmlPullParser.START_TAG:
+                    name = parser.getName();
+                    if (name.equals("sounding")){
+                        currentBalise = new MyOverlay();
+                    } else if (currentBalise != null){
+                        if (name.equals("description")){
+                        	TextDrawable textMarker = new TextDrawable(parser.nextText());
+                        	currentBalise.setMarker(textMarker);
+                        } else if (name.equals("lat")){
+                        	lat = Double.parseDouble(parser.nextText());
+                        } else if (name.equals("lon")){
+                        	lon = Double.parseDouble(parser.nextText());
+	                    } else if (name.equals("rot")){
+	                    	rot = Float.parseFloat(parser.nextText());
+	                    } 
+                    }
+                    break;
+                case XmlPullParser.END_TAG:
+                    name = parser.getName();
+                    if (name.equalsIgnoreCase("sounding") && currentBalise != null && lat != 0.000000 && lon != 0.000000 && currentBalise.getMarker() != null){
+                    	currentBalise.setPoint(new GeoPoint(lat,lon));
+                    	currentBalise.setRotationMarker(rot);
+                    	
+                    	soundings.addItem(currentBalise);
+                    	lat = 0.000000;
+                    	lon = 0.000000;
+                    	rot = 0;
+                    } 
+            }
+            eventType = parser.next();
+        }
+        return soundings;
+	}
+	
+	
 }

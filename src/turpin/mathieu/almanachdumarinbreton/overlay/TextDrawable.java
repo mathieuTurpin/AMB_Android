@@ -29,7 +29,7 @@ public class TextDrawable extends MyDrawable {
 	protected void initPaint() {
 		Paint paint = getPaint();
 		paint.setColor(Color.BLACK);
-        paint.setTextSize(50);
+		paint.setTextSize(25);
         paint.setAntiAlias(true);
         paint.setFakeBoldText(true);
         paint.setStyle(Paint.Style.FILL);

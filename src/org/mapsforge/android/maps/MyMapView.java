@@ -86,6 +86,8 @@ public class MyMapView extends MapView {
 	private MyXmlParser xmlParser;
 	private ArrayTextOverlay textOverlay;
 	private boolean isEnableShowText;
+	private ArrayTextOverlay soundingOverlay;
+	private boolean isEnableShowSounding;
 
 
 	/**
@@ -209,6 +211,22 @@ public class MyMapView extends MapView {
 						this.getOverlays().remove(textOverlay);
 					}
 				}
+				
+				if(this.isEnableShowSounding){
+					//Display Text
+					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
+						soundingOverlay = this.xmlParser.getSounding();
+						if(soundingOverlay != null){
+							this.getOverlays().add(soundingOverlay);
+						}
+					}
+					//Hidden text
+					else if(mapPosition.zoomLevel < 16){
+						this.getOverlays().remove(soundingOverlay);
+					}
+				}
+				
+				
 				// Initialize zoomCache
 				this.zoomCache = mapPosition.zoomLevel;
 			}
@@ -430,4 +448,26 @@ public class MyMapView extends MapView {
 		this.isEnableShowText = false;
 		this.getOverlays().remove(textOverlay);
 	}
+	
+	public void showSounding(){
+		MapPosition mapPosition = this.getMapPosition().getMapPosition();
+		if (mapPosition == null) {
+			return;
+		}
+		soundingOverlay = this.xmlParser.getSounding();
+		
+		if(soundingOverlay != null){
+			this.isEnableShowSounding = true;
+			if(mapPosition.zoomLevel >= 16){
+				this.getOverlays().add(soundingOverlay);
+			}
+		}
+	}
+	
+	public void hiddenSounding(){
+		this.isEnableShowSounding = false;
+		this.getOverlays().remove(soundingOverlay);
+	}
+	
+	
 }
