@@ -1,9 +1,8 @@
-package turpin.mathieu.almanachdumarinbreton.maps;
+package turpin.mathieu.almanachdumarinbreton.overlay;
 
 import org.mapsforge.android.maps.Projection;
 import org.mapsforge.android.maps.overlay.ArrayItemizedOverlay;
 
-import turpin.mathieu.almanachdumarinbreton.overlay.MyOverlay;
 
 import android.graphics.Canvas;
 import android.graphics.Point;

@@ -1,5 +1,7 @@
 package org.mapsforge.android.maps;
 
+import java.util.ArrayList;
+
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
@@ -20,15 +22,14 @@ import org.mapsforge.core.MapPosition;
 import org.mapsforge.core.MercatorProjection;
 import org.mapsforge.core.Tile;
 
+import turpin.mathieu.almanachdumarinbreton.MyXmlParser;
 import turpin.mathieu.almanachdumarinbreton.R;
-import turpin.mathieu.almanachdumarinbreton.maps.ArrayTextOverlay;
 import turpin.mathieu.almanachdumarinbreton.maps.FileSystemTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.InMemoryTileCacheOpenSeaMap;
-import turpin.mathieu.almanachdumarinbreton.maps.MyArrayItemizedOverlay;
-import turpin.mathieu.almanachdumarinbreton.maps.MyItemizedOverlay;
 import turpin.mathieu.almanachdumarinbreton.maps.MyMapWorker;
-import turpin.mathieu.almanachdumarinbreton.maps.MyXmlParser;
 import turpin.mathieu.almanachdumarinbreton.maps.OpenSeaMapTileDownloader;
+import turpin.mathieu.almanachdumarinbreton.overlay.ArrayTextOverlay;
+import turpin.mathieu.almanachdumarinbreton.overlay.MyArrayItemizedOverlay;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -55,7 +56,7 @@ import android.util.AttributeSet;
 public class MyMapView extends MapView {
 	private static final float DEFAULT_TEXT_SCALE = 1;
 	private static final int DEFAULT_TILE_CACHE_SIZE_FILE_SYSTEM = 100;
-	private static final int DEFAULT_TILE_CACHE_SIZE_IN_MEMORY = 20;
+	private static final int DEFAULT_TILE_CACHE_SIZE_IN_MEMORY = 10;
 	
 	//Position where should put Overlay for OpenSeaMap in a MyMapView
 	private final static int DEFAULT_OVERLAY = 0;
@@ -82,7 +83,7 @@ public class MyMapView extends MapView {
 	private MyArrayItemizedOverlay overlayOpenSeaMap;	
 	private byte zoomCache;
 	private boolean isEnableShowBalise;
-	private MyItemizedOverlay baliseOverlay;
+
 	private MyXmlParser xmlParser;
 	private ArrayTextOverlay textOverlay;
 	private boolean isEnableShowText;
@@ -147,8 +148,12 @@ public class MyMapView extends MapView {
 		this.mapWorkerOpenSeaMap.start();
 		
 		//Initialize overlay that gets tiles from OpenSeaMap Server
-		overlayOpenSeaMap = new MyArrayItemizedOverlay(null);
+		overlayOpenSeaMap = new MyArrayItemizedOverlay(this.getContext(),null);
 		this.getOverlays().add(MyMapView.DEFAULT_OVERLAY,overlayOpenSeaMap);
+		
+		//Get service
+		ArrayList<OverlayItem> serviceOverlay = xmlParser.getService();
+		overlayOpenSeaMap.addItemsService(serviceOverlay);
 		
 		//Initialize zoomCache
 		MapPosition mapPosition = this.getMapPosition().getMapPosition();
@@ -172,7 +177,7 @@ public class MyMapView extends MapView {
 		synchronized( this.getOverlays()) {
 			if(mapPosition.zoomLevel != this.zoomCache){
 				// Clear overlay for OpenSeaMap
-				overlayOpenSeaMap = new MyArrayItemizedOverlay(null);
+				overlayOpenSeaMap.clearOSM();
 				
 				if(mapPosition.zoomLevel >= 16){
 					//Add balise manquante sur la carte
@@ -181,29 +186,26 @@ public class MyMapView extends MapView {
 					OverlayItem baliseItem = new OverlayItem(positionBalise,"","",ItemizedOverlay.boundCenterBottom(baliseIcon));
 					overlayOpenSeaMap.addItem(baliseItem);
 				}	
-				
-				this.getOverlays().set(MyMapView.DEFAULT_OVERLAY,overlayOpenSeaMap);
-				
+								
 				if(this.isEnableShowBalise){
 					//Display balise
-					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
-						baliseOverlay = xmlParser.getBalises();
-						if(baliseOverlay != null){
-							this.getOverlays().add(baliseOverlay);
-						}
+					if(mapPosition.zoomLevel >= 16){
+						overlayOpenSeaMap.displayService();
 					}
 					//Hidden balise
 					else if(mapPosition.zoomLevel < 16){
-						this.getOverlays().remove(baliseOverlay);
+						this.overlayOpenSeaMap.hiddenService();
 					}
 				}
 				
 				if(this.isEnableShowText){
 					//Display Text
 					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
-						textOverlay = this.xmlParser.getText();
-						if(textOverlay != null){
-							this.getOverlays().add(textOverlay);
+						if(!this.getOverlays().contains(textOverlay)){
+							textOverlay = this.xmlParser.getText();
+							if(textOverlay != null){
+								this.getOverlays().add(textOverlay);
+							}
 						}
 					}
 					//Hidden text
@@ -296,7 +298,7 @@ public class MyMapView extends MapView {
 					MapGeneratorJob mapGeneratorJobOpenSeaMap = new MapGeneratorJob(tile, cacheIdOpenSeaMap, myJobParameters,
 							this.getDebugSettings());
 					
-					if(mapPosition.zoomLevel == tile.zoomLevel && !overlayOpenSeaMap.checkContains(tile.toString())){		
+					if(mapPosition.zoomLevel == tile.zoomLevel && !overlayOpenSeaMap.checkContainsOSM(tile.toString())){		
 						if (this.inMemoryTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
 							Bitmap bitmapOpenSeaMap = this.inMemoryTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
 							OverlayItem a = tileToOverlayItem(tile, bitmapOpenSeaMap);
@@ -309,7 +311,7 @@ public class MyMapView extends MapView {
 								Bitmap test = Bitmap.createBitmap(bitmapOpenSeaMap);
 								OverlayItem a = tileToOverlayItem(tile, test);
 								this.addOverlayOpenSeaMap(a);
-								this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJobOpenSeaMap, test);
+								//this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJobOpenSeaMap, test);
 							} else {
 								// the image data could not be read from the cache
 								this.jobQueueOpenSeaMap.addJob(mapGeneratorJobOpenSeaMap);
@@ -386,6 +388,7 @@ public class MyMapView extends MapView {
 		ItemizedOverlay.boundCenterBottom(tileMarker);
 		OverlayItem item = new OverlayItem();
 		item.setPoint(geoPointTile);
+		item.setSnippet("tileOSM");
 		item.setTitle(tile.toString());
 		item.setMarker(tileMarker);
  		
@@ -414,19 +417,16 @@ public class MyMapView extends MapView {
 		if (mapPosition == null) {
 			return;
 		}
-		baliseOverlay = xmlParser.getBalises();
-		
-		if(baliseOverlay != null){
-			this.isEnableShowBalise = true;
-			if(mapPosition.zoomLevel >= 16){
-				this.getOverlays().add(baliseOverlay);
-			}
+
+		this.isEnableShowBalise = true;
+		if(mapPosition.zoomLevel >= 16){
+			this.overlayOpenSeaMap.displayService();
 		}
 	}
 	
 	public void hiddenBalise(){
 		this.isEnableShowBalise = false;
-		this.getOverlays().remove(baliseOverlay);
+		this.overlayOpenSeaMap.hiddenService();
 	}
 	
 	public void showText(){
@@ -468,6 +468,5 @@ public class MyMapView extends MapView {
 		this.isEnableShowSounding = false;
 		this.getOverlays().remove(soundingOverlay);
 	}
-	
 	
 }

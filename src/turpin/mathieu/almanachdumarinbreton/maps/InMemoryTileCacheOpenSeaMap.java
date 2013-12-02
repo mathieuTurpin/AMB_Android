@@ -31,7 +31,6 @@ import android.graphics.Bitmap.Config;
  * A thread-safe cache for tile images with a fixed size and LRU policy.
  */
 public class InMemoryTileCacheOpenSeaMap extends InMemoryTileCache {
-	
 	/**
 	 * Load factor of the internal HashMap.
 	 */

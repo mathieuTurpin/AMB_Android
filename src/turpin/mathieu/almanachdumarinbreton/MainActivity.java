@@ -10,7 +10,6 @@ import org.mapsforge.android.maps.overlay.OverlayCircle;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.mapsforge.core.GeoPoint;
 
-import turpin.mathieu.almanachdumarinbreton.maps.MyItemizedOverlay;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -50,8 +49,6 @@ public class MainActivity extends MapActivity{
 	TextView infoSpeed;
 	TextView infoBearing;
 	
-	MyItemizedOverlay baliseOverlay;
-
 	private ToggleButton snapToLocationView;
 	
 	@Override
@@ -92,8 +89,8 @@ public class MainActivity extends MapActivity{
         //Display scale on the map
         this.mapView.getMapScaleBar().setShowMapScaleBar(true);
 		
+        //For test
         this.mapView.getController().setZoom(17);
-        
         this.mapView.setCenter(new GeoPoint(48.377972, -4.491666));
         
 		// get the pointers to different system services
@@ -116,11 +113,11 @@ public class MainActivity extends MapActivity{
 		//sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		//this.mySensorListener = new MySensorListener(this,sensorManager);
 		
-		showMyLocation(true);
+		//showMyLocation(true);
 		
 		this.mapView.showBalise();
-//		this.mapView.showText();
-//		this.mapView.showSounding();
+		//this.mapView.showText();
+		//this.mapView.showSounding();
 		
 		//enableSnapToLocation();
 	}

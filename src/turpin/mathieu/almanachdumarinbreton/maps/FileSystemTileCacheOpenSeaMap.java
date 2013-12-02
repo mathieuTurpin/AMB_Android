@@ -54,7 +54,7 @@ public class FileSystemTileCacheOpenSeaMap extends FileSystemTileCache {
 			return fileName.endsWith(IMAGE_FILE_NAME_EXTENSION);
 		}
 	}
-
+	
 	/**
 	 * Path to the caching folder on the external storage.
 	 */

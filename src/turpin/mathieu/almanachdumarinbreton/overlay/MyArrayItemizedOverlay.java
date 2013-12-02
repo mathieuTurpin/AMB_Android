@@ -1,0 +1,208 @@
+package turpin.mathieu.almanachdumarinbreton.overlay;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.mapsforge.android.maps.overlay.ItemizedOverlay;
+import org.mapsforge.android.maps.overlay.OverlayItem;
+
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+
+public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
+	private final Context context;
+	private static final int INITIAL_CAPACITY = 30;
+	private static final String THREAD_NAME = "MyArrayItemizedOverlay";
+
+	private final List<OverlayItem> overlayItemsDisplay;
+	private final ArrayList<OverlayItem> overlayService;
+	
+	/**
+	 * @param context
+		          the reference to the application context.
+	 * @param defaultMarker
+	 *            the default marker (may be null). This marker is aligned to the center of its bottom line to allow for
+	 *            a conical symbol such as a pin or a needle.
+	 */
+	public MyArrayItemizedOverlay(Context context, Drawable defaultMarker) {
+		this(context,defaultMarker,true);
+	}
+	
+	/**
+	 * @param context
+		          the reference to the application context.
+	 * @param defaultMarker
+	 *            the default marker (may be null).
+	 * @param alignMarker
+	 *            whether the default marker should be aligned or not. If true, the marker is aligned to the center of
+	 *            its bottom line to allow for a conical symbol such as a pin or a needle.
+	 */
+	public MyArrayItemizedOverlay(Context context, Drawable defaultMarker, boolean alignMarker) {
+		super(defaultMarker != null && alignMarker ? ItemizedOverlay.boundCenterBottom(defaultMarker) : defaultMarker);
+		this.context = context;
+		this.overlayItemsDisplay = new ArrayList<OverlayItem>(INITIAL_CAPACITY);
+		this.overlayService = new ArrayList<OverlayItem>(INITIAL_CAPACITY);
+	}
+	
+	public boolean checkContainsOSM(String title){
+		for(int itemIndex = 0; itemIndex<this.size(); itemIndex++){
+			OverlayItem overlayItem = createItem(itemIndex);
+			if (overlayItem == null) {
+				continue;
+			}
+			if(overlayItem.getTitle().equals(title)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Handles a tap event on the given item.
+	 */
+	@Override
+	protected boolean onTap(int index) {
+		OverlayItem item = createItemService(index);
+		if (item != null) {
+			Builder builder = new AlertDialog.Builder(this.context);
+			builder.setIcon(android.R.drawable.ic_menu_info_details);
+			builder.setTitle(item.getTitle());
+			builder.setMessage(item.getSnippet());
+			builder.setPositiveButton("OK", null);
+			builder.show();
+		}
+		return true;
+	}
+	
+	/**
+	 * Adds the given item to the overlay.
+	 * 
+	 * @param overlayItem
+	 *            the item that should be added to the overlay.
+	 */
+	public void addItem(OverlayItem overlayItem) {
+		synchronized (this.overlayItemsDisplay) {
+			this.overlayItemsDisplay.add(0,overlayItem);
+		}
+		populate();
+	}
+	
+	public void addItemService(OverlayItem overlayItem) {
+		synchronized (this.overlayService) {
+			this.overlayService.add(overlayItem);
+		}
+
+		synchronized (this.overlayItemsDisplay) {
+			this.overlayItemsDisplay.add(overlayItem);
+		}
+		populate();
+	}
+	
+
+	/**
+	 * Adds all items of the given collection to the overlay.
+	 * 
+	 * @param c
+	 *            collection whose items should be added to the overlay.
+	 */
+	public void addItems(Collection<? extends OverlayItem> c) {
+		synchronized (this.overlayItemsDisplay) {
+			this.overlayItemsDisplay.addAll(0,c);
+		}
+		populate();
+	}
+	
+	public void addItemsService(Collection<? extends OverlayItem> c) {
+		synchronized (this.overlayService) {
+			this.overlayService.addAll(c);
+		}
+		synchronized (this.overlayItemsDisplay) {
+			this.overlayItemsDisplay.addAll(0,c);
+		}
+		populate();
+	}
+
+	/**
+	 * Removes all items from the overlay.
+	 */
+	public void clearOSM() {
+		synchronized (this.overlayItemsDisplay) {
+			this.overlayItemsDisplay.clear();
+		}
+		populate();
+	}
+	
+	/**
+	 * Removes all items from all list.
+	 */
+	public void clearAll() {
+		synchronized (this.overlayService) {
+			this.overlayService.clear();
+		}
+		clearOSM();
+	}
+
+	@Override
+	public String getThreadName() {
+		return THREAD_NAME;
+	}
+	
+	/**
+	 * Removes the given item from the overlay.
+	 * 
+	 * @param overlayItem
+	 *            the item that should be removed from the overlay.
+	 */
+	public void removeItem(OverlayItem overlayItem) {
+		synchronized (this.overlayItemsDisplay) {
+			this.overlayItemsDisplay.remove(overlayItem);
+		}
+		populate();
+	}
+	
+	public void removeItemService(OverlayItem overlayItem) {
+		synchronized (this.overlayService) {
+			this.overlayService.remove(overlayItem);
+		}
+		removeItem(overlayItem);
+	}
+	
+	public void displayService(){
+		if(overlayService == null || this.overlayItemsDisplay.containsAll(overlayService)) return;
+		this.addItems(overlayService);
+	}
+	
+	public void hiddenService(){
+		synchronized (this.overlayService) {
+			this.overlayItemsDisplay.removeAll(overlayService);
+		}
+	}
+
+	@Override
+	public int size() {
+		synchronized (this.overlayItemsDisplay) {
+			return this.overlayItemsDisplay.size();
+		}
+	}
+
+	@Override
+	protected OverlayItem createItem(int index) {
+		synchronized (this.overlayItemsDisplay) {
+			if (index >= this.overlayItemsDisplay.size()) {
+				return null;
+			}
+			return this.overlayItemsDisplay.get(index);
+		}
+	}
+	
+	protected OverlayItem createItemService(int index) {
+		OverlayItem item = createItem(index);
+		//if tile of OSM return null
+		if(item.getSnippet().equals("tileOSM")) return null;
+		
+		return item;
+	}
+}
