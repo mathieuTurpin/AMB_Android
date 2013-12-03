@@ -114,8 +114,8 @@ public class MainActivity extends MapActivity{
 		//this.mySensorListener = new MySensorListener(this,sensorManager);
 		
 		//showMyLocation(true);
-		
-		this.mapView.showBalise();
+		this.mapView.showBaliseOSM();
+		this.mapView.showService();
 		//this.mapView.showText();
 		//this.mapView.showSounding();
 		

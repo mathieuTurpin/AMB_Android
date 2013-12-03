@@ -82,7 +82,9 @@ public class MyMapView extends MapView {
 	//ArrayItemizedOverlay that gets overlay make with tiles from OpenSeaMap Server for the current zoom
 	private MyArrayItemizedOverlay overlayOpenSeaMap;	
 	private byte zoomCache;
-	private boolean isEnableShowBalise;
+	private boolean isEnableShowBaliseOSM;
+
+	private boolean isEnableShowService;
 
 	private MyXmlParser xmlParser;
 	private ArrayTextOverlay textOverlay;
@@ -158,6 +160,10 @@ public class MyMapView extends MapView {
 		//Initialize zoomCache
 		MapPosition mapPosition = this.getMapPosition().getMapPosition();
 		zoomCache = mapPosition.zoomLevel;
+		
+		if(mapPosition.zoomLevel >=16){
+			this.addBaliseMiss();
+		}
 	}
 	
 	/**
@@ -176,23 +182,22 @@ public class MyMapView extends MapView {
 
 		synchronized( this.getOverlays()) {
 			if(mapPosition.zoomLevel != this.zoomCache){
-				// Clear overlay for OpenSeaMap
-				overlayOpenSeaMap.clearOSM();
 				
-				if(mapPosition.zoomLevel >= 16){
-					//Add balise manquante sur la carte
-					GeoPoint positionBalise = new GeoPoint(48.3772,-4.4953);
-					Drawable baliseIcon = this.getContext().getResources().getDrawable(R.drawable.balise);
-					OverlayItem baliseItem = new OverlayItem(positionBalise,"","",ItemizedOverlay.boundCenterBottom(baliseIcon));
-					overlayOpenSeaMap.addItem(baliseItem);
-				}	
-								
-				if(this.isEnableShowBalise){
-					//Display balise
+				if(this.isEnableShowBaliseOSM){
+					// Clear overlay for OpenSeaMap
+					overlayOpenSeaMap.clearOSM();
+					
 					if(mapPosition.zoomLevel >= 16){
+						addBaliseMiss();
+					}
+				}		
+												
+				if(this.isEnableShowService){
+					//Display service
+					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
 						overlayOpenSeaMap.displayService();
 					}
-					//Hidden balise
+					//Hidden service
 					else if(mapPosition.zoomLevel < 16){
 						this.overlayOpenSeaMap.hiddenService();
 					}
@@ -294,24 +299,24 @@ public class MyMapView extends MapView {
 				
 				/******************** Get tile for OpenSeaMap *******************************/
 				//Only zoom > 8 have tile
-				if(tile.zoomLevel > 8){
+				if(this.isEnableShowBaliseOSM && tile.zoomLevel > 8){
 					MapGeneratorJob mapGeneratorJobOpenSeaMap = new MapGeneratorJob(tile, cacheIdOpenSeaMap, myJobParameters,
 							this.getDebugSettings());
 					
 					if(mapPosition.zoomLevel == tile.zoomLevel && !overlayOpenSeaMap.checkContainsOSM(tile.toString())){		
 						if (this.inMemoryTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
 							Bitmap bitmapOpenSeaMap = this.inMemoryTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
-							OverlayItem a = tileToOverlayItem(tile, bitmapOpenSeaMap);
-							this.addOverlayOpenSeaMap(a);
+							OverlayItem myItem = tileToOverlayItem(tile, bitmapOpenSeaMap);
+							this.addOverlayOpenSeaMap(myItem);
 		
 						} else if (this.fileSystemTileCacheOpenSeaMap.containsKey(mapGeneratorJobOpenSeaMap)) {
 							Bitmap bitmapOpenSeaMap = this.fileSystemTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap);
 							
 							if (bitmapOpenSeaMap != null) {
-								Bitmap test = Bitmap.createBitmap(bitmapOpenSeaMap);
-								OverlayItem a = tileToOverlayItem(tile, test);
-								this.addOverlayOpenSeaMap(a);
-								//this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJobOpenSeaMap, test);
+								Bitmap myBitmap = Bitmap.createBitmap(bitmapOpenSeaMap);
+								OverlayItem myItem = tileToOverlayItem(tile, myBitmap);
+								this.addOverlayOpenSeaMap(myItem);
+								this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJobOpenSeaMap, myBitmap);
 							} else {
 								// the image data could not be read from the cache
 								this.jobQueueOpenSeaMap.addJob(mapGeneratorJobOpenSeaMap);
@@ -349,7 +354,7 @@ public class MyMapView extends MapView {
 	 * 			the {@link OverlayItem} to add in the {@link ArrayItemizedOverlay} overlayOpenSeaMap
 	 */
 	public void addOverlayOpenSeaMap(OverlayItem item){
-		overlayOpenSeaMap.addItem(item);
+		overlayOpenSeaMap.addItemOSM(item);
 	}
 	
 	/**
@@ -412,20 +417,30 @@ public class MyMapView extends MapView {
 		return this.fileSystemTileCacheOpenSeaMap;
 	}
 	
-	public void showBalise(){
+	public void showBaliseOSM(){
+		this.isEnableShowBaliseOSM = true;
+		this.overlayOpenSeaMap.displayOSM();
+	}
+	
+	public void hiddenBalise(){
+		this.isEnableShowBaliseOSM = false;
+		this.overlayOpenSeaMap.hiddenOSM();
+	}
+	
+	public void showService(){
 		MapPosition mapPosition = this.getMapPosition().getMapPosition();
 		if (mapPosition == null) {
 			return;
 		}
 
-		this.isEnableShowBalise = true;
+		this.isEnableShowService = true;
 		if(mapPosition.zoomLevel >= 16){
 			this.overlayOpenSeaMap.displayService();
 		}
 	}
 	
-	public void hiddenBalise(){
-		this.isEnableShowBalise = false;
+	public void hiddenService(){
+		this.isEnableShowService = false;
 		this.overlayOpenSeaMap.hiddenService();
 	}
 	
@@ -469,4 +484,11 @@ public class MyMapView extends MapView {
 		this.getOverlays().remove(soundingOverlay);
 	}
 	
+	private void addBaliseMiss(){
+		//Add balise manquante sur la carte
+		GeoPoint positionBalise = new GeoPoint(48.3772,-4.4953);
+		Drawable baliseIcon = this.getContext().getResources().getDrawable(R.drawable.balise);
+		OverlayItem baliseItem = new OverlayItem(positionBalise,"","tileOSM",ItemizedOverlay.boundCenter(baliseIcon));
+		overlayOpenSeaMap.addItemOSM(baliseItem);
+	}
 }
