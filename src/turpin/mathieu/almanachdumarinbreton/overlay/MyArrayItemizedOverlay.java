@@ -69,7 +69,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	protected boolean onTap(int index) {
 		OverlayItem item = createItem(index);
 		
-		if (item != null && !item.getSnippet().equals("tileOSM")) {
+		if (item != null && !item.getSnippet().equals("noTap")) {
 			Builder builder = new AlertDialog.Builder(this.context);
 			builder.setIcon(android.R.drawable.ic_menu_info_details);
 			builder.setTitle(item.getTitle());
@@ -86,15 +86,26 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	 * @param overlayItem
 	 *            the item that should be added to the overlay.
 	 */
+	public void addItem(OverlayItem overlayItem,boolean first) {
+		synchronized (this.overlayItemsDisplay) {
+			if(first) this.overlayItemsDisplay.add(0,overlayItem);
+			else this.overlayItemsDisplay.add(overlayItem);
+		}
+		populate();
+	}	
+	
+	/**
+	 * Adds the given item to the overlay.
+	 * 
+	 * @param overlayItem
+	 *            the item that should be added to the overlay.
+	 */
 	public void addItemOSM(OverlayItem overlayItem) {
 		synchronized (this.overlayOSM) {
 			this.overlayOSM.add(overlayItem);
 		}
 		
-		synchronized (this.overlayItemsDisplay) {
-			this.overlayItemsDisplay.add(0,overlayItem);
-		}
-		populate();
+		addItem(overlayItem,true);
 	}
 	
 	public void addItemService(OverlayItem overlayItem) {
@@ -102,10 +113,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 			this.overlayService.add(overlayItem);
 		}
 
-		synchronized (this.overlayItemsDisplay) {
-			this.overlayItemsDisplay.add(overlayItem);
-		}
-		populate();
+		addItem(overlayItem,false);
 	}
 	
 

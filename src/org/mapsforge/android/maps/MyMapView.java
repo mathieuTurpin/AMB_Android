@@ -349,6 +349,14 @@ public class MyMapView extends MapView {
 		}
 	}
 	
+	public void addItem(OverlayItem item){
+		overlayOpenSeaMap.addItem(item,true);
+	}
+	
+	public void updatePosition(){
+		this.overlayOpenSeaMap.requestRedraw();
+	}
+	
 	/**
 	 * @param item
 	 * 			the {@link OverlayItem} to add in the {@link ArrayItemizedOverlay} overlayOpenSeaMap
@@ -393,7 +401,7 @@ public class MyMapView extends MapView {
 		ItemizedOverlay.boundCenterBottom(tileMarker);
 		OverlayItem item = new OverlayItem();
 		item.setPoint(geoPointTile);
-		item.setSnippet("tileOSM");
+		item.setSnippet("noTap");
 		item.setTitle(tile.toString());
 		item.setMarker(tileMarker);
  		

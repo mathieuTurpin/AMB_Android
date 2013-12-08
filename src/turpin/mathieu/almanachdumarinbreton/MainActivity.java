@@ -113,7 +113,7 @@ public class MainActivity extends MapActivity{
 		//sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		//this.mySensorListener = new MySensorListener(this,sensorManager);
 		
-		//showMyLocation(true);
+		showMyLocation(true);
 		this.mapView.showBaliseOSM();
 		this.mapView.showService();
 		//this.mapView.showText();
@@ -135,17 +135,17 @@ public class MainActivity extends MapActivity{
 		}
 		
 		//Initialize overlay for MyPosition
-		this.circleOverlay = new ArrayCircleOverlay(this.circleOverlayFill, this.circleOverlayOutline);
+		/*this.circleOverlay = new ArrayCircleOverlay(this.circleOverlayFill, this.circleOverlayOutline);
 		this.overlayCircle = new OverlayCircle();
 		this.circleOverlay.addCircle(this.overlayCircle);
-		this.mapView.getOverlays().add(this.circleOverlay);
+		this.mapView.getOverlays().add(this.circleOverlay);*/
 
-		this.itemizedOverlay = new ArrayItemizedOverlay(null);
 		this.overlayItem = new OverlayItem();
 		this.overlayItem.setMarker(ItemizedOverlay.boundCenter(getResources().getDrawable(R.drawable.bateau)));
 		this.overlayItem.setTitle("My position");
-		this.itemizedOverlay.addItem(this.overlayItem);
-		this.mapView.getOverlays().add(this.itemizedOverlay);
+		this.overlayItem.setSnippet("noTap");
+		//this.overlayItem.setPoint(new GeoPoint(48.377972, -4.491666));
+		this.mapView.addItem(overlayItem);
 		
 		//Center the map to MyPosition
 		this.myLocationListener.setCenterAtFirstFix(true);
