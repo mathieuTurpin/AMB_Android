@@ -12,9 +12,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import turpin.mathieu.almanachdumarinbreton.R;
-import turpin.mathieu.almanachdumarinbreton.overlay.ArrayTextOverlay;
-import turpin.mathieu.almanachdumarinbreton.overlay.MyOverlay;
-import turpin.mathieu.almanachdumarinbreton.overlay.TextDrawable;
+import turpin.mathieu.almanachdumarinbreton.overlay.OverlayText;
 
 import android.content.Context;
 
@@ -50,7 +48,7 @@ public class MyXmlParser {
 		return null;
 	}
 	
-	public ArrayTextOverlay getText(){
+	public ArrayList<OverlayText> getText(){
 		XmlPullParserFactory pullParserFactory;
 		try {
 			pullParserFactory = XmlPullParserFactory.newInstance();
@@ -60,7 +58,7 @@ public class MyXmlParser {
 		        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 	            parser.setInput(in_s, null);
 
-	            return parseXMLToText(parser);
+	            return parseXMLToText(parser,"text");
 
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
@@ -70,7 +68,7 @@ public class MyXmlParser {
 		return null;
 	}
 	
-	public ArrayTextOverlay getSounding(){
+	public ArrayList<OverlayText> getSounding(){
 		XmlPullParserFactory pullParserFactory;
 		try {
 			pullParserFactory = XmlPullParserFactory.newInstance();
@@ -80,7 +78,7 @@ public class MyXmlParser {
 		        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 	            parser.setInput(in_s, null);
 
-	            return parseXMLToSounding(parser);
+	            return parseXMLToText(parser,"sounding");
 
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
@@ -168,11 +166,11 @@ public class MyXmlParser {
         return services;
 	}
 	
-	private ArrayTextOverlay parseXMLToText(XmlPullParser parser) throws XmlPullParserException,IOException
+	private ArrayList<OverlayText> parseXMLToText(XmlPullParser parser,String nameTag) throws XmlPullParserException,IOException
 	{
-		ArrayTextOverlay texts = null;
+		ArrayList<OverlayText> texts = null;
         int eventType = parser.getEventType();
-        MyOverlay currentBalise = null;
+        String txt = "";
         double lat = 0.000000;
         double lon = 0.000000;
         float rot = 0;
@@ -181,90 +179,35 @@ public class MyXmlParser {
             String name = null;
             switch (eventType){
                 case XmlPullParser.START_DOCUMENT:
-                	texts = new ArrayTextOverlay(null);
+                	texts = new ArrayList<OverlayText>();
                     break;
                 case XmlPullParser.START_TAG:
                     name = parser.getName();
-                    if (name.equals("text")){
-                        currentBalise = new MyOverlay();
-                    } else if (currentBalise != null){
-                        if (name.equals("description")){
-                        	TextDrawable textMarker = new TextDrawable(parser.nextText());
-                        	currentBalise.setMarker(textMarker);
-                        } else if (name.equals("lat")){
-                        	lat = Double.parseDouble(parser.nextText());
-                        } else if (name.equals("lon")){
-                        	lon = Double.parseDouble(parser.nextText());
-	                    } else if (name.equals("rot")){
-	                    	rot = Float.parseFloat(parser.nextText());
-	                    } 
-                    }
+                    if (name.equals(nameTag)){
+                        txt = "";
+                        lat = 0.000000;
+                    	lon = 0.000000;
+                    	rot = 0;
+                    } else if (name.equals("description")){
+                        	txt = parser.nextText();
+                    } else if (name.equals("lat")){
+                    	lat = Double.parseDouble(parser.nextText());
+                    } else if (name.equals("lon")){
+                    	lon = Double.parseDouble(parser.nextText());
+                    } else if (name.equals("rot")){
+                    	rot = Float.parseFloat(parser.nextText());
+                    } 
                     break;
                 case XmlPullParser.END_TAG:
                     name = parser.getName();
-                    if (name.equalsIgnoreCase("text") && currentBalise != null && lat != 0.000000 && lon != 0.000000 && currentBalise.getMarker() != null){
-                    	currentBalise.setPoint(new GeoPoint(lat,lon));
-                    	currentBalise.setRotationMarker(rot);
-                    	
-                    	texts.addItem(currentBalise);
-                    	lat = 0.000000;
-                    	lon = 0.000000;
-                    	rot = 0;
+                    if (name.equalsIgnoreCase(nameTag) && lat != 0.000000 && lon != 0.000000 && txt != ""){
+                    	OverlayText currentText = new OverlayText(new GeoPoint(lat,lon),txt);
+                    	currentText.setRotation(rot);
+                    	texts.add(currentText);
                     } 
             }
             eventType = parser.next();
         }
         return texts;
-	}
-	
-	private ArrayTextOverlay parseXMLToSounding(XmlPullParser parser) throws XmlPullParserException,IOException
-	{
-		ArrayTextOverlay soundings = null;
-        int eventType = parser.getEventType();
-        MyOverlay currentBalise = null;
-        double lat = 0.000000;
-        double lon = 0.000000;
-        float rot = 0;
-
-        while (eventType != XmlPullParser.END_DOCUMENT){
-            String name = null;
-            switch (eventType){
-                case XmlPullParser.START_DOCUMENT:
-                	soundings = new ArrayTextOverlay(null);
-                    break;
-                case XmlPullParser.START_TAG:
-                    name = parser.getName();
-                    if (name.equals("sounding")){
-                        currentBalise = new MyOverlay();
-                    } else if (currentBalise != null){
-                        if (name.equals("description")){
-                        	TextDrawable textMarker = new TextDrawable(parser.nextText());
-                        	currentBalise.setMarker(textMarker);
-                        } else if (name.equals("lat")){
-                        	lat = Double.parseDouble(parser.nextText());
-                        } else if (name.equals("lon")){
-                        	lon = Double.parseDouble(parser.nextText());
-	                    } else if (name.equals("rot")){
-	                    	rot = Float.parseFloat(parser.nextText());
-	                    } 
-                    }
-                    break;
-                case XmlPullParser.END_TAG:
-                    name = parser.getName();
-                    if (name.equalsIgnoreCase("sounding") && currentBalise != null && lat != 0.000000 && lon != 0.000000 && currentBalise.getMarker() != null){
-                    	currentBalise.setPoint(new GeoPoint(lat,lon));
-                    	currentBalise.setRotationMarker(rot);
-                    	
-                    	soundings.addItem(currentBalise);
-                    	lat = 0.000000;
-                    	lon = 0.000000;
-                    	rot = 0;
-                    } 
-            }
-            eventType = parser.next();
-        }
-        return soundings;
-	}
-	
-	
+	}	
 }

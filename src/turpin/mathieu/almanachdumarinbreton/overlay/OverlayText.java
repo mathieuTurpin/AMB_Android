@@ -1,28 +1,21 @@
 package turpin.mathieu.almanachdumarinbreton.overlay;
 
-import android.graphics.Canvas;
+import org.mapsforge.core.GeoPoint;
+
 import android.graphics.Color;
 import android.graphics.Paint;
 
-public class TextDrawable extends MyDrawable {
+public class OverlayText extends MyDrawable {
 
     private final String text;
 
-    public TextDrawable(String text) {
-    	super();
+    public OverlayText(GeoPoint center,String text) {
+    	super(center);
         this.text = text;
     }
 
     String getText(){
     	return text;
-    }
-    
-    @Override
-    public void draw(Canvas canvas) {
-    	canvas.save();
-    	canvas.rotate(getRotation(), getPositionX(), getPositionY());
-    	canvas.drawText(text, getPositionX(), getPositionY(), getPaint());
-    	canvas.restore();
     }
 
 	@Override

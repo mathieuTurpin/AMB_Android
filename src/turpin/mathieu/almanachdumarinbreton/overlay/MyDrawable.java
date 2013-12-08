@@ -1,19 +1,35 @@
 package turpin.mathieu.almanachdumarinbreton.overlay;
 
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
+import org.mapsforge.core.GeoPoint;
 
-public abstract class MyDrawable extends Drawable {
+import android.graphics.Paint;
+import android.graphics.Point;
+
+public abstract class MyDrawable{
 
     private final Paint paint;
+    
+    /**
+	 * Cached position of the circle on the map.
+	 */
+	Point cachedCenterPosition;
+	
+	/**
+	 * Geographical coordinate of the circle.
+	 */
+	protected GeoPoint center;
+	
+	/**
+	 * Zoom level of the cached circle position.
+	 */
+	byte cachedZoomLevel;
+	
 	private float positionX = 0;
 	private float positionY = 0;
 	private float rotation = 0;
 
-    public MyDrawable() {
+    public MyDrawable(GeoPoint center) {
+    	this.center = center;
         this.paint = new Paint();
         initPaint();
     }
@@ -24,7 +40,7 @@ public abstract class MyDrawable extends Drawable {
     
     protected abstract void initPaint();
         
-    void setRotation(float rotation){
+    public void setRotation(float rotation){
     	this.rotation = rotation;
     }
     
@@ -43,23 +59,5 @@ public abstract class MyDrawable extends Drawable {
     void setPosition(float positionX,float positionY){
 		this.positionX = positionX;
 		this.positionY = positionY;
-    }
-    
-    @Override
-    public abstract void draw(Canvas canvas);
-
-    @Override
-    public void setAlpha(int alpha) {
-        paint.setAlpha(alpha);
-    }
-
-    @Override
-    public void setColorFilter(ColorFilter cf) {
-        paint.setColorFilter(cf);
-    }
-
-    @Override
-    public int getOpacity() {
-        return PixelFormat.TRANSLUCENT;
     }
 }

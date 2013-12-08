@@ -116,7 +116,7 @@ public class MainActivity extends MapActivity{
 		showMyLocation(true);
 		this.mapView.showBaliseOSM();
 		this.mapView.showService();
-		//this.mapView.showText();
+		this.mapView.showText();
 		//this.mapView.showSounding();
 		
 		//enableSnapToLocation();

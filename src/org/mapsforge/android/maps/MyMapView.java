@@ -30,8 +30,8 @@ import turpin.mathieu.almanachdumarinbreton.maps.InMemoryTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.MyMapWorker;
 import turpin.mathieu.almanachdumarinbreton.maps.OpenSeaMapTileDownloader;
 import turpin.mathieu.almanachdumarinbreton.overlay.ArrayDrawOverlay;
-import turpin.mathieu.almanachdumarinbreton.overlay.ArrayTextOverlay;
 import turpin.mathieu.almanachdumarinbreton.overlay.MyArrayItemizedOverlay;
+import turpin.mathieu.almanachdumarinbreton.overlay.OverlayText;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -91,9 +91,9 @@ public class MyMapView extends MapView {
 	private boolean isEnableShowService;
 
 	private MyXmlParser xmlParser;
-	private ArrayTextOverlay textOverlay;
+	private ArrayList<OverlayText> textOverlay;
 	private boolean isEnableShowText;
-	private ArrayTextOverlay soundingOverlay;
+	private ArrayList<OverlayText> soundingOverlay;
 	private boolean isEnableShowSounding;
 
 
@@ -213,16 +213,14 @@ public class MyMapView extends MapView {
 				if(this.isEnableShowText){
 					//Display Text
 					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
-						if(!this.getOverlays().contains(textOverlay)){
-							textOverlay = this.xmlParser.getText();
-							if(textOverlay != null){
-								this.getOverlays().add(textOverlay);
-							}
+						textOverlay = this.xmlParser.getText();
+						if(textOverlay != null){
+							this.overlayDraw.addTexts(textOverlay);
 						}
 					}
 					//Hidden text
 					else if(mapPosition.zoomLevel < 16){
-						this.getOverlays().remove(textOverlay);
+						this.overlayDraw.removeTexts(textOverlay);
 					}
 				}
 				
@@ -231,12 +229,12 @@ public class MyMapView extends MapView {
 					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
 						soundingOverlay = this.xmlParser.getSounding();
 						if(soundingOverlay != null){
-							this.getOverlays().add(soundingOverlay);
+							this.overlayDraw.addTexts(soundingOverlay);
 						}
 					}
 					//Hidden text
 					else if(mapPosition.zoomLevel < 16){
-						this.getOverlays().remove(soundingOverlay);
+						this.overlayDraw.removeTexts(soundingOverlay);
 					}
 				}
 				
@@ -474,14 +472,14 @@ public class MyMapView extends MapView {
 		if(textOverlay != null){
 			this.isEnableShowText = true;
 			if(mapPosition.zoomLevel >= 16){
-				this.getOverlays().add(textOverlay);
+				this.overlayDraw.addTexts(textOverlay);
 			}
 		}
 	}
 	
 	public void hiddenText(){
 		this.isEnableShowText = false;
-		this.getOverlays().remove(textOverlay);
+		this.overlayDraw.removeTexts(textOverlay);
 	}
 	
 	public void showSounding(){
@@ -494,21 +492,21 @@ public class MyMapView extends MapView {
 		if(soundingOverlay != null){
 			this.isEnableShowSounding = true;
 			if(mapPosition.zoomLevel >= 16){
-				this.getOverlays().add(soundingOverlay);
+				this.overlayDraw.addTexts(soundingOverlay);
 			}
 		}
 	}
 	
 	public void hiddenSounding(){
 		this.isEnableShowSounding = false;
-		this.getOverlays().remove(soundingOverlay);
+		this.overlayDraw.removeTexts(soundingOverlay);
 	}
 	
 	private void addBaliseMiss(){
 		//Add balise manquante sur la carte
 		GeoPoint positionBalise = new GeoPoint(48.3772,-4.4953);
 		Drawable baliseIcon = this.getContext().getResources().getDrawable(R.drawable.balise);
-		OverlayItem baliseItem = new OverlayItem(positionBalise,"","tileOSM",ItemizedOverlay.boundCenter(baliseIcon));
+		OverlayItem baliseItem = new OverlayItem(positionBalise,"","noTap",ItemizedOverlay.boundCenter(baliseIcon));
 		overlayOpenSeaMap.addItemOSM(baliseItem);
 	}
 }
