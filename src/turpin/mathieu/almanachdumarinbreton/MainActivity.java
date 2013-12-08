@@ -135,16 +135,13 @@ public class MainActivity extends MapActivity{
 		}
 		
 		//Initialize overlay for MyPosition
-		/*this.circleOverlay = new ArrayCircleOverlay(this.circleOverlayFill, this.circleOverlayOutline);
-		this.overlayCircle = new OverlayCircle();
-		this.circleOverlay.addCircle(this.overlayCircle);
-		this.mapView.getOverlays().add(this.circleOverlay);*/
+		this.overlayCircle = new OverlayCircle(this.circleOverlayFill, this.circleOverlayOutline);
+		this.mapView.addCircle(this.overlayCircle);
 
 		this.overlayItem = new OverlayItem();
 		this.overlayItem.setMarker(ItemizedOverlay.boundCenter(getResources().getDrawable(R.drawable.bateau)));
 		this.overlayItem.setTitle("My position");
 		this.overlayItem.setSnippet("noTap");
-		//this.overlayItem.setPoint(new GeoPoint(48.377972, -4.491666));
 		this.mapView.addItem(overlayItem);
 		
 		//Center the map to MyPosition

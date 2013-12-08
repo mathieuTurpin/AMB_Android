@@ -16,6 +16,7 @@ import org.mapsforge.android.maps.mapgenerator.databaserenderer.DatabaseRenderer
 import org.mapsforge.android.maps.mapgenerator.tiledownloader.TileDownloader;
 import org.mapsforge.android.maps.overlay.ArrayItemizedOverlay;
 import org.mapsforge.android.maps.overlay.ItemizedOverlay;
+import org.mapsforge.android.maps.overlay.OverlayCircle;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.mapsforge.core.GeoPoint;
 import org.mapsforge.core.MapPosition;
@@ -28,6 +29,7 @@ import turpin.mathieu.almanachdumarinbreton.maps.FileSystemTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.InMemoryTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.MyMapWorker;
 import turpin.mathieu.almanachdumarinbreton.maps.OpenSeaMapTileDownloader;
+import turpin.mathieu.almanachdumarinbreton.overlay.ArrayDrawOverlay;
 import turpin.mathieu.almanachdumarinbreton.overlay.ArrayTextOverlay;
 import turpin.mathieu.almanachdumarinbreton.overlay.MyArrayItemizedOverlay;
 
@@ -80,7 +82,9 @@ public class MyMapView extends MapView {
 	private final MyMapWorker mapWorkerOpenSeaMap;
 	
 	//ArrayItemizedOverlay that gets overlay make with tiles from OpenSeaMap Server for the current zoom
-	private MyArrayItemizedOverlay overlayOpenSeaMap;	
+	private final MyArrayItemizedOverlay overlayOpenSeaMap;	
+	private final ArrayDrawOverlay overlayDraw;
+	
 	private byte zoomCache;
 	private boolean isEnableShowBaliseOSM;
 
@@ -156,6 +160,9 @@ public class MyMapView extends MapView {
 		//Get service
 		ArrayList<OverlayItem> serviceOverlay = xmlParser.getService();
 		overlayOpenSeaMap.addItemsService(serviceOverlay);
+		
+		this.overlayDraw = new ArrayDrawOverlay();
+		this.getOverlays().add(overlayDraw);
 		
 		//Initialize zoomCache
 		MapPosition mapPosition = this.getMapPosition().getMapPosition();
@@ -353,8 +360,13 @@ public class MyMapView extends MapView {
 		overlayOpenSeaMap.addItem(item,true);
 	}
 	
+	public void addCircle(OverlayCircle circle){
+		this.overlayDraw.addCircle(circle);
+	}
+	
 	public void updatePosition(){
 		this.overlayOpenSeaMap.requestRedraw();
+		this.overlayDraw.requestRedraw();
 	}
 	
 	/**

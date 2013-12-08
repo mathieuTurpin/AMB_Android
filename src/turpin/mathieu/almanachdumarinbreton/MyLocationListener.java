@@ -45,9 +45,8 @@ public class MyLocationListener implements LocationListener {
 		GeoPoint point = new GeoPoint(location.getLatitude(), location.getLongitude());
 		
 		//Update myPosition on the map
-		//this.myMapViewer.overlayCircle.setCircleData(point, location.getAccuracy());
+		this.myMapViewer.overlayCircle.setCircleData(point, location.getAccuracy());
 		this.myMapViewer.overlayItem.setPoint(point);
-		//this.myMapViewer.circleOverlay.requestRedraw();
 		this.myMapViewer.mapView.updatePosition();
 		
 		//Update the orientation
