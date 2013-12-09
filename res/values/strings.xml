@@ -7,6 +7,6 @@
     <string name="menu_crop">Crop</string>
     <string name="menu_search">Search</string>
     <string name="menu_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-
+    <string name="rose_des_vents">Rose des vents</string>
+    <string name="maxime">La maxime : " Le poisson ne voit pas l'hameçon, il ne voit que l'appât"</string>
 </resources>

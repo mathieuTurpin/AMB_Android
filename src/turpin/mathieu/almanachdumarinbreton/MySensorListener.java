@@ -71,7 +71,7 @@ public class MySensorListener implements SensorEventListener {
         		currentRunX = currentX;
         		Drawable c = rotateDrawable(currentX);
                 myMapViewer.overlayItem.setMarker(ItemizedOverlay.boundCenter(c));
-        		myMapViewer.itemizedOverlay.requestRedraw();
+                myMapViewer.mapView.updatePosition();
         	}
 			sendRequestUpdates();
         }

@@ -67,7 +67,7 @@ public class MyLocationListener implements LocationListener {
 				this.myMapViewer.infoBearing.setText(location.getBearing()+ "°");
 				Drawable c = rotateDrawable(location.getBearing());
                 myMapViewer.overlayItem.setMarker(ItemizedOverlay.boundCenter(c));
-        		myMapViewer.itemizedOverlay.requestRedraw();
+                this.myMapViewer.mapView.updatePosition();
 			}
 			this.myMapViewer.infoPosition.setText("lat: "+location.getLatitude()+"°, lon: "+location.getLongitude()+"°");
 			

@@ -1,6 +1,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_settings"
-        android:title="@string/menu_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
+    <item
+        android:id="@+id/menu_port"
+        android:showAsAction="ifRoom|withText"
+        android:icon="@drawable/ic_action_place"
+        android:title="Port: Aucun"/>
+    <item
+        android:id="@+id/menu_mode"
+        android:showAsAction="ifRoom|withText"
+        android:icon="@drawable/ic_action_overflow"
+        android:title="Mode: Carte"/>
+    <item
+        android:id="@+id/menu_affichage"
+        android:showAsAction="ifRoom|withText"
+        android:icon="@drawable/ic_action_settings"
+        android:title="Affichage"/>
+    <item
+        android:id="@+id/menu_compte"
+        android:showAsAction="ifRoom|withText"
+        android:icon="@drawable/ic_action_person"
+        android:title="Mon compte"/>
+
 </menu>

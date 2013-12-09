@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context=".MainActivity" >
-
+    
     <TextView
         android:id="@+id/infoPositionLabel"
         android:layout_width="wrap_content"
@@ -65,6 +65,7 @@
 
         <RelativeLayout
             android:id="@+id/mapViewLayout"
+            android:paddingBottom="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         
@@ -73,21 +74,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:contentDescription="rose des vents"
+        android:contentDescription="@string/rose_des_vents"
         android:src="@drawable/rose_des_vent" />
 
         <ToggleButton
             android:id="@+id/snapToLocationView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@+id/roseDesVents"
             android:textOn=""
             android:textOff=""
             android:background="@drawable/snap_to_position" />
 
     </RelativeLayout>
+	
+    <TextView
+        android:id="@+id/maxime"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#000000"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="@string/maxime"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" >
 
+    </TextView>
     
 
 </RelativeLayout>

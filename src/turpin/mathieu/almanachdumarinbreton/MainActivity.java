@@ -3,8 +3,6 @@ package turpin.mathieu.almanachdumarinbreton;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MyMapView;
 import org.mapsforge.android.maps.mapgenerator.tiledownloader.MapnikTileDownloader;
-import org.mapsforge.android.maps.overlay.ArrayCircleOverlay;
-import org.mapsforge.android.maps.overlay.ArrayItemizedOverlay;
 import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.android.maps.overlay.OverlayCircle;
 import org.mapsforge.android.maps.overlay.OverlayItem;
@@ -33,8 +31,6 @@ public class MainActivity extends MapActivity{
 	private LocationManager locationManager;
 	private MyLocationListener myLocationListener;
 	
-	ArrayCircleOverlay circleOverlay;
-	ArrayItemizedOverlay itemizedOverlay;
 	OverlayCircle overlayCircle;
 	OverlayItem overlayItem;
 	private Paint circleOverlayFill;
@@ -149,14 +145,6 @@ public class MainActivity extends MapActivity{
 		//Update MyPosition every second
 		this.locationManager.requestLocationUpdates(bestProvider, 1000, 0, this.myLocationListener);
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.main, menu);
-		return true;
-	}
 	
 	/**
 	 * Returns the status of the "snap to location" mode.
@@ -185,6 +173,15 @@ public class MainActivity extends MapActivity{
 			this.snapToLocation = false;
 			this.mapView.setClickable(true);
 		}
+	}
+	
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main, menu);
+		return true;
 	}
 	
 }
