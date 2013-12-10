@@ -133,6 +133,12 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		populate();
 	}
 	
+	public void initItemsService(Collection<? extends OverlayItem> c) {
+		synchronized (this.overlayService) {
+			this.overlayService.addAll(c);
+		}
+	}
+	
 	public void addItemsService(Collection<? extends OverlayItem> c) {
 		synchronized (this.overlayService) {
 			this.overlayService.addAll(c);
@@ -151,6 +157,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		synchronized (this.overlayOSM) {
 			this.overlayOSM.clear();
 		}
+		populate();
 	}
 	
 	public void clearService() {
@@ -158,6 +165,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		synchronized (this.overlayService) {
 			this.overlayService.clear();
 		}
+		populate();
 	}
 	
 	/**
@@ -211,6 +219,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 				this.overlayItemsDisplay.removeAll(overlayOSM);
 			}
 		}
+		populate();
 	}
 	
 	public void displayService(){
@@ -224,6 +233,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 				this.overlayItemsDisplay.removeAll(overlayService);
 			}
 		}
+		populate();
 	}
 
 	@Override

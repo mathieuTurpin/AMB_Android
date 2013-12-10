@@ -3,31 +3,27 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context=".MainActivity" >
-    
-    <TextView
-        android:id="@+id/infoPositionLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="My position: "
-        android:textStyle="bold" >
-    </TextView>
 
     <TextView
         android:id="@+id/infoPosition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/infoPositionLabel"
-        android:text="N.C. "
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/my_marginRight"
+        android:text="@string/defaultPosition"
         android:textStyle="bold" >
-    </TextView>
 
+    </TextView>
+    
     <TextView
         android:id="@+id/infoSpeedLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/infoPosition"
-        android:text="My speed: "
+        android:paddingRight="@dimen/my_paddingRight"
+        android:text="@string/label_speed"
         android:textStyle="bold" >
+
     </TextView>
 
     <TextView
@@ -35,8 +31,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/infoSpeedLabel"
-        android:text="N.C. "
+        android:paddingRight="@dimen/my_marginRight"
+        android:text="@string/defaultSpeed"
         android:textStyle="bold" >
+
     </TextView>
 
     <TextView
@@ -44,8 +42,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/infoSpeed"
-        android:text="My bearing: "
+        android:paddingRight="@dimen/my_paddingRight"
+        android:text="@string/label_bearing"
         android:textStyle="bold" >
+
     </TextView>
 
     <TextView
@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/infoBearingLabel"
-        android:text="N.C. "
+        android:text="@string/defaultBearing"
         android:textStyle="bold" >
     </TextView>
 
@@ -70,18 +70,19 @@
             android:layout_height="wrap_content" />
         
         <ImageView
-        android:id="@+id/roseDesVents"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:contentDescription="@string/rose_des_vents"
-        android:src="@drawable/rose_des_vent" />
+	        android:id="@+id/roseDesVents"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:contentDescription="@string/rose_des_vents"
+	        android:src="@drawable/rose_des_vent" />
 
         <ToggleButton
             android:id="@+id/snapToLocationView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/roseDesVents"
+            android:layout_below="@+id/roseDesVents"
+        	android:layout_alignParentRight="true"
             android:textOn=""
             android:textOff=""
             android:background="@drawable/snap_to_position" />

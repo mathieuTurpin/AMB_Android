@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_port"
-        android:showAsAction="always|withText"
+        android:showAsAction="ifRoom|withText"
         android:icon="@drawable/ic_action_place"
         android:title="@string/menu_port">
         <menu>
@@ -11,12 +11,12 @@
     </item>
     <item
         android:id="@+id/menu_mode"
-        android:showAsAction="always|withText"
+        android:showAsAction="ifRoom|withText"
         android:icon="@drawable/ic_action_search"
         android:title="@string/menu_mode"/>
     <item
         android:id="@+id/menu_affichage"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom|withText"
         android:icon="@drawable/ic_action_settings"
         android:title="@string/menu_affichage">
         <menu>
@@ -46,7 +46,7 @@
     </item>
     <item
         android:id="@+id/menu_compte"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom|withText"
         android:icon="@drawable/ic_action_person"
         android:title="@string/menu_compte"/>
 

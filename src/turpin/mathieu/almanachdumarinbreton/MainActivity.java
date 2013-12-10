@@ -17,6 +17,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
@@ -46,6 +47,7 @@ public class MainActivity extends MapActivity{
 	TextView infoBearing;
 	
 	private ToggleButton snapToLocationView;
+	private Menu _menu;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,9 +87,7 @@ public class MainActivity extends MapActivity{
         //Display scale on the map
         this.mapView.getMapScaleBar().setShowMapScaleBar(true);
 		
-        //For test
-        this.mapView.getController().setZoom(17);
-        this.mapView.setCenter(new GeoPoint(48.377972, -4.491666));
+        this.mapView.getController().setZoom(14);
         
 		// get the pointers to different system services
 		this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -110,14 +110,10 @@ public class MainActivity extends MapActivity{
 		//this.mySensorListener = new MySensorListener(this,sensorManager);
 		
 		showMyLocation(true);
-		this.mapView.showBaliseOSM();
-		this.mapView.showService();
-		this.mapView.showText();
-		//this.mapView.showSounding();
 		
 		//enableSnapToLocation();
 	}
-	
+		
 	private void showMyLocation(boolean centerAtFirstFix){
 		//Get the best provider
 		Criteria criteria = new Criteria();
@@ -181,7 +177,94 @@ public class MainActivity extends MapActivity{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.main, menu);
+	    _menu = menu;
+	    
+    	if(_menu.findItem(R.id.menu_OSM).isChecked()){
+    		this.mapView.showBaliseOSM();
+    	}
+    	if(_menu.findItem(R.id.menu_service).isChecked()){
+    		this.mapView.showService();
+    	}
+    	if(_menu.findItem(R.id.menu_ponton).isChecked()){
+    		this.mapView.showText();
+    	}
+    	if(_menu.findItem(R.id.menu_sounding).isChecked()){
+    		this.mapView.showSounding();
+    	}
 		return true;
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	        switch (item.getItemId()) {
+	                case R.id.menu_port:
+                        // Comportement du bouton "Port"
+                        return true;
+	                case R.id.menu_marina:
+                        // Comportement du bouton "Marina"
+	                	_menu.findItem(R.id.menu_port).setTitle(item.getTitle());
+	                    this.mapView.getController().setZoom(16);
+	                    this.mapView.setCenter(new GeoPoint(48.377972, -4.491666));
+                        return true;
+	                case R.id.menu_mode:
+	                        // Comportement du bouton "Mode"
+	                    	Toast.makeText(this, "Mode", Toast.LENGTH_SHORT).show();
+	                        return true;
+	                case R.id.menu_affichage:
+	                        // Comportement du bouton "Affichage"
+	                        return true;
+	                case R.id.menu_OSM:
+                        // Comportement du bouton "OSM"
+	                	if(item.isChecked()){
+	                		item.setChecked(false);
+	                		this.mapView.hiddenBalise();
+	                	}
+	                	else{
+	                		item.setChecked(true);
+	                		this.mapView.showBaliseOSM();
+	                	}
+                        return true;
+	                case R.id.menu_service:
+                        // Comportement du bouton "Service"
+	                	if(item.isChecked()){
+	                		item.setChecked(false);
+	                		this.mapView.hiddenService();
+	                	}
+	                	else{
+	                		item.setChecked(true);
+	                		this.mapView.showService();
+	                	}
+                        return true;
+	                case R.id.menu_ponton:
+                        // Comportement du bouton "Ponton"
+	                	if(item.isChecked()){
+	                		item.setChecked(false);
+	                		this.mapView.hiddenText();
+	                	}
+	                	else{
+	                		item.setChecked(true);
+	                		this.mapView.showText();
+	                	}
+                        return true;
+	                case R.id.menu_sounding:
+                        // Comportement du bouton "Sounding"
+	                	if(item.isChecked()){
+	                		item.setChecked(false);
+	                		this.mapView.hiddenSounding();
+	                	}
+	                	else{
+	                		item.setChecked(true);
+	                		this.mapView.showSounding();
+	                	}
+                        return true;
+	                case R.id.menu_compte:
+	                        // Comportement du bouton "Compte"
+                			Toast.makeText(this, "Compte", Toast.LENGTH_SHORT).show();
+	                        return true;
+	                default:
+	                        return super.onOptionsItemSelected(item);
+	        }
+	}
+
 	
 }

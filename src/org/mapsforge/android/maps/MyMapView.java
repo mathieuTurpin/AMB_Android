@@ -159,7 +159,8 @@ public class MyMapView extends MapView {
 		
 		//Get service
 		ArrayList<OverlayItem> serviceOverlay = xmlParser.getService();
-		overlayOpenSeaMap.addItemsService(serviceOverlay);
+		overlayOpenSeaMap.initItemsService(serviceOverlay);
+		//overlayOpenSeaMap.addItemsService(serviceOverlay);
 		
 		this.overlayDraw = new ArrayDrawOverlay();
 		this.getOverlays().add(overlayDraw);
@@ -168,7 +169,7 @@ public class MyMapView extends MapView {
 		MapPosition mapPosition = this.getMapPosition().getMapPosition();
 		zoomCache = mapPosition.zoomLevel;
 		
-		if(mapPosition.zoomLevel >=16){
+		if(this.isEnableShowBaliseOSM){
 			this.addBaliseMiss();
 		}
 	}
@@ -194,9 +195,7 @@ public class MyMapView extends MapView {
 					// Clear overlay for OpenSeaMap
 					overlayOpenSeaMap.clearOSM();
 					
-					if(mapPosition.zoomLevel >= 16){
-						addBaliseMiss();
-					}
+					addBaliseMiss();
 				}		
 												
 				if(this.isEnableShowService){
@@ -435,8 +434,10 @@ public class MyMapView extends MapView {
 		return this.fileSystemTileCacheOpenSeaMap;
 	}
 	
-	public void showBaliseOSM(){
+	public void showBaliseOSM(){		
 		this.isEnableShowBaliseOSM = true;
+		addBaliseMiss();
+		
 		this.overlayOpenSeaMap.displayOSM();
 	}
 	
@@ -503,6 +504,12 @@ public class MyMapView extends MapView {
 	}
 	
 	private void addBaliseMiss(){
+		MapPosition mapPosition = this.getMapPosition().getMapPosition();
+		if (mapPosition == null) {
+			return;
+		}
+		if(mapPosition.zoomLevel < 16) return;
+		
 		//Add balise manquante sur la carte
 		GeoPoint positionBalise = new GeoPoint(48.3772,-4.4953);
 		Drawable baliseIcon = this.getContext().getResources().getDrawable(R.drawable.balise);
