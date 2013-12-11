@@ -5,9 +5,9 @@
     <string name="rose_des_vents">Rose des vents</string>
     <string name="maxime">La maxime : " Le poisson ne voit pas l'hameçon, il ne voit que l'appât"</string>
     
-    <string name="menu_port">Aucun</string>
+    <string name="menu_port">Port: Aucun</string>
     <string name="menu_marina">Brest - Marina du château</string>
-    <string name="menu_mode">Carte</string>
+    <string name="menu_mode">Mode</string>
     <string name="menu_affichage">Affichage</string>
     <string name="menu_OSM">OpenSeaMap</string>
     <string name="menu_service">Service</string>
