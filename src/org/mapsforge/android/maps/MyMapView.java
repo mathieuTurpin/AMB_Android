@@ -84,19 +84,18 @@ public class MyMapView extends MapView {
 	//ArrayItemizedOverlay that gets overlay make with tiles from OpenSeaMap Server for the current zoom
 	private final MyArrayItemizedOverlay overlayOpenSeaMap;	
 	private final ArrayDrawOverlay overlayDraw;
+	private ArrayList<OverlayText> textOverlay;
+	private ArrayList<OverlayText> soundingOverlay;
 	
 	private byte zoomCache;
+	
 	private boolean isEnableShowBaliseOSM;
-
 	private boolean isEnableShowService;
-
-	private MyXmlParser xmlParser;
-	private ArrayList<OverlayText> textOverlay;
 	private boolean isEnableShowText;
-	private ArrayList<OverlayText> soundingOverlay;
 	private boolean isEnableShowSounding;
 
-
+	private MyXmlParser xmlParser;
+	
 	/**
 	 * Need to test
 	 * @param context
@@ -224,14 +223,14 @@ public class MyMapView extends MapView {
 				}
 				
 				if(this.isEnableShowSounding){
-					//Display Text
+					//Display Sounding
 					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
 						soundingOverlay = this.xmlParser.getSounding();
 						if(soundingOverlay != null){
 							this.overlayDraw.addTexts(soundingOverlay);
 						}
 					}
-					//Hidden text
+					//Hidden Sounding
 					else if(mapPosition.zoomLevel < 16){
 						this.overlayDraw.removeTexts(soundingOverlay);
 					}
@@ -242,6 +241,7 @@ public class MyMapView extends MapView {
 				this.zoomCache = mapPosition.zoomLevel;
 			}
 			
+			//Request redraw all overlay
 			for (int i = 0, n = this.getOverlays().size(); i < n; ++i) {
 				this.getOverlays().get(i).requestRedraw();
 			}
@@ -353,10 +353,18 @@ public class MyMapView extends MapView {
 		}
 	}
 	
+	/** 
+	 * @param item
+	 *            tile from overlaySeaMap to display on the map
+	 */
 	public void addItem(OverlayItem item){
 		overlayOpenSeaMap.addItem(item,true);
 	}
 	
+	/** 
+	 * @param item
+	 *            circle to display on the map
+	 */
 	public void addCircle(OverlayCircle circle){
 		this.overlayDraw.addCircle(circle);
 	}
@@ -510,7 +518,7 @@ public class MyMapView extends MapView {
 		}
 		if(mapPosition.zoomLevel < 16) return;
 		
-		//Add balise manquante sur la carte
+		//Add balise missing on the map
 		GeoPoint positionBalise = new GeoPoint(48.3772,-4.4953);
 		Drawable baliseIcon = this.getContext().getResources().getDrawable(R.drawable.balise);
 		OverlayItem baliseItem = new OverlayItem(positionBalise,"","noTap",ItemizedOverlay.boundCenter(baliseIcon));

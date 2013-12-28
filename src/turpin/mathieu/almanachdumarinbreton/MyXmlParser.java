@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.mapsforge.core.GeoPoint;
@@ -22,12 +23,21 @@ public class MyXmlParser {
 	private final String textXML = "text.xml";
 	private final String soundingXML = "sounding.xml";
 
-	private Context context;
+	private final Context context;
 	
+	/**
+	 * Parse Xml to create items to use in Overlay
+	 * 
+	 * @param context
+	 *            the enclosing {@link MapActivity} instance.
+	 */
 	public MyXmlParser(Context context){
 		this.context = context;
 	}
 	
+	/**
+	 * return an ArrayList which represents Port Service to display on the map
+	 */
 	public ArrayList<OverlayItem> getService(){
 		XmlPullParserFactory pullParserFactory;
 		try {
@@ -48,6 +58,9 @@ public class MyXmlParser {
 		return null;
 	}
 	
+	/**
+	 * return an ArrayList which represents Text to display on the map
+	 */
 	public ArrayList<OverlayText> getText(){
 		XmlPullParserFactory pullParserFactory;
 		try {
@@ -68,6 +81,9 @@ public class MyXmlParser {
 		return null;
 	}
 	
+	/**
+	 * return an ArrayList which represents Sounding to display on the map
+	 */
 	public ArrayList<OverlayText> getSounding(){
 		XmlPullParserFactory pullParserFactory;
 		try {

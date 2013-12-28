@@ -33,7 +33,7 @@ public class MainActivity extends MapActivity{
 	private MyLocationListener myLocationListener;
 	
 	OverlayCircle overlayCircle;
-	OverlayItem overlayItem;
+	OverlayItem myPositionItem;
 	private Paint circleOverlayFill;
 	private Paint circleOverlayOutline;
 
@@ -87,6 +87,7 @@ public class MainActivity extends MapActivity{
         //Display scale on the map
         this.mapView.getMapScaleBar().setShowMapScaleBar(true);
 		
+        //Set zoom map to 14
         this.mapView.getController().setZoom(14);
         
 		// get the pointers to different system services
@@ -110,10 +111,14 @@ public class MainActivity extends MapActivity{
 		//this.mySensorListener = new MySensorListener(this,sensorManager);
 		
 		showMyLocation(true);
-		
-		//enableSnapToLocation();
 	}
 		
+	/**
+	 * Enables the "show my location" mode.
+	 * 
+	 * @param centerAtFirstFix
+	 *            defines whether the map ({@link MyLocationListener}) should be centered to the first fix.
+	 */
 	private void showMyLocation(boolean centerAtFirstFix){
 		//Get the best provider
 		Criteria criteria = new Criteria();
@@ -130,11 +135,11 @@ public class MainActivity extends MapActivity{
 		this.overlayCircle = new OverlayCircle(this.circleOverlayFill, this.circleOverlayOutline);
 		this.mapView.addCircle(this.overlayCircle);
 
-		this.overlayItem = new OverlayItem();
-		this.overlayItem.setMarker(ItemizedOverlay.boundCenter(getResources().getDrawable(R.drawable.bateau)));
-		this.overlayItem.setTitle("My position");
-		this.overlayItem.setSnippet("noTap");
-		this.mapView.addItem(overlayItem);
+		this.myPositionItem = new OverlayItem();
+		this.myPositionItem.setMarker(ItemizedOverlay.boundCenter(getResources().getDrawable(R.drawable.bateau)));
+		this.myPositionItem.setTitle("My position");
+		this.myPositionItem.setSnippet("noTap");
+		this.mapView.addItem(myPositionItem);
 		
 		//Center the map to MyPosition
 		this.myLocationListener.setCenterAtFirstFix(true);
@@ -196,75 +201,74 @@ public class MainActivity extends MapActivity{
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	        switch (item.getItemId()) {
-	                case R.id.menu_port:
-                        // Comportement du bouton "Port"
-                        return true;
-	                case R.id.menu_marina:
-                        // Comportement du bouton "Marina"
-	                	_menu.findItem(R.id.menu_port).setTitle(item.getTitle());
-	                    this.mapView.getController().setZoom(16);
-	                    this.mapView.setCenter(new GeoPoint(48.377972, -4.491666));
-                        return true;
-	                case R.id.menu_mode:
-	                        // Comportement du bouton "Mode"
-	                    	Toast.makeText(this, "Mode", Toast.LENGTH_SHORT).show();
-	                        return true;
-	                case R.id.menu_affichage:
-	                        // Comportement du bouton "Affichage"
-	                        return true;
-	                case R.id.menu_OSM:
-                        // Comportement du bouton "OSM"
-	                	if(item.isChecked()){
-	                		item.setChecked(false);
-	                		this.mapView.hiddenBalise();
-	                	}
-	                	else{
-	                		item.setChecked(true);
-	                		this.mapView.showBaliseOSM();
-	                	}
-                        return true;
-	                case R.id.menu_service:
-                        // Comportement du bouton "Service"
-	                	if(item.isChecked()){
-	                		item.setChecked(false);
-	                		this.mapView.hiddenService();
-	                	}
-	                	else{
-	                		item.setChecked(true);
-	                		this.mapView.showService();
-	                	}
-                        return true;
-	                case R.id.menu_ponton:
-                        // Comportement du bouton "Ponton"
-	                	if(item.isChecked()){
-	                		item.setChecked(false);
-	                		this.mapView.hiddenText();
-	                	}
-	                	else{
-	                		item.setChecked(true);
-	                		this.mapView.showText();
-	                	}
-                        return true;
-	                case R.id.menu_sounding:
-                        // Comportement du bouton "Sounding"
-	                	if(item.isChecked()){
-	                		item.setChecked(false);
-	                		this.mapView.hiddenSounding();
-	                	}
-	                	else{
-	                		item.setChecked(true);
-	                		this.mapView.showSounding();
-	                	}
-                        return true;
-	                case R.id.menu_compte:
-	                        // Comportement du bouton "Compte"
-                			Toast.makeText(this, "Compte", Toast.LENGTH_SHORT).show();
-	                        return true;
-	                default:
-	                        return super.onOptionsItemSelected(item);
-	        }
+		switch (item.getItemId()) {
+            case R.id.menu_port:
+                // Button behavior "Port"
+                return true;
+            case R.id.menu_marina:
+                // Button behavior "Marina"
+            	_menu.findItem(R.id.menu_port).setTitle(item.getTitle());
+                this.mapView.getController().setZoom(16);
+                this.mapView.setCenter(new GeoPoint(48.377972, -4.491666));
+                return true;
+            case R.id.menu_mode:
+                // Button behavior "Mode"
+            	Toast.makeText(this, "Mode", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_affichage:
+                // Button behavior "Affichage"
+                return true;
+            case R.id.menu_OSM:
+                // Button behavior "OSM"
+            	if(item.isChecked()){
+            		item.setChecked(false);
+            		this.mapView.hiddenBalise();
+            	}
+            	else{
+            		item.setChecked(true);
+            		this.mapView.showBaliseOSM();
+            	}
+                return true;
+            case R.id.menu_service:
+                // Button behavior "Service"
+            	if(item.isChecked()){
+            		item.setChecked(false);
+            		this.mapView.hiddenService();
+            	}
+            	else{
+            		item.setChecked(true);
+            		this.mapView.showService();
+            	}
+                return true;
+            case R.id.menu_ponton:
+                // Button behavior "Ponton"
+            	if(item.isChecked()){
+            		item.setChecked(false);
+            		this.mapView.hiddenText();
+            	}
+            	else{
+            		item.setChecked(true);
+            		this.mapView.showText();
+            	}
+                return true;
+            case R.id.menu_sounding:
+                // Button behavior "Sounding"
+            	if(item.isChecked()){
+            		item.setChecked(false);
+            		this.mapView.hiddenSounding();
+            	}
+            	else{
+            		item.setChecked(true);
+            		this.mapView.showSounding();
+            	}
+                return true;
+            case R.id.menu_compte:
+                // Button behavior "Compte"
+    			Toast.makeText(this, "Compte", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 	}
-
 	
 }

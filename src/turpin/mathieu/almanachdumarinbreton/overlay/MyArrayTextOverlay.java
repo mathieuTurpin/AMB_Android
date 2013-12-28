@@ -18,8 +18,6 @@ public class MyArrayTextOverlay{
 	private List<Integer> visibleText;
 	private List<Integer> visibleTextRedraw;
 	private final List<OverlayText> overlayTexts;
-
-	
 	
 	/**
 	 * @param defaultPaintFill
