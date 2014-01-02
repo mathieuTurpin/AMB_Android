@@ -1,5 +1,7 @@
 package turpin.mathieu.almanachdumarinbreton;
 
+import java.io.File;
+
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MyMapView;
 import org.mapsforge.android.maps.mapgenerator.tiledownloader.MapnikTileDownloader;
@@ -15,6 +17,7 @@ import android.graphics.Paint;
 import android.location.Criteria;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -59,7 +62,13 @@ public class MainActivity extends MapActivity{
 		RelativeLayout relative = (RelativeLayout) findViewById(R.id.mapViewLayout);
 	
 		//Create map with tiles from OpenStreetMap and make overlays with tiles from OpenSeaMap
-		mapView = new MyMapView(this, new MapnikTileDownloader());
+		//mapView = new MyMapView(this, new MapnikTileDownloader());
+		
+		//offline
+		mapView = new MyMapView(this);
+		String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
+		String cacheDirectoryPath = externalStorageDirectory + "/Android/data/org.mapsforge.android.maps/map/bretagne.map";
+		mapView.setMapFile(new File(cacheDirectoryPath));
 
         configureMap();
 		relative.addView(mapView);

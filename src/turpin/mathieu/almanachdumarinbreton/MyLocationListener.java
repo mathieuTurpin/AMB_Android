@@ -1,6 +1,5 @@
 package turpin.mathieu.almanachdumarinbreton;
 
-import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.core.GeoPoint;
 import org.mapsforge.core.MapPosition;

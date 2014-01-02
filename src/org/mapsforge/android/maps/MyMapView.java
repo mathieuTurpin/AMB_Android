@@ -97,7 +97,6 @@ public class MyMapView extends MapView {
 	private MyXmlParser xmlParser;
 	
 	/**
-	 * Need to test
 	 * @param context
 	 *            the enclosing {@link MapActivity} instance.
 	 * @throws IllegalArgumentException

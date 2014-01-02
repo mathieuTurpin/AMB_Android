@@ -10,7 +10,8 @@ import org.mapsforge.core.Tile;
 public class OpenSeaMapTileDownloader extends TileDownloader {
 	private static OpenSeaMapTileDownloader singleton = null;
 	
-	private static final String HOST_NAME = "tiles.openseamap.org";
+	//private static final String HOST_NAME = "tiles.openseamap.org";
+	private static final String HOST_NAME = "t1.openseamap.org";
 	private static final String PROTOCOL = "http";
 	private static final byte ZOOM_MAX = 18;
 	
