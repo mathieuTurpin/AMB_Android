@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MyMapView;
+import org.mapsforge.android.maps.mapgenerator.databaserenderer.DatabaseRenderer;
 import org.mapsforge.android.maps.mapgenerator.tiledownloader.MapnikTileDownloader;
 import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.android.maps.overlay.OverlayCircle;
@@ -35,6 +36,8 @@ public class MainActivity extends MapActivity{
 	private LocationManager locationManager;
 	private MyLocationListener myLocationListener;
 	
+	private String cacheDirectoryPath;
+	
 	OverlayCircle overlayCircle;
 	OverlayItem myPositionItem;
 	private Paint circleOverlayFill;
@@ -59,19 +62,18 @@ public class MainActivity extends MapActivity{
 		infoPosition = (TextView) findViewById(R.id.infoPosition);
 		infoSpeed = (TextView) findViewById(R.id.infoSpeed);
 		infoBearing = (TextView) findViewById(R.id.infoBearing);
-		RelativeLayout relative = (RelativeLayout) findViewById(R.id.mapViewLayout);
-	
-		//Create map with tiles from OpenStreetMap and make overlays with tiles from OpenSeaMap
-		//mapView = new MyMapView(this, new MapnikTileDownloader());
 		
-		//offline
-		mapView = new MyMapView(this);
+		RelativeLayout relative = (RelativeLayout) findViewById(R.id.mapViewLayout);
+		this.mapView = new MyMapView(this);
+		
 		String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
-		String cacheDirectoryPath = externalStorageDirectory + "/Android/data/org.mapsforge.android.maps/map/bretagne.map";
-		mapView.setMapFile(new File(cacheDirectoryPath));
-
-        configureMap();
-		relative.addView(mapView);
+		cacheDirectoryPath = externalStorageDirectory + "/Android/data/org.mapsforge.android.maps/map/bretagne.map";
+		this.mapView.setMapFile(new File(cacheDirectoryPath));
+		configureMap();
+		
+        relative.addView(this.mapView);
+		
+		initLocation();
         
         this.snapToLocationView = (ToggleButton) findViewById(R.id.snapToLocationView);
 		this.snapToLocationView.setOnClickListener(new OnClickListener() {
@@ -86,19 +88,21 @@ public class MainActivity extends MapActivity{
 		});
 		
  	}
-		
+	
 	private void configureMap(){
 		this.mapView.setClickable(true);
         
         //Displays ZoomControls on the map
-        this.mapView.setBuiltInZoomControls(true);
+		this.mapView.setBuiltInZoomControls(true);
         
         //Display scale on the map
-        this.mapView.getMapScaleBar().setShowMapScaleBar(true);
+		this.mapView.getMapScaleBar().setShowMapScaleBar(true);
 		
         //Set zoom map to 14
-        this.mapView.getController().setZoom(14);
-        
+		this.mapView.getController().setZoom(14);
+	}
+	
+	private void initLocation(){
 		// get the pointers to different system services
 		this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		this.myLocationListener = new MyLocationListener(this);
@@ -222,7 +226,14 @@ public class MainActivity extends MapActivity{
                 return true;
             case R.id.menu_mode:
                 // Button behavior "Mode"
-            	Toast.makeText(this, "Mode", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.map_offline:
+                // Button behavior "Map offline"
+            	this.mapView.setMapGenerator(new DatabaseRenderer());
+                return true;
+            case R.id.map_online:
+                // Button behavior "Map Online"
+            	this.mapView.setMapGenerator(new MapnikTileDownloader());
                 return true;
             case R.id.menu_affichage:
                 // Button behavior "Affichage"

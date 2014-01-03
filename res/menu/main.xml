@@ -13,7 +13,14 @@
         android:id="@+id/menu_mode"
         android:showAsAction="always|withText"
         android:icon="@drawable/ic_action_search"
-        android:title="@string/menu_mode"/>
+        android:title="@string/menu_mode">
+        <menu>
+            <item android:id="@+id/map_online"
+                  android:title="online" />
+            <item android:id="@+id/map_offline"
+                  android:title="offline" />
+        </menu>
+    </item>
     <item
         android:id="@+id/menu_affichage"
         android:showAsAction="always"

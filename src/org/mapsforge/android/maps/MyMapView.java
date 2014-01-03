@@ -174,6 +174,12 @@ public class MyMapView extends MapView {
 		}
 	}
 	
+	@Override
+	public void setMapGenerator(MapGenerator mapGenerator){
+		super.setMapGenerator(mapGenerator);
+		this.myMapWorker.setMapGenerator(mapGenerator);
+	}
+	
 	/**
 	 * Calculates all necessary tiles and adds jobs accordingly.
 	 */
