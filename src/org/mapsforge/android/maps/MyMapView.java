@@ -1,5 +1,6 @@
 package org.mapsforge.android.maps;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.mapsforge.android.maps.MapActivity;
@@ -135,6 +136,7 @@ public class MyMapView extends MapView {
 		//Initialize cache for OpenStreetMap
 		this.inMemoryTileCacheOpenStreetMap = new InMemoryTileCache(50);
 		this.getFileSystemTileCache().setCapacity(200);
+		this.getFileSystemTileCache().setPersistent(false);
 		
 		//Initialize MapWorker that gets tiles from OpenStreetMap Server
 		this.myMapWorker = new MapWorker(this);
@@ -262,13 +264,12 @@ public class MyMapView extends MapView {
 		// Init MapGenerator
 		Object cacheId;
 		Object cacheIdOpenSeaMap;
+		cacheIdOpenSeaMap = OpenSeaMapTileDownloader.getInstance().getHostName();
+
 		if (this.getMapGenerator().requiresInternetConnection()) {
 			cacheId = ((TileDownloader) this.getMapGenerator()).getHostName();
-			cacheIdOpenSeaMap = OpenSeaMapTileDownloader.getInstance().getHostName();
 		} else {
 			cacheId = this.getMapFile();
-			// Need code here for offline
-			cacheIdOpenSeaMap = null;
 		}
 
 		// Get job for all tiles we need to display
@@ -320,13 +321,28 @@ public class MyMapView extends MapView {
 								OverlayItem myItem = tileToOverlayItem(tile, myBitmap);
 								this.addOverlayOpenSeaMap(myItem);
 								this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJobOpenSeaMap, myBitmap);
-							} else {
+							} else{
 								// the image data could not be read from the cache
-								this.jobQueueOpenSeaMap.addJob(mapGeneratorJobOpenSeaMap);
+								if (this.getMapGenerator().requiresInternetConnection()){
+									this.jobQueueOpenSeaMap.addJob(mapGeneratorJobOpenSeaMap);
+								}		
 							}
 						} else {
-							// cache miss: need to download
-							this.jobQueueOpenSeaMap.addJob(mapGeneratorJobOpenSeaMap);
+							if (this.getMapGenerator().requiresInternetConnection()){
+								//Get the last version
+								this.jobQueueOpenSeaMap.addJob(mapGeneratorJobOpenSeaMap);
+							}
+							else{
+								//Get in cache directory
+								Bitmap bitmapOpenSeaMap = this.fileSystemTileCacheOpenSeaMap.get(mapGeneratorJobOpenSeaMap,true);
+								if (bitmapOpenSeaMap != null) {
+									Bitmap myBitmap = Bitmap.createBitmap(bitmapOpenSeaMap);
+									OverlayItem myItem = tileToOverlayItem(tile, myBitmap);
+									this.addOverlayOpenSeaMap(myItem);
+									this.inMemoryTileCacheOpenSeaMap.put(mapGeneratorJobOpenSeaMap, myBitmap);
+									this.fileSystemTileCacheOpenSeaMap.put(mapGeneratorJobOpenSeaMap, myBitmap);
+								}
+							}
 						}
 					}
 				}

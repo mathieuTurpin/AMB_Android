@@ -192,9 +192,11 @@ public class FileSystemTileCacheOpenSeaMap extends FileSystemTileCache {
 	private final Bitmap myBitmapGet;
 	private final ByteBuffer myByteBuffer;
 	private final File cacheDirectoryOpenSeaMap;
-	private long cacheId;
+	//private long cacheId;
 	private Map<MapGeneratorJob, File> myMap;
 	private boolean persistent;
+	
+	private final String rootDirectory;
 
 	/**
 	 * @param capacity
@@ -209,6 +211,7 @@ public class FileSystemTileCacheOpenSeaMap extends FileSystemTileCache {
 	
 		String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
 		String cacheDirectoryPath = externalStorageDirectory + CACHE_DIRECTORY + mapViewId;
+		rootDirectory = cacheDirectoryPath;
 		this.cacheDirectoryOpenSeaMap = createDirectory(cacheDirectoryPath);
 
 		Map<MapGeneratorJob, File> deserializedMap = deserializeMap(this.cacheDirectoryOpenSeaMap);
@@ -251,16 +254,26 @@ public class FileSystemTileCacheOpenSeaMap extends FileSystemTileCache {
 			}
 		}
 	}
-
+	
 	@Override
-	public synchronized Bitmap get(MapGeneratorJob mapGeneratorJob) {
+	public synchronized Bitmap get(MapGeneratorJob mapGeneratorJob){
+		return get(mapGeneratorJob,false);
+	}
+
+	public synchronized Bitmap get(MapGeneratorJob mapGeneratorJob,boolean searchInCache) {
 		if (this.getCapacity() == 0) {
 			return null;
 		}
 
 		FileInputStream fileInputStream = null;
 		try {
-			File inputFile = this.myMap.get(mapGeneratorJob);
+			File inputFile;
+			if(searchInCache){
+				inputFile = getFileCache(mapGeneratorJob);
+			}
+			else{
+				inputFile = this.myMap.get(mapGeneratorJob);
+			}
 
 			fileInputStream = new FileInputStream(inputFile);
 			byte[] array = this.myByteBuffer.array();
@@ -299,11 +312,14 @@ public class FileSystemTileCacheOpenSeaMap extends FileSystemTileCache {
 		FileOutputStream fileOutputStream = null;
 		try {
 			File outputFile;
-			do {
+			
+			/*do {
 				++this.cacheId;
 				outputFile = new File(this.cacheDirectoryOpenSeaMap, this.cacheId + IMAGE_FILE_NAME_EXTENSION);
-			} while (outputFile.exists());
-
+			} while (outputFile.exists());*/
+			
+			outputFile = getFileCache(mapGeneratorJob);
+			
 			this.myByteBuffer.rewind();
 			bitmap.copyPixelsToBuffer(this.myByteBuffer);
 			byte[] array = this.myByteBuffer.array();
@@ -323,6 +339,12 @@ public class FileSystemTileCacheOpenSeaMap extends FileSystemTileCache {
 				LOG.log(Level.SEVERE, null, e);
 			}
 		}
+	}
+
+	private File getFileCache(MapGeneratorJob mapGeneratorJob){
+		String tileString = "/" + mapGeneratorJob.tile.zoomLevel + "/" + mapGeneratorJob.tile.tileX + "/";
+		File folder = createDirectory(rootDirectory + tileString);
+		return new File(folder, mapGeneratorJob.tile.tileY + IMAGE_FILE_NAME_EXTENSION);
 	}
 
 	@Override
