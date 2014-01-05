@@ -28,7 +28,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DescriptionActivity"
+            android:name=".description.DescriptionActivityWeb"
+            android:label="" />
+        <activity
+            android:name=".description.DescriptionActivityText"
             android:label="" />
     </application>
 

@@ -28,7 +28,11 @@
     <string name="title_activity_description_display">Description du port</string>
     <string name="error_missing_port">Veuillez sélectionner un port</string>
     <string name="menu_details">Affichage : Détails</string>
-    <string name="menu_courant">Affichage : Courant</string>
+    <string name="menu_courant">Affichage : Courants</string>
     <string name="menu_marees">Affichage : Marées</string>
+    <string name="menu_meteo">Affichage : Météo</string>
+    
+    <string name="url_marees">http://maree.info/82</string>
+    <string name="url_meteo">http://www.windguru.cz/fr/index.php?sc=48447</string>
     
 </resources>
