@@ -1,0 +1,53 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_port"
+        android:showAsAction="ifRoom"
+        android:title="">
+        <menu>
+            <item
+                android:id="@+id/menu_marina"
+                android:title="@string/menu_marina"/>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menu_mode"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_description">
+        <menu>
+            <item
+                android:id="@+id/map_online"
+                android:title="@string/menu_online"/>
+            <item
+                android:id="@+id/map_offline"
+                android:title="@string/menu_offline"/>
+            <item
+                android:id="@+id/map_description"
+                android:enabled="false"
+                android:title="@string/menu_description"/>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menu_affichage"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_details">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/menu_details"
+                    android:title="@string/menu_details"/>
+                <item
+                    android:id="@+id/menu_courant"
+                    android:title="@string/menu_courant"/>
+                <item
+                    android:id="@+id/menu_marees"
+                    android:title="@string/menu_marees"/>
+            </group>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menu_compte"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_compte"/>
+
+</menu>

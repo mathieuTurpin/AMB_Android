@@ -210,7 +210,7 @@ public class FileSystemTileCacheOpenSeaMap extends FileSystemTileCache {
 		super(capacity,mapViewId);
 	
 		String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
-		String cacheDirectoryPath = externalStorageDirectory + CACHE_DIRECTORY + mapViewId;
+		String cacheDirectoryPath = externalStorageDirectory + CACHE_DIRECTORY;
 		rootDirectory = cacheDirectoryPath;
 		this.cacheDirectoryOpenSeaMap = createDirectory(cacheDirectoryPath);
 
@@ -342,7 +342,7 @@ public class FileSystemTileCacheOpenSeaMap extends FileSystemTileCache {
 	}
 
 	private File getFileCache(MapGeneratorJob mapGeneratorJob){
-		String tileString = "/" + mapGeneratorJob.tile.zoomLevel + "/" + mapGeneratorJob.tile.tileX + "/";
+		String tileString = "" + mapGeneratorJob.tile.zoomLevel + "/" + mapGeneratorJob.tile.tileX + "/";
 		File folder = createDirectory(rootDirectory + tileString);
 		return new File(folder, mapGeneratorJob.tile.tileY + IMAGE_FILE_NAME_EXTENSION);
 	}

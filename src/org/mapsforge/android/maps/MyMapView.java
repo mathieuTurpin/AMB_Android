@@ -178,6 +178,7 @@ public class MyMapView extends MapView {
 	public void setMapGenerator(MapGenerator mapGenerator){
 		super.setMapGenerator(mapGenerator);
 		this.myMapWorker.setMapGenerator(mapGenerator);
+		this.getFileSystemTileCache().setPersistent(false);
 	}
 	
 	/**

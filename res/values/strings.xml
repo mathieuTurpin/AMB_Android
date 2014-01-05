@@ -5,8 +5,8 @@
     <string name="rose_des_vents">Rose des vents</string>
     <string name="maxime">La maxime : " Le poisson ne voit pas l'hameçon, il ne voit que l'appât"</string>
     
-    <string name="menu_port">Aucun</string>
-    <string name="menu_marina">Brest - Marina du château</string>
+    <string name="menu_port">Port : Aucun</string>
+    <string name="menu_marina">Port : Brest - Marina du château</string>
     <string name="menu_mode">Carte</string>
     <string name="menu_affichage">Affichage</string>
     <string name="menu_OSM">OpenSeaMap</string>
@@ -20,4 +20,15 @@
     <string name="defaultSpeed">NC</string>
     <string name="label_bearing">Cap:</string>
     <string name="defaultBearing">NC</string>
+    
+    <string name="menu_online">Mode : Online</string>
+    <string name="menu_offline">Mode : Offline</string>
+    <string name="menu_description">Mode : Description</string>
+    
+    <string name="title_activity_description_display">Description du port</string>
+    <string name="error_missing_port">Veuillez sélectionner un port</string>
+    <string name="menu_details">Affichage : Détails</string>
+    <string name="menu_courant">Affichage : Courant</string>
+    <string name="menu_marees">Affichage : Marées</string>
+    
 </resources>
