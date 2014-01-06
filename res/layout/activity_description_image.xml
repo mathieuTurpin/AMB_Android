@@ -1,0 +1,79 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".description.DescriptionActivityImage" >
+
+    <ViewFlipper
+        android:id="@+id/view_flipper"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/maxime"
+        android:layout_alignParentTop="true"
+        android:layout_margin="6dip" >
+
+        <!-- The child Views/Layout to flip -->
+
+
+        <!-- Layout 1 for 1st Screen -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:contentDescription="Image 1"
+                android:src="@drawable/capture" />
+        </LinearLayout>
+
+        <!-- Layout 2 for 2nd Screen -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:contentDescription="Image 2"
+                android:src="@drawable/capture2" />
+        </LinearLayout>
+        
+        <!-- Layout 3 for 3rd Screen -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:contentDescription="Image 3"
+                android:src="@drawable/capture3" />
+        </LinearLayout>
+    </ViewFlipper>
+
+    <TextView
+        android:id="@+id/maxime"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#000000"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="@string/maxime"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" >
+    </TextView>
+
+</RelativeLayout>

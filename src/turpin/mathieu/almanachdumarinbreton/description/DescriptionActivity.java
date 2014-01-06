@@ -73,6 +73,13 @@ public abstract class DescriptionActivity extends Activity{
     	intent.putExtra(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
     	startActivity(intent);
 	}
+	
+	private void goToImageDescription(int id_mode_description){
+		Intent intent = new Intent(DescriptionActivity.this, DescriptionActivityImage.class);
+    	intent.putExtra(EXTRA_MODE_DESCRIPTION, id_mode_description);
+    	intent.putExtra(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
+    	startActivity(intent);
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -94,7 +101,7 @@ public abstract class DescriptionActivity extends Activity{
 			return true;
 		case R.id.menu_courant:
 			// Button behavior "Courant"
-			Toast.makeText(this, "Courants", Toast.LENGTH_SHORT).show();
+			goToImageDescription(R.id.menu_courant);
 			return true;
 		case R.id.menu_marees:
 			// Button behavior "Marees"

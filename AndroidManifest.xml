@@ -33,6 +33,9 @@
         <activity
             android:name=".description.DescriptionActivityText"
             android:label="" />
+        <activity
+            android:name=".description.DescriptionActivityImage"
+            android:label="" />
     </application>
 
 </manifest>
