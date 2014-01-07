@@ -2,12 +2,11 @@ package turpin.mathieu.almanachdumarinbreton.description;
 
 import turpin.mathieu.almanachdumarinbreton.R;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-@SuppressLint("SetJavaScriptEnabled")
 public class DescriptionActivityImage extends DescriptionActivity{
 
 	private ViewFlipper viewFlipper;
@@ -19,6 +18,7 @@ public class DescriptionActivityImage extends DescriptionActivity{
 		setContentView(R.layout.activity_description_image);
 
 		viewFlipper = (ViewFlipper) findViewById(R.id.view_flipper);
+		Toast.makeText(this, "Glisser pour changer d'horaire", Toast.LENGTH_LONG).show();
 	}
 
 	// Method to handle touch event like left to right swap and right to left swap
