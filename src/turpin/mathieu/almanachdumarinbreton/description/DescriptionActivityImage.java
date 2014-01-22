@@ -1,9 +1,10 @@
 package turpin.mathieu.almanachdumarinbreton.description;
 
 import turpin.mathieu.almanachdumarinbreton.R;
-
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -18,6 +19,8 @@ public class DescriptionActivityImage extends DescriptionActivity{
 		setContentView(R.layout.activity_description_image);
 
 		viewFlipper = (ViewFlipper) findViewById(R.id.view_flipper);
+		ImageView iv = (ImageView) findViewById(R.id.imageView1);  
+		iv.setOnTouchListener(new Touch()); 
 		Toast.makeText(this, "Glisser pour changer d'horaire", Toast.LENGTH_LONG).show();
 	}
 
@@ -35,18 +38,27 @@ public class DescriptionActivityImage extends DescriptionActivity{
 		case MotionEvent.ACTION_UP:
 		{
 			float currentX = touchevent.getX();
-
+			int idChild = viewFlipper.getDisplayedChild();
 			// if left to right swipe on screen
 			if (lastX < currentX)
 			{
+				
 				// If no more View/Child to flip
-				if (viewFlipper.getDisplayedChild() == 0)
+				if (idChild == 0)
 					break;
+				//Remove touch listener on currentView
+				ImageView ivOld = (ImageView) ((LinearLayout) viewFlipper.getCurrentView()).getChildAt(0);
+				ivOld.setOnTouchListener(null);
 
 				// set the required Animation type to ViewFlipper
 				// The Next screen will come in form Left and current Screen will go OUT from Right
 				viewFlipper.setInAnimation(this, R.anim.in_from_left);
 				viewFlipper.setOutAnimation(this, R.anim.out_to_right);
+				
+				//Add touch listener to previous View
+				ImageView ivNew = (ImageView) ((LinearLayout) viewFlipper.getChildAt(idChild-1)).getChildAt(0);
+				ivNew.setOnTouchListener(new Touch());
+				
 				// Show the previous Screen
 				viewFlipper.showPrevious();
 			}
@@ -54,12 +66,21 @@ public class DescriptionActivityImage extends DescriptionActivity{
 			// if right to left swipe on screen
 			if (lastX > currentX)
 			{
-				if (viewFlipper.getDisplayedChild() == viewFlipper.getChildCount()-1)
+				if (idChild == viewFlipper.getChildCount()-1)
 					break;
+				//Remove touch listener on currentView
+				ImageView ivOld = (ImageView) ((LinearLayout) viewFlipper.getCurrentView()).getChildAt(0);
+				ivOld.setOnTouchListener(null);
+				
 				// set the required Animation type to ViewFlipper
 				// The Next screen will come in form Right and current Screen will go OUT from Left
 				viewFlipper.setInAnimation(this, R.anim.in_from_right);
 				viewFlipper.setOutAnimation(this, R.anim.out_to_left);
+				
+				//Add touch listener to next View
+				ImageView ivNew = (ImageView) ((LinearLayout) viewFlipper.getChildAt(idChild+1)).getChildAt(0);
+				ivNew.setOnTouchListener(new Touch());
+				
 				// Show The next Screen
 				viewFlipper.showNext();
 			}
