@@ -167,8 +167,9 @@ public class MyMapView extends MapView {
 		
 		//Initialize zoomCache
 		MapPosition mapPosition = this.getMapPosition().getMapPosition();
-		zoomCache = mapPosition.zoomLevel;
-		
+		if(mapPosition != null)	zoomCache = mapPosition.zoomLevel;
+		else zoomCache = 0;
+			
 		if(this.isEnableShowBaliseOSM){
 			this.addBaliseMiss();
 		}

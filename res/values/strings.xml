@@ -34,5 +34,6 @@
     
     <string name="url_marees">http://maree.info/82</string>
     <string name="url_meteo">http://www.windguru.cz/fr/index.php?sc=48447</string>
+    <string name="name_marina">BrestMarinaDuChateau</string>
     
 </resources>

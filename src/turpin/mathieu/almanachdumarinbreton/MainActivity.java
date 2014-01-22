@@ -11,8 +11,7 @@ import org.mapsforge.android.maps.overlay.OverlayCircle;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.mapsforge.core.GeoPoint;
 
-import turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityText;
-
+import turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityWebLocal;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -60,7 +59,10 @@ public class MainActivity extends MapActivity{
 
 	//Extra
 	final String EXTRA_PORT = "port_name";
+	final String EXTRA_COURT_PORT = "port_court_name";
 	final String EXTRA_MODE_MAP = "mode_map";
+	
+	private String courtNamePort ="";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,11 @@ public class MainActivity extends MapActivity{
 			String mode = intent.getStringExtra(EXTRA_MODE_MAP);
 			if(mode != null && mode.equals("mode_online")){
 				this.mapView.setMapGenerator(new MapnikTileDownloader());
+			}
+			
+			String courtName = intent.getStringExtra(EXTRA_COURT_PORT);
+			if(courtName != null){
+				this.courtNamePort = courtName;
 			}
 		}
 				
@@ -248,6 +255,7 @@ public class MainActivity extends MapActivity{
 	
 	private void goToMarina(String name){
 		_menu.findItem(R.id.menu_port).setTitle(name);
+		this.courtNamePort = getResources().getString(R.string.name_marina);
 		this.mapView.getController().setZoom(16);
 		this.mapView.setCenter(new GeoPoint(48.377972, -4.491666));
 	}
@@ -281,8 +289,9 @@ public class MainActivity extends MapActivity{
 				Toast.makeText(MainActivity.this, R.string.error_missing_port, Toast.LENGTH_SHORT).show();
 				return true;
 			}
-			Intent intent = new Intent(MainActivity.this, DescriptionActivityText.class);
+			Intent intent = new Intent(MainActivity.this, DescriptionActivityWebLocal.class);
 			intent.putExtra(EXTRA_PORT, namePort);
+			intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
 			startActivity(intent);
 			return true;
 		case R.id.menu_OSM:

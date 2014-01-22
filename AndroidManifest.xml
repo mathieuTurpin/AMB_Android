@@ -31,6 +31,9 @@
             android:name=".description.DescriptionActivityWeb"
             android:label="" />
         <activity
+            android:name=".description.DescriptionActivityWebLocal"
+            android:label="" />
+        <activity
             android:name=".description.DescriptionActivityText"
             android:label="" />
         <activity
