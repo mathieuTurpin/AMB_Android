@@ -83,9 +83,11 @@ public class MainActivity extends MapActivity{
 
 		Intent intent = getIntent();
 		if (intent != null) {
-			String mode = intent.getStringExtra(EXTRA_MODE_MAP);
-			if(mode != null && mode.equals("mode_online")){
+			int mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
+			if(mode == R.id.map_online){
 				this.mapView.setMapGenerator(new MapnikTileDownloader());
+				_menu.findItem(R.id.map_online).setEnabled(false);
+				_menu.findItem(R.id.map_offline).setEnabled(true);
 			}
 			
 			String courtName = intent.getStringExtra(EXTRA_COURT_PORT);
@@ -237,9 +239,9 @@ public class MainActivity extends MapActivity{
 		
 		Intent intent = getIntent();
 		if (intent != null) {
-			String mode = intent.getStringExtra(EXTRA_MODE_MAP);
-			if(mode != null && mode.equals("mode_online")){
-				_menu.findItem(R.id.menu_mode).setTitle(R.string.menu_online);
+			int mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
+			if(mode == R.id.map_online){
+				_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
 				_menu.findItem(R.id.map_online).setEnabled(false);
 				_menu.findItem(R.id.map_offline).setEnabled(true);
 			}
@@ -271,14 +273,14 @@ public class MainActivity extends MapActivity{
 			// Button behavior "Map offline"
 			_menu.findItem(R.id.map_online).setEnabled(true);
 			_menu.findItem(R.id.map_offline).setEnabled(false);
-			_menu.findItem(R.id.menu_mode).setTitle(item.getTitle());
+			_menu.findItem(R.id.menu_connexion).setTitle(item.getTitle());
 			this.mapView.setMapGenerator(new DatabaseRenderer());
 			return true;
 		case R.id.map_online:
 			// Button behavior "Map Online"
 			_menu.findItem(R.id.map_online).setEnabled(false);
 			_menu.findItem(R.id.map_offline).setEnabled(true);
-			_menu.findItem(R.id.menu_mode).setTitle(item.getTitle());
+			_menu.findItem(R.id.menu_connexion).setTitle(item.getTitle());
 			this.mapView.setMapGenerator(new MapnikTileDownloader());
 			return true;
 		case R.id.map_description:
@@ -292,6 +294,11 @@ public class MainActivity extends MapActivity{
 			Intent intent = new Intent(MainActivity.this, DescriptionActivityWebLocal.class);
 			intent.putExtra(EXTRA_PORT, namePort);
 			intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
+			
+			String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+			if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+				intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
+			}
 			startActivity(intent);
 			return true;
 		case R.id.menu_OSM:

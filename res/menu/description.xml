@@ -16,15 +16,26 @@
         android:title="@string/menu_description">
         <menu>
             <item
-                android:id="@+id/map_online"
-                android:title="@string/menu_online"/>
-            <item
-                android:id="@+id/map_offline"
-                android:title="@string/menu_offline"/>
+                android:id="@+id/map"
+                android:title="@string/map"/>
             <item
                 android:id="@+id/map_description"
                 android:enabled="false"
                 android:title="@string/menu_description"/>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menu_connexion"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_offline">
+        <menu>
+            <item
+                android:id="@+id/map_online"
+                android:title="@string/menu_online"/>
+            <item
+                android:id="@+id/map_offline"
+                android:enabled="false"
+                android:title="@string/menu_offline"/>
         </menu>
     </item>
     <item

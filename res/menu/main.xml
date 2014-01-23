@@ -13,6 +13,20 @@
     <item
         android:id="@+id/menu_mode"
         android:showAsAction="ifRoom"
+        android:title="@string/map">
+        <menu>
+            <item
+                android:id="@+id/map"
+                android:enabled="false"
+                android:title="@string/map"/>
+            <item
+                android:id="@+id/map_description"
+                android:title="@string/menu_description"/>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menu_connexion"
+        android:showAsAction="ifRoom"
         android:title="@string/menu_offline">
         <menu>
             <item
@@ -22,9 +36,6 @@
                 android:id="@+id/map_offline"
                 android:enabled="false"
                 android:title="@string/menu_offline"/>
-            <item
-                android:id="@+id/map_description"
-                android:title="@string/menu_description"/>
         </menu>
     </item>
     <item
