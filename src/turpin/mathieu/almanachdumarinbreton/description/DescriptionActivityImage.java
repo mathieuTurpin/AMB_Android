@@ -47,7 +47,7 @@ public class DescriptionActivityImage extends DescriptionActivity{
 				if (idChild == 0)
 					break;
 				//Remove touch listener on currentView
-				ImageView ivOld = (ImageView) ((LinearLayout) viewFlipper.getCurrentView()).getChildAt(0);
+				ImageView ivOld = (ImageView) ((LinearLayout) viewFlipper.getCurrentView()).getChildAt(1);
 				ivOld.setOnTouchListener(null);
 
 				// set the required Animation type to ViewFlipper
@@ -56,7 +56,7 @@ public class DescriptionActivityImage extends DescriptionActivity{
 				viewFlipper.setOutAnimation(this, R.anim.out_to_right);
 				
 				//Add touch listener to previous View
-				ImageView ivNew = (ImageView) ((LinearLayout) viewFlipper.getChildAt(idChild-1)).getChildAt(0);
+				ImageView ivNew = (ImageView) ((LinearLayout) viewFlipper.getChildAt(idChild-1)).getChildAt(1);
 				ivNew.setOnTouchListener(new Touch());
 				
 				// Show the previous Screen
@@ -69,7 +69,7 @@ public class DescriptionActivityImage extends DescriptionActivity{
 				if (idChild == viewFlipper.getChildCount()-1)
 					break;
 				//Remove touch listener on currentView
-				ImageView ivOld = (ImageView) ((LinearLayout) viewFlipper.getCurrentView()).getChildAt(0);
+				ImageView ivOld = (ImageView) ((LinearLayout) viewFlipper.getCurrentView()).getChildAt(1);
 				ivOld.setOnTouchListener(null);
 				
 				// set the required Animation type to ViewFlipper
@@ -78,7 +78,7 @@ public class DescriptionActivityImage extends DescriptionActivity{
 				viewFlipper.setOutAnimation(this, R.anim.out_to_left);
 				
 				//Add touch listener to next View
-				ImageView ivNew = (ImageView) ((LinearLayout) viewFlipper.getChildAt(idChild+1)).getChildAt(0);
+				ImageView ivNew = (ImageView) ((LinearLayout) viewFlipper.getChildAt(idChild+1)).getChildAt(1);
 				ivNew.setOnTouchListener(new Touch());
 				
 				// Show The next Screen

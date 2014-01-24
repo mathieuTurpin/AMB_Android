@@ -24,7 +24,7 @@ public class Touch implements OnTouchListener {
 	// Remember some things for zooming  
 	PointF start = new PointF();  
 	PointF mid = new PointF();  
-	float oldDist = 1f;  
+	float oldDist = 0.7f;  
 
 	
 	private float dx; // postTranslate X distance

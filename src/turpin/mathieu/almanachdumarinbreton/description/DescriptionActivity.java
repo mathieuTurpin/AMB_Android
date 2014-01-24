@@ -1,10 +1,19 @@
 package turpin.mathieu.almanachdumarinbreton.description;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import turpin.mathieu.almanachdumarinbreton.MainActivity;
 import turpin.mathieu.almanachdumarinbreton.R;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -147,12 +156,35 @@ public abstract class DescriptionActivity extends Activity{
 			return true;
 		case R.id.menu_marees:
 			// Button behavior "Marees"
-			goToWebDescription(R.id.menu_marees,getString(R.string.url_marees));
+			String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+			if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+				goToWebDescription(R.id.menu_marees,getString(R.string.url_marees));
+			}
+			else{
+				String nameFile = "maree.pdf";
+				if(copyReadPdfAssets(nameFile)){
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+			        intent.setDataAndType(
+			                Uri.parse("file://" + getFilesDir() + "/"+nameFile),
+			                "application/pdf");
+			        intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+			        try {
+			                startActivity(intent);
+			                return true;
+			        } catch (ActivityNotFoundException e) {
+						Toast.makeText(this, "Erreur: vous n'avez pas d'application pour lire un pdf", Toast.LENGTH_SHORT).show();
+			        }
+				}
+				else{
+					Toast.makeText(this, "Erreur: Fichier pdf non disponible", Toast.LENGTH_SHORT).show();
+				}
+			}
+			
 			return true;
 		case R.id.menu_meteo:
 			// Button behavior "Meteo"
-			String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-			if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+			String connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+			if(connexion.equals(getResources().getString(R.string.menu_online))){
 				goToWebDescription(R.id.menu_meteo,getString(R.string.url_meteo));
 			}
 			else{
@@ -167,4 +199,38 @@ public abstract class DescriptionActivity extends Activity{
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+	private boolean copyReadPdfAssets(String nameFile)
+    {
+        InputStream in = null;
+        OutputStream out = null;
+        File file = new File(getFilesDir(), nameFile);
+        try
+        {
+            in = getAssets().open(nameFile);
+            out = openFileOutput(file.getName(), Context.MODE_WORLD_READABLE);
+
+            copyFile(in, out);
+            in.close();
+            in = null;
+            out.flush();
+            out.close();
+            out = null;
+            return true;
+        } catch (Exception e)
+        {
+            Log.e("tag", e.getMessage());
+        }
+        return false;
+    }
+
+    private void copyFile(InputStream in, OutputStream out) throws IOException
+    {
+        byte[] buffer = new byte[1024];
+        int read;
+        while ((read = in.read(buffer)) != -1)
+        {
+            out.write(buffer, 0, read);
+        }
+    }
 }
