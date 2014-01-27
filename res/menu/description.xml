@@ -63,6 +63,6 @@
     <item
         android:id="@+id/menu_compte"
         android:showAsAction="ifRoom"
-        android:title="@string/menu_compte"/>
+        android:title="@string/menu_login"/>
 
 </menu>

@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import turpin.mathieu.almanachdumarinbreton.MainActivity;
 import turpin.mathieu.almanachdumarinbreton.R;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountActivity;
+import turpin.mathieu.almanachdumarinbreton.forum.AccountManager;
+import turpin.mathieu.almanachdumarinbreton.forum.LoginDialog;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 public abstract class DescriptionActivity extends Activity{
 
 	//Extra
+	final int RESULT_IS_LOGIN = 0;
 	final String EXTRA_PORT = "port_name";
 	final String EXTRA_MODE_MAP = "mode_map";
 	final String EXTRA_URL = "url";
@@ -33,6 +36,8 @@ public abstract class DescriptionActivity extends Activity{
 
 	private Menu _menu;
 
+	private AccountManager accountManager;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,6 +82,11 @@ public abstract class DescriptionActivity extends Activity{
 				_menu.findItem(R.id.menu_connexion).setEnabled(false);
 			}
 			
+			accountManager = new AccountManager(getApplicationContext());
+
+			if(accountManager.isLoggedIn()){
+				_menu.findItem(R.id.menu_compte).setTitle(getResources().getString(R.string.menu_compte));
+			}
 			
 		}
 
@@ -123,11 +133,6 @@ public abstract class DescriptionActivity extends Activity{
 	private void goToImageDescription(int id_mode_description){
 		Intent intent = new Intent(DescriptionActivity.this, DescriptionActivityImage.class);
 		intent.putExtra(EXTRA_MODE_DESCRIPTION, id_mode_description);
-		goToActivity(intent);
-	}
-	
-	private void goToAccount(){
-		Intent intent = new Intent(DescriptionActivity.this, AccountActivity.class);
 		goToActivity(intent);
 	}
 
@@ -199,7 +204,22 @@ public abstract class DescriptionActivity extends Activity{
 			return true;
 		case R.id.menu_compte:
 			// Button behavior "Compte"
-			goToAccount();
+			if(accountManager.isLoggedIn()){
+				String namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
+				Intent intent = new Intent(DescriptionActivity.this, AccountActivity.class);
+				intent.putExtra(EXTRA_PORT, namePort);
+				intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
+
+				mode_connexion = _menu. findItem(R.id.menu_connexion).getTitle().toString();
+				if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+					intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
+				}
+				startActivityForResult(intent, RESULT_IS_LOGIN);
+			}
+			else{
+				new LoginDialog(this,_menu.findItem(R.id.menu_compte),this.accountManager);
+			}
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

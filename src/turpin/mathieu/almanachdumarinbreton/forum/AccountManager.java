@@ -23,6 +23,12 @@ public class AccountManager {
 
 	// User pseudo
 	public static final String KEY_PSEUDO = "pseudo";
+	
+	// User email
+	private static final String KEY_EMAIL = "email";
+	
+	// User is logged in
+	private static final String KEY_IS_LOGGED_IN = "isLogin";
 
 	// User shared location
 	public static final String KEY_SHARED = "shared_location";
@@ -53,14 +59,48 @@ public class AccountManager {
 	}
 	
 	public void setPartage(int partage){
-		// Storing pseudo in pref
+		// Storing partage in pref
 		editor.putInt(KEY_SHARED, partage);
 
 		// commit changes
 		editor.commit();
-	}  
+	}
 
 	public int getPartage(){
 		return pref.getInt(KEY_SHARED, NO_PARTAGE);
+	}
+	
+	public void logIn(String email){
+		setEmail(email);
+		setIsLoggedIn(true);
+	}
+	
+	public void logOut(){
+		editor.clear();
+		
+		editor.commit();
+	}
+	
+	private void setEmail(String email){
+		// Storing email in pref
+		editor.putString(KEY_EMAIL, email);
+
+		// commit changes
+		editor.commit();
+	}
+	
+	public String getEmail(){
+		return pref.getString(KEY_EMAIL, null);
+	}
+	
+	private void setIsLoggedIn(boolean logged){
+		editor.putBoolean(KEY_IS_LOGGED_IN, logged);
+
+		// commit changes
+		editor.commit();
+	}
+
+	public boolean isLoggedIn(){
+		return pref.getBoolean(KEY_IS_LOGGED_IN, false);
 	}
 }

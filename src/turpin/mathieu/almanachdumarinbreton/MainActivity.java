@@ -13,6 +13,9 @@ import org.mapsforge.core.GeoPoint;
 
 import turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityWebLocal;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountActivity;
+import turpin.mathieu.almanachdumarinbreton.forum.AccountManager;
+import turpin.mathieu.almanachdumarinbreton.forum.LoginDialog;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -60,10 +63,13 @@ public class MainActivity extends MapActivity{
 
 	//Extra
 	final String EXTRA_PORT = "port_name";
+	final int RESULT_IS_LOGIN = 0;
 	final String EXTRA_COURT_PORT = "port_court_name";
 	final String EXTRA_MODE_MAP = "mode_map";
-	
+
 	private String courtNamePort ="";
+
+	private AccountManager accountManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +81,7 @@ public class MainActivity extends MapActivity{
 		infoBearing = (TextView) findViewById(R.id.infoBearing);
 
 		RelativeLayout relative = (RelativeLayout) findViewById(R.id.mapViewLayout);
-		
+
 		this.mapView = new MyMapView(this);
 		String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
 		cacheDirectoryPath = externalStorageDirectory + "/Android/data/org.mapsforge.android.maps/map/bretagne.map";
@@ -90,13 +96,13 @@ public class MainActivity extends MapActivity{
 				_menu.findItem(R.id.map_online).setEnabled(false);
 				_menu.findItem(R.id.map_offline).setEnabled(true);
 			}
-			
+
 			String courtName = intent.getStringExtra(EXTRA_COURT_PORT);
 			if(courtName != null){
 				this.courtNamePort = courtName;
 			}
 		}
-				
+
 		configureMap();
 
 		relative.addView(this.mapView);
@@ -237,7 +243,7 @@ public class MainActivity extends MapActivity{
 		if(_menu.findItem(R.id.menu_sounding).isChecked()){
 			this.mapView.showSounding();
 		}
-		
+
 		Intent intent = getIntent();
 		if (intent != null) {
 			int mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
@@ -246,16 +252,22 @@ public class MainActivity extends MapActivity{
 				_menu.findItem(R.id.map_online).setEnabled(false);
 				_menu.findItem(R.id.map_offline).setEnabled(true);
 			}
-			
+
 			String port = intent.getStringExtra(EXTRA_PORT);
 			if(port != null && port.equals(getResources().getString(R.string.menu_marina))){
 				goToMarina(port);
 			}
 		}
-		
+
+		accountManager = new AccountManager(getApplicationContext());
+
+		if(accountManager.isLoggedIn()){
+			_menu.findItem(R.id.menu_compte).setTitle(getResources().getString(R.string.menu_compte));
+		}
+
 		return true;
 	}
-	
+
 	private void goToMarina(String name){
 		_menu.findItem(R.id.menu_port).setTitle(name);
 		this.courtNamePort = getResources().getString(R.string.name_marina);
@@ -268,7 +280,7 @@ public class MainActivity extends MapActivity{
 		String namePort;
 		Intent intent;
 		String mode_connexion;
-		
+
 		switch (item.getItemId()) {
 		case R.id.menu_marina:
 			// Button behavior "Marina"
@@ -299,7 +311,7 @@ public class MainActivity extends MapActivity{
 			intent = new Intent(MainActivity.this, DescriptionActivityWebLocal.class);
 			intent.putExtra(EXTRA_PORT, namePort);
 			intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
-			
+
 			mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
 			if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
 				intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
@@ -352,19 +364,45 @@ public class MainActivity extends MapActivity{
 			return true;
 		case R.id.menu_compte:
 			// Button behavior "Compte"
-			namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
-			intent = new Intent(MainActivity.this, AccountActivity.class);
-			intent.putExtra(EXTRA_PORT, namePort);
-			intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
-			
-			mode_connexion = _menu. findItem(R.id.menu_connexion).getTitle().toString();
-			if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-				intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
+			if(accountManager.isLoggedIn()){
+				namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
+				intent = new Intent(MainActivity.this, AccountActivity.class);
+				intent.putExtra(EXTRA_PORT, namePort);
+				intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
+
+				mode_connexion = _menu. findItem(R.id.menu_connexion).getTitle().toString();
+				if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+					intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
+				}
+				startActivityForResult(intent, RESULT_IS_LOGIN);
 			}
-			startActivity(intent);
+			else{
+				new LoginDialog(this,_menu.findItem(R.id.menu_compte),this.accountManager);
+			}
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch(requestCode){
+		case RESULT_IS_LOGIN:
+			switch(resultCode){
+			//Logout
+			case Activity.RESULT_CANCELED:
+				_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_login);
+				break;
+			//Always login
+			case Activity.RESULT_OK:
+				//Nothing to do
+				break;
+			}
+			break;
+		default:
+			return;
 		}
 	}
 

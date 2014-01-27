@@ -6,8 +6,6 @@ import turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityWebLo
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,7 +17,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-public class AccountActivity extends Activity implements TextWatcher{
+public class AccountActivity extends Activity{
 
 	//Extra
 	final String EXTRA_PORT = "port_name";
@@ -58,8 +56,8 @@ public class AccountActivity extends Activity implements TextWatcher{
 		int sharedMode = accountManager.getPartage();
 		getShareButtonByMode(sharedMode).setChecked(true);
 
-		Button btnRetourAccueil = (Button) findViewById(R.id.boutonSave);
-		btnRetourAccueil.setOnClickListener(new OnClickListener()
+		Button btnSave = (Button) findViewById(R.id.boutonSave);
+		btnSave.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
@@ -70,7 +68,19 @@ public class AccountActivity extends Activity implements TextWatcher{
 				int idButtonChecked = radioGroup.getCheckedRadioButtonId();
 				int sharedMode = getSharedModeByButton(idButtonChecked);
 				accountManager.setPartage(sharedMode);
-				
+				setResult(Activity.RESULT_OK);
+				finish();
+			}
+		});
+		
+		Button btnLogOut = (Button) findViewById(R.id.boutonLogout);
+		btnLogOut.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				accountManager.logOut();
+				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
 		});
@@ -183,24 +193,5 @@ public class AccountActivity extends Activity implements TextWatcher{
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	@Override
-	public void afterTextChanged(Editable s) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onTextChanged(CharSequence s, int start, int before, int count) {
-		// TODO Auto-generated method stub
-
 	}
 }

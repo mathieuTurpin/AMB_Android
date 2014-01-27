@@ -16,7 +16,7 @@
             android:id="@+id/pseudoTitle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingLeft="@dimen/my_marginRight"
+            android:layout_marginRight="@dimen/my_marginRight"
             android:text="mon pseudo"
             android:textStyle="bold" />
 
@@ -31,15 +31,16 @@
         android:id="@+id/linearLayoutPartage"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_below="@+id/linearLayoutPseudo"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:paddingLeft="@dimen/activity_horizontal_margin" >
 
         <TextView
             android:id="@+id/partageTitle"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingLeft="@dimen/my_marginRight"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/my_marginRight"
             android:text="mon partage"
             android:textStyle="bold" />
 
@@ -59,6 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Partager ma position de manière publique" />
+
             <RadioButton
                 android:id="@+id/radioPartagePrivate"
                 android:layout_width="wrap_content"
@@ -67,13 +69,27 @@
         </RadioGroup>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/boutonSave"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayoutButton"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:gravity="center_horizontal"
         android:layout_below="@+id/linearLayoutPartage"
-        android:text="Sauvegarder" />
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/boutonSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/my_marginRight"
+            android:text="Sauvegarder" />
+
+        <Button
+            android:id="@+id/boutonLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Se déconnecter" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/maxime"
