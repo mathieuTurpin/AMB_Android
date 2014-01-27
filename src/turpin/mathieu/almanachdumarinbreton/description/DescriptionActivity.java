@@ -7,6 +7,7 @@ import java.io.OutputStream;
 
 import turpin.mathieu.almanachdumarinbreton.MainActivity;
 import turpin.mathieu.almanachdumarinbreton.R;
+import turpin.mathieu.almanachdumarinbreton.forum.AccountActivity;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -124,6 +125,11 @@ public abstract class DescriptionActivity extends Activity{
 		intent.putExtra(EXTRA_MODE_DESCRIPTION, id_mode_description);
 		goToActivity(intent);
 	}
+	
+	private void goToAccount(){
+		Intent intent = new Intent(DescriptionActivity.this, AccountActivity.class);
+		goToActivity(intent);
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -193,7 +199,7 @@ public abstract class DescriptionActivity extends Activity{
 			return true;
 		case R.id.menu_compte:
 			// Button behavior "Compte"
-			Toast.makeText(this, "Compte", Toast.LENGTH_SHORT).show();
+			goToAccount();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

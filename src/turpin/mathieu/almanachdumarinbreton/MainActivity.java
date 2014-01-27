@@ -12,6 +12,7 @@ import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.mapsforge.core.GeoPoint;
 
 import turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityWebLocal;
+import turpin.mathieu.almanachdumarinbreton.forum.AccountActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -264,6 +265,10 @@ public class MainActivity extends MapActivity{
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		String namePort;
+		Intent intent;
+		String mode_connexion;
+		
 		switch (item.getItemId()) {
 		case R.id.menu_marina:
 			// Button behavior "Marina"
@@ -286,16 +291,16 @@ public class MainActivity extends MapActivity{
 		case R.id.map_description:
 			// Button behavior "Map Decription"
 			// if no port is selected
-			String namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
+			namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
 			if(namePort.equals(getResources().getString(R.string.menu_port))){
 				Toast.makeText(MainActivity.this, R.string.error_missing_port, Toast.LENGTH_SHORT).show();
 				return true;
 			}
-			Intent intent = new Intent(MainActivity.this, DescriptionActivityWebLocal.class);
+			intent = new Intent(MainActivity.this, DescriptionActivityWebLocal.class);
 			intent.putExtra(EXTRA_PORT, namePort);
 			intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
 			
-			String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+			mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
 			if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
 				intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
 			}
@@ -347,7 +352,16 @@ public class MainActivity extends MapActivity{
 			return true;
 		case R.id.menu_compte:
 			// Button behavior "Compte"
-			Toast.makeText(this, "Compte", Toast.LENGTH_SHORT).show();
+			namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
+			intent = new Intent(MainActivity.this, AccountActivity.class);
+			intent.putExtra(EXTRA_PORT, namePort);
+			intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
+			
+			mode_connexion = _menu. findItem(R.id.menu_connexion).getTitle().toString();
+			if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+				intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
+			}
+			startActivity(intent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

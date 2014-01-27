@@ -1,0 +1,90 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".forum.AccountActivity" >
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPseudo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/activity_horizontal_margin" >
+
+        <TextView
+            android:id="@+id/pseudoTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/my_marginRight"
+            android:text="mon pseudo"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/pseudo"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:inputType="text" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPartage"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/linearLayoutPseudo"
+        android:paddingLeft="@dimen/activity_horizontal_margin" >
+
+        <TextView
+            android:id="@+id/partageTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/my_marginRight"
+            android:text="mon partage"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/radioPartageGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/radioNoPartage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ne pas partager ma position" />
+
+            <RadioButton
+                android:id="@+id/radioPartagePublic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Partager ma position de manière publique" />
+            <RadioButton
+                android:id="@+id/radioPartagePrivate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Partager ma position de manière privée" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/boutonSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayoutPartage"
+        android:text="Sauvegarder" />
+
+    <TextView
+        android:id="@+id/maxime"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#000000"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="@string/maxime"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" >
+    </TextView>
+
+</RelativeLayout>

@@ -39,6 +39,9 @@
         <activity
             android:name=".description.DescriptionActivityImage"
             android:label="" />
+        <activity
+            android:name=".forum.AccountActivity"
+            android:label="" />
     </application>
 
 </manifest>
