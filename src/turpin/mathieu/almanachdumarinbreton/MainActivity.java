@@ -14,6 +14,7 @@ import org.mapsforge.core.GeoPoint;
 import turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityWebLocal;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountActivity;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountManager;
+import turpin.mathieu.almanachdumarinbreton.forum.ForumActivity;
 import turpin.mathieu.almanachdumarinbreton.forum.LoginDialog;
 import android.app.Activity;
 import android.content.Context;
@@ -86,22 +87,10 @@ public class MainActivity extends MapActivity{
 		String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
 		cacheDirectoryPath = externalStorageDirectory + "/Android/data/org.mapsforge.android.maps/map/bretagne.map";
 		this.mapView.setMapFile(new File(cacheDirectoryPath));
-		this.mapView.getFileSystemTileCache().setPersistent(false);
-
+		//this.mapView.getFileSystemTileCache().setPersistent(false);
+		
 		Intent intent = getIntent();
-		if (intent != null) {
-			int mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
-			if(mode == R.id.map_online){
-				this.mapView.setMapGenerator(new MapnikTileDownloader());
-				_menu.findItem(R.id.map_online).setEnabled(false);
-				_menu.findItem(R.id.map_offline).setEnabled(true);
-			}
-
-			String courtName = intent.getStringExtra(EXTRA_COURT_PORT);
-			if(courtName != null){
-				this.courtNamePort = courtName;
-			}
-		}
+		initIntentForActivity(intent);
 
 		configureMap();
 
@@ -230,7 +219,6 @@ public class MainActivity extends MapActivity{
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
 		_menu = menu;
-
 		if(_menu.findItem(R.id.menu_OSM).isChecked()){
 			this.mapView.showBaliseOSM();
 		}
@@ -245,6 +233,33 @@ public class MainActivity extends MapActivity{
 		}
 
 		Intent intent = getIntent();
+		initIntentForMenu(intent);
+		
+		return true;
+	}
+	
+	private void initIntentForActivity(Intent intent){
+		this.mapView.getFileSystemTileCache().setPersistent(false);
+		if (intent != null) {
+			int mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
+			if(mode == R.id.map_online){
+				this.mapView.setMapGenerator(new MapnikTileDownloader());
+			}
+			else{
+				this.mapView.setMapGenerator(new DatabaseRenderer());
+			}
+
+			String courtName = intent.getStringExtra(EXTRA_COURT_PORT);
+			if(courtName != null){
+				this.courtNamePort = courtName;
+			}
+		}
+		else{
+			this.mapView.setMapGenerator(new DatabaseRenderer());
+		}
+	}
+	
+	private void initIntentForMenu(Intent intent){
 		if (intent != null) {
 			int mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
 			if(mode == R.id.map_online){
@@ -258,14 +273,21 @@ public class MainActivity extends MapActivity{
 				goToMarina(port);
 			}
 		}
-
 		accountManager = new AccountManager(getApplicationContext());
 
 		if(accountManager.isLoggedIn()){
 			_menu.findItem(R.id.menu_compte).setTitle(getResources().getString(R.string.menu_compte));
 		}
-
-		return true;
+	}
+	
+	@Override
+    protected void onNewIntent(Intent intent)
+    {
+		super.onNewIntent(intent);
+		//Restart thread before init the map with new configuration
+		this.mapView.onResume();
+		initIntentForActivity(intent);
+		initIntentForMenu(intent);
 	}
 
 	private void goToMarina(String name){
@@ -277,10 +299,8 @@ public class MainActivity extends MapActivity{
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		String namePort;
 		Intent intent;
-		String mode_connexion;
-
+		
 		switch (item.getItemId()) {
 		case R.id.menu_marina:
 			// Button behavior "Marina"
@@ -303,19 +323,22 @@ public class MainActivity extends MapActivity{
 		case R.id.map_description:
 			// Button behavior "Map Decription"
 			// if no port is selected
-			namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
+			String namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
 			if(namePort.equals(getResources().getString(R.string.menu_port))){
 				Toast.makeText(MainActivity.this, R.string.error_missing_port, Toast.LENGTH_SHORT).show();
 				return true;
 			}
+			
 			intent = new Intent(MainActivity.this, DescriptionActivityWebLocal.class);
-			intent.putExtra(EXTRA_PORT, namePort);
-			intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
-
-			mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-			if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-				intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
-			}
+			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			initIntent(intent);
+			
+			startActivity(intent);
+			return true;
+		case R.id.menu_forum:
+			intent = new Intent(MainActivity.this, ForumActivity.class);
+			initIntent(intent);
+			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(intent);
 			return true;
 		case R.id.menu_OSM:
@@ -365,15 +388,9 @@ public class MainActivity extends MapActivity{
 		case R.id.menu_compte:
 			// Button behavior "Compte"
 			if(accountManager.isLoggedIn()){
-				namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
 				intent = new Intent(MainActivity.this, AccountActivity.class);
-				intent.putExtra(EXTRA_PORT, namePort);
-				intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
-
-				mode_connexion = _menu. findItem(R.id.menu_connexion).getTitle().toString();
-				if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-					intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
-				}
+				initIntent(intent);
+				intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 				startActivityForResult(intent, RESULT_IS_LOGIN);
 			}
 			else{
@@ -383,6 +400,15 @@ public class MainActivity extends MapActivity{
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	private void initIntent(Intent intent){
+		intent.putExtra(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
+		intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
+		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+			intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
 		}
 	}
 

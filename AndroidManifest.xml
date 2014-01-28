@@ -42,6 +42,9 @@
         <activity
             android:name=".forum.AccountActivity"
             android:label="" />
+        <activity
+            android:name=".forum.ForumActivity"
+            android:label="" />
     </application>
 
 </manifest>

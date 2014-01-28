@@ -547,4 +547,16 @@ public class MyMapView extends MapView {
 		OverlayItem baliseItem = new OverlayItem(positionBalise,"","noTap",ItemizedOverlay.boundCenter(baliseIcon));
 		overlayOpenSeaMap.addItemOSM(baliseItem);
 	}
+	
+	@Override
+	void onPause() {
+		super.onPause();
+		this.mapWorkerOpenSeaMap.pause();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		this.mapWorkerOpenSeaMap.proceed();
+	}
 }

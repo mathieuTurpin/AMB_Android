@@ -9,6 +9,7 @@ import turpin.mathieu.almanachdumarinbreton.MainActivity;
 import turpin.mathieu.almanachdumarinbreton.R;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountActivity;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountManager;
+import turpin.mathieu.almanachdumarinbreton.forum.ForumActivity;
 import turpin.mathieu.almanachdumarinbreton.forum.LoginDialog;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -37,17 +38,12 @@ public abstract class DescriptionActivity extends Activity{
 	private Menu _menu;
 
 	private AccountManager accountManager;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Intent intent = getIntent();
-		if (intent != null) {
-			String courtName = intent.getStringExtra(EXTRA_COURT_PORT);
-			if(courtName != null){
-				this.courtNamePort = courtName;
-			}
-		}
+		initIntentForActivity(intent);
 	}
 
 	@Override
@@ -58,19 +54,34 @@ public abstract class DescriptionActivity extends Activity{
 		_menu = menu;
 
 		Intent intent = getIntent();
+		initIntentForMenu(intent);
+
+		return true;
+	}
+	
+	private void initIntentForActivity(Intent intent){
 		if (intent != null) {
-			String menuPort = intent.getStringExtra(EXTRA_PORT);
-			if(menuPort != null){
-				_menu.findItem(R.id.menu_port).setTitle(menuPort);
+			String courtName = intent.getStringExtra(EXTRA_COURT_PORT);
+			if(courtName != null){
+				this.courtNamePort = courtName;
 			}
-			
-			int modeMap = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
-			if(modeMap == R.id.map_online){
+		}
+	}
+	
+	private void initIntentForMenu(Intent intent){
+		if (intent != null) {
+			int mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
+			if(mode == R.id.map_online){
 				_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
 				_menu.findItem(R.id.map_online).setEnabled(false);
 				_menu.findItem(R.id.map_offline).setEnabled(true);
 			}
 
+			String port = intent.getStringExtra(EXTRA_PORT);
+			if(port != null && port.equals(getResources().getString(R.string.menu_marina))){
+				_menu.findItem(R.id.menu_port).setTitle(port);
+			}
+			
 			int modeDescription = intent.getIntExtra(EXTRA_MODE_DESCRIPTION, R.id.menu_details);
 			if(modeDescription != R.id.menu_details){
 				MenuItem item = _menu.findItem(modeDescription);
@@ -81,44 +92,36 @@ public abstract class DescriptionActivity extends Activity{
 			if(modeDescription == R.id.menu_meteo){
 				_menu.findItem(R.id.menu_connexion).setEnabled(false);
 			}
-			
-			accountManager = new AccountManager(getApplicationContext());
-
-			if(accountManager.isLoggedIn()){
-				_menu.findItem(R.id.menu_compte).setTitle(getResources().getString(R.string.menu_compte));
-			}
-			
 		}
+		accountManager = new AccountManager(getApplicationContext());
 
-		return true;
+		if(accountManager.isLoggedIn()){
+			_menu.findItem(R.id.menu_compte).setTitle(getResources().getString(R.string.menu_compte));
+		}
 	}
 	
-	private void goToActivity(Intent intent){
-		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-			intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
-		}
-		intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
-		intent.putExtra(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
-		startActivity(intent);
-	}
-
-	private void goToMap(){
-		Intent intent = new Intent(DescriptionActivity.this, MainActivity.class);
-		goToActivity(intent);
+	@Override
+    protected void onNewIntent(Intent intent)
+    {
+		super.onNewIntent(intent);
+		initIntentForActivity(intent);
+		initIntentForMenu(intent);
 	}
 
 	private void goToWebDescription(int id_mode_description,String url){
 		Intent intent = new Intent(DescriptionActivity.this, DescriptionActivityWeb.class);
+		initIntent(intent);
 		intent.putExtra(EXTRA_MODE_DESCRIPTION, id_mode_description);
 		intent.putExtra(EXTRA_URL, url);
-		goToActivity(intent);
+		startActivity(intent);
 	}
 
 	private void goToWebLocalDescription(int id_mode_description){
 		Intent intent = new Intent(DescriptionActivity.this, DescriptionActivityWebLocal.class);
+		initIntent(intent);
 		intent.putExtra(EXTRA_MODE_DESCRIPTION, id_mode_description);
-		goToActivity(intent);
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		startActivity(intent);
 	}
 
 	/*
@@ -132,18 +135,24 @@ public abstract class DescriptionActivity extends Activity{
 
 	private void goToImageDescription(int id_mode_description){
 		Intent intent = new Intent(DescriptionActivity.this, DescriptionActivityImage.class);
+		initIntent(intent);
 		intent.putExtra(EXTRA_MODE_DESCRIPTION, id_mode_description);
-		goToActivity(intent);
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		startActivity(intent);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
 		switch (item.getItemId()) {
 		case R.id.menu_marina:
 			// Button behavior "Marina"
 			return true;
 		case R.id.map:
-			goToMap();
+			intent = new Intent(DescriptionActivity.this, MainActivity.class);
+			initIntent(intent);
+			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			startActivity(intent);
 			return true;
 		case R.id.map_offline:
 			// Button behavior "Map offline"
@@ -156,6 +165,12 @@ public abstract class DescriptionActivity extends Activity{
 			_menu.findItem(R.id.map_online).setEnabled(false);
 			_menu.findItem(R.id.map_offline).setEnabled(true);
 			_menu.findItem(R.id.menu_connexion).setTitle(item.getTitle());
+			return true;
+		case R.id.menu_forum:
+			intent = new Intent(DescriptionActivity.this, ForumActivity.class);
+			initIntent(intent);
+			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			startActivity(intent);
 			return true;
 		case R.id.menu_details:
 			// Button behavior "Details"
@@ -174,23 +189,22 @@ public abstract class DescriptionActivity extends Activity{
 			else{
 				String nameFile = "maree.pdf";
 				if(copyReadPdfAssets(nameFile)){
-					Intent intent = new Intent(Intent.ACTION_VIEW);
-			        intent.setDataAndType(
-			                Uri.parse("file://" + getFilesDir() + "/"+nameFile),
-			                "application/pdf");
-			        intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
-			        try {
-			                startActivity(intent);
-			                return true;
-			        } catch (ActivityNotFoundException e) {
+					intent = new Intent(Intent.ACTION_VIEW);
+					intent.setDataAndType(
+							Uri.parse("file://" + getFilesDir() + "/"+nameFile),
+							"application/pdf");
+					try {
+						startActivity(intent);
+						return true;
+					} catch (ActivityNotFoundException e) {
 						Toast.makeText(this, "Erreur: vous n'avez pas d'application pour lire un pdf", Toast.LENGTH_SHORT).show();
-			        }
+					}
 				}
 				else{
 					Toast.makeText(this, "Erreur: Fichier pdf non disponible", Toast.LENGTH_SHORT).show();
 				}
 			}
-			
+
 			return true;
 		case R.id.menu_meteo:
 			// Button behavior "Meteo"
@@ -205,15 +219,9 @@ public abstract class DescriptionActivity extends Activity{
 		case R.id.menu_compte:
 			// Button behavior "Compte"
 			if(accountManager.isLoggedIn()){
-				String namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
-				Intent intent = new Intent(DescriptionActivity.this, AccountActivity.class);
-				intent.putExtra(EXTRA_PORT, namePort);
-				intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
-
-				mode_connexion = _menu. findItem(R.id.menu_connexion).getTitle().toString();
-				if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-					intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
-				}
+				intent = new Intent(DescriptionActivity.this, AccountActivity.class);
+				initIntent(intent);
+				intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 				startActivityForResult(intent, RESULT_IS_LOGIN);
 			}
 			else{
@@ -225,38 +233,67 @@ public abstract class DescriptionActivity extends Activity{
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
+	private void initIntent(Intent intent){
+		intent.putExtra(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
+		intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
+		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+			intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch(requestCode){
+		case RESULT_IS_LOGIN:
+			switch(resultCode){
+			//Logout
+			case Activity.RESULT_CANCELED:
+				_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_login);
+				break;
+				//Always login
+			case Activity.RESULT_OK:
+				//Nothing to do
+				break;
+			}
+			break;
+		default:
+			return;
+		}
+	}
+
 	private boolean copyReadPdfAssets(String nameFile)
-    {
-        InputStream in = null;
-        OutputStream out = null;
-        File file = new File(getFilesDir(), nameFile);
-        try
-        {
-            in = getAssets().open(nameFile);
-            out = openFileOutput(file.getName(), Context.MODE_WORLD_READABLE);
+	{
+		InputStream in = null;
+		OutputStream out = null;
+		File file = new File(getFilesDir(), nameFile);
+		try
+		{
+			in = getAssets().open(nameFile);
+			out = openFileOutput(file.getName(), Context.MODE_WORLD_READABLE);
 
-            copyFile(in, out);
-            in.close();
-            in = null;
-            out.flush();
-            out.close();
-            out = null;
-            return true;
-        } catch (Exception e)
-        {
-            Log.e("tag", e.getMessage());
-        }
-        return false;
-    }
+			copyFile(in, out);
+			in.close();
+			in = null;
+			out.flush();
+			out.close();
+			out = null;
+			return true;
+		} catch (Exception e)
+		{
+			Log.e("tag", e.getMessage());
+		}
+		return false;
+	}
 
-    private void copyFile(InputStream in, OutputStream out) throws IOException
-    {
-        byte[] buffer = new byte[1024];
-        int read;
-        while ((read = in.read(buffer)) != -1)
-        {
-            out.write(buffer, 0, read);
-        }
-    }
+	private void copyFile(InputStream in, OutputStream out) throws IOException
+	{
+		byte[] buffer = new byte[1024];
+		int read;
+		while ((read = in.read(buffer)) != -1)
+		{
+			out.write(buffer, 0, read);
+		}
+	}
 }

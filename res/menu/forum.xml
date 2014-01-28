@@ -13,7 +13,7 @@
     <item
         android:id="@+id/menu_mode"
         android:showAsAction="ifRoom"
-        android:title="Mode">
+        android:title="@string/menu_forum">
         <menu>
             <item
                 android:id="@+id/map"
@@ -23,6 +23,7 @@
                 android:title="@string/menu_description"/>
             <item
                 android:id="@+id/menu_forum"
+                android:enabled="false"
                 android:title="@string/menu_forum"/>
         </menu>
     </item>
@@ -43,6 +44,6 @@
     <item
         android:id="@+id/menu_compte"
         android:showAsAction="ifRoom"
-        android:title="@string/menu_compte"/>
+        android:title="@string/menu_login"/>
 
 </menu>

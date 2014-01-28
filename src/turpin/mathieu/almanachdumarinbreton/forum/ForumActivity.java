@@ -9,17 +9,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
-public class AccountActivity extends Activity{
+public class ForumActivity extends Activity{
 
 	//Extra
+	final int RESULT_IS_LOGIN = 0;
 	final String EXTRA_PORT = "port_name";
 	final String EXTRA_COURT_PORT = "port_court_name";
 	final String EXTRA_MODE_MAP = "mode_map";
@@ -28,91 +23,24 @@ public class AccountActivity extends Activity{
 
 	private Menu _menu;
 
-	private EditText pseudoEdit;
-	private RadioGroup radioGroup;
-
 	private AccountManager accountManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_account);
+		setContentView(R.layout.activity_forum);
 
 		Intent intent = getIntent();
 		initIntentForActivity(intent);
-
-		accountManager = new AccountManager(getApplicationContext());
-
-		String myPseudo = accountManager.getPseudo();
-		pseudoEdit = (EditText) findViewById(R.id.pseudo);
-		pseudoEdit.setText(myPseudo);
-
-		radioGroup = (RadioGroup) findViewById(R.id.radioPartageGroup); 
-		int sharedMode = accountManager.getPartage();
-		getShareButtonByMode(sharedMode).setChecked(true);
-
-		Button btnSave = (Button) findViewById(R.id.boutonSave);
-		btnSave.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				String newPseudo = pseudoEdit.getText().toString();
-				accountManager.setPseudo(newPseudo);
-
-				int idButtonChecked = radioGroup.getCheckedRadioButtonId();
-				int sharedMode = getSharedModeByButton(idButtonChecked);
-				accountManager.setPartage(sharedMode);
-				setResult(Activity.RESULT_OK);
-				finish();
-			}
-		});
-		
-		Button btnLogOut = (Button) findViewById(R.id.boutonLogout);
-		btnLogOut.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				accountManager.logOut();
-				setResult(Activity.RESULT_CANCELED);
-				finish();
-			}
-		});
-	}
-	
-	private int getSharedModeByButton(int id){
-		switch(id){
-		case R.id.radioNoPartage:
-			return AccountManager.NO_PARTAGE;
-		case R.id.radioPartagePublic:
-			return AccountManager.PARTAGE_PUBLIC;
-		case R.id.radioPartagePrivate:
-			return AccountManager.PARTAGE_PRIVATE;
-		default:
-			return AccountManager.NO_PARTAGE;
-		}
-	}
-
-	private RadioButton getShareButtonByMode(int sharedMode){
-		switch(sharedMode){
-		case AccountManager.NO_PARTAGE:
-			return (RadioButton) findViewById(R.id.radioNoPartage);
-		case AccountManager.PARTAGE_PUBLIC:
-			return (RadioButton) findViewById(R.id.radioPartagePublic);
-		case AccountManager.PARTAGE_PRIVATE:
-			return (RadioButton) findViewById(R.id.radioPartagePrivate);
-		default:
-			return null;
-		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.account, menu);
+		inflater.inflate(R.menu.forum, menu);
 		_menu = menu;
+
 		Intent intent = getIntent();
 		initIntentForMenu(intent);
 
@@ -142,6 +70,11 @@ public class AccountActivity extends Activity{
 				_menu.findItem(R.id.menu_port).setTitle(port);
 			}
 		}
+		accountManager = new AccountManager(getApplicationContext());
+
+		if(accountManager.isLoggedIn()){
+			_menu.findItem(R.id.menu_compte).setTitle(getResources().getString(R.string.menu_compte));
+		}
 	}
 	
 	@Override
@@ -162,7 +95,7 @@ public class AccountActivity extends Activity{
 			this.courtNamePort = getResources().getString(R.string.name_marina);
 			return true;
 		case R.id.map:
-			intent = new Intent(AccountActivity.this, MainActivity.class);
+			intent = new Intent(ForumActivity.this, MainActivity.class);
 			initIntent(intent);
 			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(intent);
@@ -172,10 +105,10 @@ public class AccountActivity extends Activity{
 			// if no port is selected
 			String namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
 			if(namePort.equals(getResources().getString(R.string.menu_port))){
-				Toast.makeText(AccountActivity.this, R.string.error_missing_port, Toast.LENGTH_SHORT).show();
+				Toast.makeText(ForumActivity.this, R.string.error_missing_port, Toast.LENGTH_SHORT).show();
 				return true;
 			}
-			intent = new Intent(AccountActivity.this, DescriptionActivityWebLocal.class);
+			intent = new Intent(ForumActivity.this, DescriptionActivityWebLocal.class);
 			initIntent(intent);
 			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(intent);
@@ -192,14 +125,17 @@ public class AccountActivity extends Activity{
 			_menu.findItem(R.id.map_offline).setEnabled(true);
 			_menu.findItem(R.id.menu_connexion).setTitle(item.getTitle());
 			return true;
-		case R.id.menu_forum:
-			intent = new Intent(AccountActivity.this, ForumActivity.class);
-			initIntent(intent);
-			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			startActivity(intent);
-			return true;
 		case R.id.menu_compte:
 			// Button behavior "Compte"
+			if(accountManager.isLoggedIn()){
+				intent = new Intent(ForumActivity.this, AccountActivity.class);
+				initIntent(intent);
+				intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+				startActivityForResult(intent, RESULT_IS_LOGIN);
+			}
+			else{
+				new LoginDialog(this,_menu.findItem(R.id.menu_compte),this.accountManager);
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -212,6 +148,26 @@ public class AccountActivity extends Activity{
 		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
 		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
 			intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
+		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch(requestCode){
+		case RESULT_IS_LOGIN:
+			switch(resultCode){
+			//Logout
+			case Activity.RESULT_CANCELED:
+				_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_login);
+				break;
+			//Always login
+			case Activity.RESULT_OK:
+				//Nothing to do
+				break;
+			}
+			break;
+		default:
+			return;
 		}
 	}
 }

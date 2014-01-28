@@ -37,5 +37,6 @@
     <string name="name_marina">BrestMarinaDuChateau</string>
     <string name="map">Mode : Carte</string>
     <string name="menu_login">Se connecter</string>
+    <string name="menu_forum">Mode : Forum</string>
     
 </resources>

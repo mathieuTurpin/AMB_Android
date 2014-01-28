@@ -22,6 +22,10 @@
                 android:id="@+id/map_description"
                 android:enabled="false"
                 android:title="@string/menu_description"/>
+            <item
+                android:id="@+id/menu_forum"
+                android:title="@string/menu_forum"/>
+            
         </menu>
     </item>
     <item

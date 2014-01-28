@@ -10,7 +10,7 @@ import android.widget.EditText;
 
 public class LoginDialog extends Dialog{
 		
-	public LoginDialog(final Context context,final MenuItem item,final AccountManager accountManager) {
+	public LoginDialog(Context context,final MenuItem item,final AccountManager accountManager) {
 		super(context);
 		
 		this.setContentView(R.layout.login);
