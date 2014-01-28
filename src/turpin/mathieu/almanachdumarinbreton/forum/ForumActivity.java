@@ -4,14 +4,19 @@ import turpin.mathieu.almanachdumarinbreton.MainActivity;
 import turpin.mathieu.almanachdumarinbreton.R;
 import turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityWebLocal;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.Toast;
 
-public class ForumActivity extends Activity{
+public class ForumActivity extends Activity implements LoginDialog.LoginDialogListener{
 
 	//Extra
 	final int RESULT_IS_LOGIN = 0;
@@ -32,6 +37,39 @@ public class ForumActivity extends Activity{
 
 		Intent intent = getIntent();
 		initIntentForActivity(intent);
+		
+		Button addComment = (Button) findViewById(R.id.boutonAdd);
+		addComment.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				// Use the Builder class for convenient dialog construction
+				AlertDialog.Builder builder = new AlertDialog.Builder(ForumActivity.this);
+				// Set the dialog title
+				builder.setTitle("Aide");
+				builder.setMessage("Faite un clic long sur la carte pour ajouter un commentaire");
+
+				// Add action buttons
+				builder.setPositiveButton("Voir la carte", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						//Go to map activity
+						Intent intent = new Intent(ForumActivity.this, MainActivity.class);
+						initIntent(intent);
+						intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+						startActivity(intent);
+					}
+				})
+				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						// User cancelled the dialog
+					}
+				});
+				
+				builder.create().show();
+			}
+		});
 	}
 
 	@Override
@@ -134,7 +172,9 @@ public class ForumActivity extends Activity{
 				startActivityForResult(intent, RESULT_IS_LOGIN);
 			}
 			else{
-				new LoginDialog(this,_menu.findItem(R.id.menu_compte),this.accountManager);
+				// Create an instance of the dialog fragment and show it
+				LoginDialog dialog = new LoginDialog();
+				dialog.show(getFragmentManager(), "LoginDialog");
 			}
 			return true;
 		default:
@@ -169,5 +209,10 @@ public class ForumActivity extends Activity{
 		default:
 			return;
 		}
+	}
+
+	@Override
+	public void setIsLogin() {
+		_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);
 	}
 }

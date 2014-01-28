@@ -23,7 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public abstract class DescriptionActivity extends Activity{
+public abstract class DescriptionActivity extends Activity implements LoginDialog.LoginDialogListener{
 
 	//Extra
 	final int RESULT_IS_LOGIN = 0;
@@ -225,7 +225,9 @@ public abstract class DescriptionActivity extends Activity{
 				startActivityForResult(intent, RESULT_IS_LOGIN);
 			}
 			else{
-				new LoginDialog(this,_menu.findItem(R.id.menu_compte),this.accountManager);
+				// Create an instance of the dialog fragment and show it
+				LoginDialog dialog = new LoginDialog();
+				dialog.show(getFragmentManager(), "LoginDialog");
 			}
 
 			return true;
@@ -295,5 +297,10 @@ public abstract class DescriptionActivity extends Activity{
 		{
 			out.write(buffer, 0, read);
 		}
+	}
+	
+	@Override
+	public void setIsLogin() {
+		_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);
 	}
 }

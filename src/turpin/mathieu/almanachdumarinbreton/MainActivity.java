@@ -36,7 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class MainActivity extends MapActivity{
+public class MainActivity extends MapActivity implements LoginDialog.LoginDialogListener{
 	private static final int DIALOG_LOCATION_PROVIDER_DISABLED = 2;
 
 	public MyMapView mapView;
@@ -394,7 +394,9 @@ public class MainActivity extends MapActivity{
 				startActivityForResult(intent, RESULT_IS_LOGIN);
 			}
 			else{
-				new LoginDialog(this,_menu.findItem(R.id.menu_compte),this.accountManager);
+				// Create an instance of the dialog fragment and show it
+				LoginDialog dialog = new LoginDialog();
+				dialog.show(getFragmentManager(), "LoginDialog");
 			}
 
 			return true;
@@ -430,6 +432,11 @@ public class MainActivity extends MapActivity{
 		default:
 			return;
 		}
+	}
+
+	@Override
+	public void setIsLogin() {
+		_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);
 	}
 
 }

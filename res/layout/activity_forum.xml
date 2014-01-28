@@ -4,6 +4,13 @@
     android:layout_height="fill_parent"
     tools:context=".forum.AccountActivity" >
 
+    <Button
+        android:id="@+id/boutonAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="Ajouter un commentaire" />
+
     <TextView
         android:id="@+id/maxime"
         android:layout_width="fill_parent"

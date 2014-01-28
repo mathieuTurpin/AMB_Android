@@ -9,43 +9,39 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
-public class LoginDialog extends DialogFragment{
+public class AddCommentDialog extends DialogFragment{
 
-	public interface LoginDialogListener {
-        void setIsLogin();
-    }
-	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		// Set the dialog title
-		builder.setTitle(R.string.menu_login);
-
-		final AccountManager accountManager = new AccountManager(getActivity());
+		builder.setTitle("Ajouter un commentaire");
 
 		// Get the layout inflater
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		
+
 		// Inflate and set the layout for the dialog
 		// Pass null as the parent view because its going in the dialog layout
-		View v = inflater.inflate(R.layout.login, null);
+		View v = inflater.inflate(R.layout.add_comment, null);
 		builder.setView(v);
 
 		//getView
-		final EditText emailaddr = (EditText) v.findViewById(R.id.email);
-		final EditText password = (EditText) v.findViewById(R.id.password);
+		final EditText commentEdit = (EditText) v.findViewById(R.id.comment);
+		final TextView positionTextView = (TextView) v.findViewById(R.id.position);
+
+		final RadioGroup radioGroup = (RadioGroup) v.findViewById(R.id.radioPartageGroup);
 
 		// Add action buttons
-		builder.setPositiveButton(R.string.menu_login, new DialogInterface.OnClickListener() {
+		builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				String emailText = emailaddr.getText().toString();
-				String passwordText = password.getText().toString();
-				accountManager.logIn(emailText);
-				//Give result to currentActivity
-				LoginDialogListener activity = (LoginDialogListener) getActivity();
-				activity.setIsLogin();
+				String commentText = commentEdit.getText().toString();
+				String positionText = positionTextView.getText().toString();
+				int idButtonChecked = radioGroup.getCheckedRadioButtonId();
+				boolean sharedMode = isShared(idButtonChecked);
 			}
 		})
 		.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -55,5 +51,16 @@ public class LoginDialog extends DialogFragment{
 		});
 		// Create the AlertDialog object and return it
 		return builder.create();
+	}
+
+	private boolean isShared(int id){
+		switch(id){
+		case R.id.radioPartagePublic:
+			return true;
+		case R.id.radioPartagePrivate:
+			return false;
+		default:
+			return false;
+		}
 	}
 }

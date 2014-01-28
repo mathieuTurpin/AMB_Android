@@ -38,5 +38,7 @@
     <string name="map">Mode : Carte</string>
     <string name="menu_login">Se connecter</string>
     <string name="menu_forum">Mode : Forum</string>
+    <string name="cancel">Annuler</string>
+    <string name="save">Enregistrer</string>
     
 </resources>

@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin" >
+
+    <LinearLayout
+        android:id="@+id/linearLayoutComment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/commentTitle"
+            android:layout_width="85dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/my_marginRight"
+            android:text="Commentaire"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/comment"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:inputType="text" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/radioPartageGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayoutComment"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radioPartagePublic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="public" />
+
+        <RadioButton
+            android:id="@+id/radioPartagePrivate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="privé" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/radioPartageGroup"
+        android:textStyle="bold" />
+
+</RelativeLayout>
