@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="@dimen/my_marginRight"
-            android:text="mon pseudo"
+            android:text="@string/pseudo"
             android:textStyle="bold" />
 
         <EditText
@@ -32,8 +32,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayoutPseudo"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingLeft="@dimen/activity_horizontal_margin" >
 
         <TextView
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/my_marginRight"
-            android:text="mon partage"
+            android:text="@string/myShare"
             android:textStyle="bold" />
 
         <RadioGroup
@@ -53,54 +53,59 @@
                 android:id="@+id/radioNoPartage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ne pas partager ma position" />
+                android:text="@string/share_position_no" />
 
             <RadioButton
                 android:id="@+id/radioPartagePublic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Partager ma position de manière publique" />
+                android:text="@string/share_position_public" />
 
             <RadioButton
                 android:id="@+id/radioPartagePrivate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Partager ma position de manière privée" />
+                android:text="@string/share_position_private" />
         </RadioGroup>
     </LinearLayout>
 
+    <View
+        android:id="@+id/border"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/linearLayoutButton"
+        android:layout_marginBottom="0dp"
+        android:background="?android:attr/dividerVertical" />
+
     <LinearLayout
-        android:id="@+id/linearLayoutButton"
+        android:id="@id/linearLayoutButton"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_below="@+id/linearLayoutPartage"
+        android:layout_above="@+id/maxime"
+        android:layout_alignParentLeft="true"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/boutonSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_marginRight="@dimen/my_marginRight"
-            android:text="Sauvegarder" />
+            android:layout_weight="1"
+            android:text="@string/save" />
 
         <Button
             android:id="@+id/boutonLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Se déconnecter" />
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/logout" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/maxime"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#000000"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:text="@string/maxime"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold" >
-    </TextView>
+    <include
+        android:id="@id/maxime"
+        layout="@layout/maxime" />
 
 </RelativeLayout>

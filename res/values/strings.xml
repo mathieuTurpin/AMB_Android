@@ -40,5 +40,11 @@
     <string name="menu_forum">Mode : Forum</string>
     <string name="cancel">Annuler</string>
     <string name="save">Enregistrer</string>
+    <string name="myShare">mon partage</string>
+    <string name="share_position_no">Ne pas partager ma position</string>
+    <string name="share_position_public">Partager ma position de manière publique</string>
+    <string name="share_position_private">Partage ma position de manière privée</string>
+    <string name="pseudo">mon pseudo</string>
+    <string name="logout">Se déconnecter</string>
     
 </resources>

@@ -88,19 +88,7 @@
             android:background="@drawable/snap_to_position" />
 
     </RelativeLayout>
-	
-    <TextView
-        android:id="@+id/maxime"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#000000"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:text="@string/maxime"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold" >
-
-    </TextView>
     
+	<include android:id="@+id/maxime" layout="@layout/maxime"/>
 
 </RelativeLayout>
