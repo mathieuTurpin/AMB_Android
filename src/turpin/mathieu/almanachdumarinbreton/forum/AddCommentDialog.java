@@ -13,9 +13,27 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public class AddCommentDialog extends DialogFragment{
+	
+	/**
+	 * 
+	 * @param title
+	 * @return
+	 */
+	public static AddCommentDialog getInstance(double latitude, double longitude) {
+		AddCommentDialog dialog = new AddCommentDialog();
+        Bundle args = new Bundle();
+        args.putDouble("lat", latitude);
+        args.putDouble("lon", longitude);
+        dialog.setArguments(args);
+        return dialog;
+    }
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		//Get argument
+		double lat = getArguments().getDouble("lat");
+		double lon = getArguments().getDouble("lon");
+		
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		// Set the dialog title
@@ -32,9 +50,12 @@ public class AddCommentDialog extends DialogFragment{
 		//getView
 		final EditText commentEdit = (EditText) v.findViewById(R.id.comment);
 		final TextView positionTextView = (TextView) v.findViewById(R.id.position);
-
 		final RadioGroup radioGroup = (RadioGroup) v.findViewById(R.id.radioPartageGroup);
 
+		//Init position
+		String position = "Lat: " + Double.toString(lat) +"°, Lon: " + Double.toString(lon)+"°";
+		positionTextView.setText(position);
+		
 		// Add action buttons
 		builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {

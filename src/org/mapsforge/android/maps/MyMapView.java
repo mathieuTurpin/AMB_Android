@@ -105,6 +105,9 @@ public class MyMapView extends MapView {
 	 * has been panned.
 	 */
 	private GeoPoint lastMapCenter;
+	
+	private float previousPositionX;
+	private float previousPositionY;
 
 	/**
 	 * @param context
@@ -182,6 +185,8 @@ public class MyMapView extends MapView {
 		if(this.isEnableShowBaliseOSM){
 			this.addBaliseMiss();
 		}
+		//Get map center
+		lastMapCenter = getMapPosition().getMapCenter();
 	}
 
 	@Override
@@ -570,10 +575,14 @@ public class MyMapView extends MapView {
 	}
 
 	final Handler handler = new Handler(); 
-	Runnable mLongPressed = new Runnable() { 
-		public void run() { 
+	Runnable mLongPressed = new Runnable() {
+		public void run() {
+			GeoPoint longPressPoint = getProjection().fromPixels((int) previousPositionX,
+					(int) previousPositionY);
+			double lat = longPressPoint.getLatitude();
+			double lon = longPressPoint.getLongitude(); 
 			// Create an instance of the dialog fragment and show it
-			AddCommentDialog dialog = new AddCommentDialog();
+			AddCommentDialog dialog = AddCommentDialog.getInstance(lat,lon);
 			
 			Activity activity = (Activity) getContext();
 			dialog.show(activity.getFragmentManager(), "AddCommentDialog");
@@ -583,13 +592,19 @@ public class MyMapView extends MapView {
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
 		boolean result = super.onTouchEvent(event);
-
+		
 		switch(event.getAction()){
 
 		case MotionEvent.ACTION_DOWN:
+			int index = event.getActionIndex();
+		    int pointerId = event.getPointerId(index);
+			int pointerIndex = event.findPointerIndex(pointerId);
+			// save the position of the event
+			this.previousPositionX = event.getX(pointerIndex);
+			this.previousPositionY = event.getY(pointerIndex);
 			//Time enough long to avoid calling handler if another OnLongPress was handled in super.onTouchEvent(event)
 			handler.postDelayed(mLongPressed, 1000);
-			break;
+			return true;
 
 		case MotionEvent.ACTION_MOVE :
 			if (!getMapPosition().getMapCenter().equals(lastMapCenter)) {
@@ -598,12 +613,16 @@ public class MyMapView extends MapView {
 			}
 
 			lastMapCenter = getMapPosition().getMapCenter();
-			break;
+			return true;
 
 		case MotionEvent.ACTION_UP :
 			handler.removeCallbacks(mLongPressed);
-			break;
+			return true;
 
+		}
+		//If multitouch
+		if(event.getPointerCount() > 1){
+			handler.removeCallbacks(mLongPressed);
 		}
 		return result;
 	}
