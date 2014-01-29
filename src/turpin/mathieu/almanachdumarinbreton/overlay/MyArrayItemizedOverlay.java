@@ -20,7 +20,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	private final List<OverlayItem> overlayItemsDisplay;
 	private final ArrayList<OverlayItem> overlayService;
 	private final ArrayList<OverlayItem> overlayOSM;
-	
+
 	/**
 	 * @param context
 		          the reference to the application context.
@@ -31,7 +31,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	public MyArrayItemizedOverlay(Context context, Drawable defaultMarker) {
 		this(context,defaultMarker,true);
 	}
-	
+
 	/**
 	 * @param context
 		          the reference to the application context.
@@ -48,7 +48,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		this.overlayService = new ArrayList<OverlayItem>(INITIAL_CAPACITY);
 		this.overlayOSM = new ArrayList<OverlayItem>(INITIAL_CAPACITY);
 	}
-	
+
 	public boolean checkContainsOSM(String title){
 		for(int itemIndex = 0; itemIndex<this.size(); itemIndex++){
 			OverlayItem overlayItem = createItemOSM(itemIndex);
@@ -62,13 +62,19 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		return false;
 	}
 
+
 	/**
-	 * Handles a tap event on the given item.
+	 * Handles a tap event.
+	 * <p>
+	 * Show an {@link AlertDialog} that gives information
+	 * 
+	 * @param index
+	 *            the index of the item that has been tapped.
+	 * @return true if the event was handled, false otherwise.
 	 */
-	@Override
 	protected boolean onTap(int index) {
 		OverlayItem item = createItem(index);
-		
+
 		if (item != null && !item.getSnippet().equals("noTap")) {
 			Builder builder = new AlertDialog.Builder(this.context);
 			builder.setIcon(android.R.drawable.ic_menu_info_details);
@@ -76,10 +82,11 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 			builder.setMessage(item.getSnippet());
 			builder.setPositiveButton("OK", null);
 			builder.show();
+			return true;
 		}
-		return true;
+		return false;
 	}
-	
+
 	/**
 	 * Adds the given item to the overlay.
 	 * 
@@ -93,7 +100,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		}
 		populate();
 	}	
-	
+
 	/**
 	 * Adds the given item to the overlay.
 	 * 
@@ -104,10 +111,10 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		synchronized (this.overlayOSM) {
 			this.overlayOSM.add(overlayItem);
 		}
-		
+
 		addItem(overlayItem,true);
 	}
-	
+
 	public void addItemService(OverlayItem overlayItem) {
 		synchronized (this.overlayService) {
 			this.overlayService.add(overlayItem);
@@ -115,7 +122,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 		addItem(overlayItem,false);
 	}
-	
+
 
 	/**
 	 * Adds all items of the given collection to the overlay.
@@ -132,13 +139,13 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		}
 		populate();
 	}
-	
+
 	public void initItemsService(Collection<? extends OverlayItem> c) {
 		synchronized (this.overlayService) {
 			this.overlayService.addAll(c);
 		}
 	}
-	
+
 	public void addItemsService(Collection<? extends OverlayItem> c) {
 		synchronized (this.overlayService) {
 			this.overlayService.addAll(c);
@@ -159,7 +166,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		}
 		populate();
 	}
-	
+
 	public void clearService() {
 		hiddenService();
 		synchronized (this.overlayService) {
@@ -167,7 +174,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		}
 		populate();
 	}
-	
+
 	/**
 	 * Removes all items from all list.
 	 */
@@ -180,7 +187,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	public String getThreadName() {
 		return THREAD_NAME;
 	}
-	
+
 	/**
 	 * Removes the given item from the overlay.
 	 * 
@@ -193,26 +200,26 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		}
 		populate();
 	}
-	
+
 	public void removeItemOSM(OverlayItem overlayItem) {
 		synchronized (this.overlayOSM) {
 			this.overlayOSM.remove(overlayItem);
 		}
 		removeItem(overlayItem);
 	}
-	
+
 	public void removeItemService(OverlayItem overlayItem) {
 		synchronized (this.overlayService) {
 			this.overlayService.remove(overlayItem);
 		}
 		removeItem(overlayItem);
 	}
-	
+
 	public void displayOSM(){
 		if(overlayOSM == null || this.overlayItemsDisplay.containsAll(overlayOSM)) return;
 		this.addItemsOSM(overlayOSM);
 	}
-	
+
 	public void hiddenOSM(){
 		synchronized (this.overlayOSM) {
 			synchronized (this.overlayItemsDisplay) {
@@ -221,12 +228,12 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		}
 		populate();
 	}
-	
+
 	public void displayService(){
 		if(overlayService == null || this.overlayItemsDisplay.containsAll(overlayService)) return;
 		this.addItemsService(overlayService);
 	}
-	
+
 	public void hiddenService(){
 		synchronized (this.overlayService) {
 			synchronized (this.overlayItemsDisplay) {
@@ -242,7 +249,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 			return this.overlayItemsDisplay.size();
 		}
 	}
-	
+
 	//GetItem to display in ItemizedOverlay
 	@Override
 	protected OverlayItem createItem(int index) {
@@ -262,6 +269,6 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 			return this.overlayOSM.get(index);
 		}
 	}
-	
-	
+
+
 }
