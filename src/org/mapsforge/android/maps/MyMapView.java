@@ -588,6 +588,21 @@ public class MyMapView extends MapView {
 			dialog.show(activity.getFragmentManager(), "AddCommentDialog");
 		}   
 	};
+	
+	@Override
+	void destroy() {
+		this.myMapWorker.interrupt();
+		try {
+			this.myMapWorker.join();
+		} catch (InterruptedException e) {
+			// restore the interrupted status
+			Thread.currentThread().interrupt();
+		}
+		this.inMemoryTileCacheOpenStreetMap.destroy();
+		this.inMemoryTileCacheOpenSeaMap.destroy();
+		this.fileSystemTileCacheOpenSeaMap.destroy();
+		super.destroy();
+	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
