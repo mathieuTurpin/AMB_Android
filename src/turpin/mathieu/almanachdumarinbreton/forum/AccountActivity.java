@@ -1,6 +1,7 @@
 package turpin.mathieu.almanachdumarinbreton.forum;
 
 import turpin.mathieu.almanachdumarinbreton.MainActivity;
+import turpin.mathieu.almanachdumarinbreton.MyActivity;
 import turpin.mathieu.almanachdumarinbreton.R;
 import turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityWebLocal;
 import android.app.Activity;
@@ -17,42 +18,16 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-public class AccountActivity extends Activity{
-
-	//Extra
-	final String EXTRA_PORT = "port_name";
-	final String EXTRA_COURT_PORT = "port_court_name";
-	final String EXTRA_MODE_MAP = "mode_map";
-
-	private int mode;
-	private String courtNamePort ="";
-	private String port ="";
-
-	private Menu _menu;
+public class AccountActivity extends MyActivity{
 
 	private EditText pseudoEdit;
 	private RadioGroup radioGroup;
-
-	private AccountManager accountManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_account);
-
-		Intent intent = getIntent();
-		//Orientation change
-		if (savedInstanceState != null) {
-			this.mode = savedInstanceState.getInt(EXTRA_MODE_MAP,R.id.map_offline);
-			this.courtNamePort = savedInstanceState.getString(EXTRA_COURT_PORT);
-			this.port = savedInstanceState.getString(EXTRA_PORT);
-		}
-		else{
-			initIntentForActivity(intent);
-		}
-
-		accountManager = new AccountManager(getApplicationContext());
-
+		
 		String myPseudo = accountManager.getPseudo();
 		pseudoEdit = (EditText) findViewById(R.id.pseudo);
 		pseudoEdit.setText(myPseudo);
@@ -91,6 +66,15 @@ public class AccountActivity extends Activity{
 		});
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.account, menu);
+
+		return super.onCreateOptionsMenu(menu);
+	}
+
 	private int getSharedModeByButton(int id){
 		switch(id){
 		case R.id.radioNoPartage:
@@ -114,68 +98,6 @@ public class AccountActivity extends Activity{
 			return (RadioButton) findViewById(R.id.radioPartagePrivate);
 		default:
 			return null;
-		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.account, menu);
-		_menu = menu;
-		initMenu();
-
-		return true;
-	}
-
-	private void initIntentForActivity(Intent intent){
-		if (intent != null) {
-			//Get parameters
-			this.mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
-			this.courtNamePort = intent.getStringExtra(EXTRA_COURT_PORT);
-			this.port = intent.getStringExtra(EXTRA_PORT);
-		}
-	}
-
-	private void initMenu(){
-		if(this.mode == R.id.map_online){
-			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
-			_menu.findItem(R.id.map_online).setEnabled(false);
-			_menu.findItem(R.id.map_offline).setEnabled(true);
-		}
-		else{
-			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_offline);
-			_menu.findItem(R.id.map_online).setEnabled(true);
-			_menu.findItem(R.id.map_offline).setEnabled(false);
-		}
-
-		if(this.port != null && port.equals(getResources().getString(R.string.menu_marina))){
-			_menu.findItem(R.id.menu_port).setTitle(port);
-		}
-		else{
-			_menu.findItem(R.id.menu_port).setTitle(R.string.menu_port);
-		}
-	}
-
-	@Override
-	protected void onNewIntent(Intent intent) 
-	{
-		super.onNewIntent(intent);
-
-		initIntentForActivity(intent);
-		if(_menu != null){
-			initMenu();
-		}
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
-		savedInstanceState.putString(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
-		savedInstanceState.putString(EXTRA_COURT_PORT, this.courtNamePort);
-		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-			savedInstanceState.putInt(EXTRA_MODE_MAP, R.id.map_online);
 		}
 	}
 
@@ -230,15 +152,6 @@ public class AccountActivity extends Activity{
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	private void initIntent(Intent intent){
-		intent.putExtra(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
-		intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
-		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-			intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
 		}
 	}
 }

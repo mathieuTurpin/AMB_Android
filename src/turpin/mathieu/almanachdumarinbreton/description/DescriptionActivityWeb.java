@@ -43,7 +43,7 @@ public class DescriptionActivityWeb extends DescriptionActivity{
 				
 		Intent intent = getIntent();
 		//Orientation change
-		if (savedInstanceState != null && intent.getExtras() == null) {
+		if (savedInstanceState != null) {
 			url = savedInstanceState.getString(EXTRA_URL);
 		}
 		else{

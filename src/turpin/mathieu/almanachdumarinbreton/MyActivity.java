@@ -26,6 +26,8 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		accountManager = new AccountManager(getApplicationContext());
+		
 		Intent intent = getIntent();
 		//Orientation change
 		if (savedInstanceState != null) {
@@ -73,8 +75,6 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 		else{
 			_menu.findItem(R.id.menu_port).setTitle(R.string.menu_port);
 		}
-		
-		accountManager = new AccountManager(getApplicationContext());
 
 		if(accountManager.isLoggedIn()){
 			_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);

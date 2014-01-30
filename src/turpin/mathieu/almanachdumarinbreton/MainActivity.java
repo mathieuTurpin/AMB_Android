@@ -62,12 +62,6 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	private ToggleButton snapToLocationView;
 	private Menu _menu;
 
-	//Extra
-	final String EXTRA_PORT = "port_name";
-	final int RESULT_IS_LOGIN = 0;
-	final String EXTRA_COURT_PORT = "port_court_name";
-	final String EXTRA_MODE_MAP = "mode_map";
-
 	private int mode;
 	private String courtNamePort ="";
 	private String port ="";
@@ -95,9 +89,9 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		Intent intent = getIntent();
 		//Orientation change
 		if (savedInstanceState != null) {
-			this.mode = savedInstanceState.getInt(EXTRA_MODE_MAP,R.id.map_offline);
-			this.courtNamePort = savedInstanceState.getString(EXTRA_COURT_PORT);
-			this.port = savedInstanceState.getString(EXTRA_PORT);
+			this.mode = savedInstanceState.getInt(MyActivity.EXTRA_MODE_MAP,R.id.map_offline);
+			this.courtNamePort = savedInstanceState.getString(MyActivity.EXTRA_COURT_PORT);
+			this.port = savedInstanceState.getString(MyActivity.EXTRA_PORT);
 			initActivity();
 			showMyLocation = false;
 		}
@@ -252,9 +246,9 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	private void initIntentForActivity(Intent intent){
 		if (intent != null) {
 			//Get parameters
-			this.mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
-			this.courtNamePort = intent.getStringExtra(EXTRA_COURT_PORT);
-			this.port = intent.getStringExtra(EXTRA_PORT);
+			this.mode = intent.getIntExtra(MyActivity.EXTRA_MODE_MAP,R.id.map_offline);
+			this.courtNamePort = intent.getStringExtra(MyActivity.EXTRA_COURT_PORT);
+			this.port = intent.getStringExtra(MyActivity.EXTRA_PORT);
 			initActivity();
 		}
 		else{
@@ -313,11 +307,11 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
-		savedInstanceState.putString(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
-		savedInstanceState.putString(EXTRA_COURT_PORT, this.courtNamePort);
+		savedInstanceState.putString(MyActivity.EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
+		savedInstanceState.putString(MyActivity.EXTRA_COURT_PORT, this.courtNamePort);
 		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
 		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-			savedInstanceState.putInt(EXTRA_MODE_MAP, R.id.map_online);
+			savedInstanceState.putInt(MyActivity.EXTRA_MODE_MAP, R.id.map_online);
 		}
 	}
 
@@ -422,7 +416,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 				intent = new Intent(MainActivity.this, AccountActivity.class);
 				initIntent(intent);
 				intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-				startActivityForResult(intent, RESULT_IS_LOGIN);
+				startActivityForResult(intent, MyActivity.RESULT_IS_LOGIN);
 			}
 			else{
 				// Create an instance of the dialog fragment and show it
@@ -437,18 +431,18 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	}
 
 	private void initIntent(Intent intent){
-		intent.putExtra(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
-		intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
+		intent.putExtra(MyActivity.EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
+		intent.putExtra(MyActivity.EXTRA_COURT_PORT, this.courtNamePort);
 		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
 		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-			intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
+			intent.putExtra(MyActivity.EXTRA_MODE_MAP, R.id.map_online);
 		}
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch(requestCode){
-		case RESULT_IS_LOGIN:
+		case MyActivity.RESULT_IS_LOGIN:
 			switch(resultCode){
 			//Logout
 			case Activity.RESULT_CANCELED:
