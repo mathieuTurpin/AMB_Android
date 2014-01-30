@@ -42,7 +42,7 @@ public class AccountActivity extends Activity{
 
 		Intent intent = getIntent();
 		//Orientation change
-		if (savedInstanceState != null && intent.getExtras() == null) {
+		if (savedInstanceState != null) {
 			this.mode = savedInstanceState.getInt(EXTRA_MODE_MAP,R.id.map_offline);
 			this.courtNamePort = savedInstanceState.getString(EXTRA_COURT_PORT);
 			this.port = savedInstanceState.getString(EXTRA_PORT);
@@ -77,7 +77,7 @@ public class AccountActivity extends Activity{
 				finish();
 			}
 		});
-		
+
 		Button btnLogOut = (Button) findViewById(R.id.boutonLogout);
 		btnLogOut.setOnClickListener(new OnClickListener()
 		{
@@ -90,7 +90,7 @@ public class AccountActivity extends Activity{
 			}
 		});
 	}
-	
+
 	private int getSharedModeByButton(int id){
 		switch(id){
 		case R.id.radioNoPartage:
@@ -127,7 +127,7 @@ public class AccountActivity extends Activity{
 
 		return true;
 	}
-	
+
 	private void initIntentForActivity(Intent intent){
 		if (intent != null) {
 			//Get parameters
@@ -136,7 +136,7 @@ public class AccountActivity extends Activity{
 			this.port = intent.getStringExtra(EXTRA_PORT);
 		}
 	}
-	
+
 	private void initMenu(){
 		if(this.mode == R.id.map_online){
 			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
@@ -148,7 +148,7 @@ public class AccountActivity extends Activity{
 			_menu.findItem(R.id.map_online).setEnabled(true);
 			_menu.findItem(R.id.map_offline).setEnabled(false);
 		}
-		
+
 		if(this.port != null && port.equals(getResources().getString(R.string.menu_marina))){
 			_menu.findItem(R.id.menu_port).setTitle(port);
 		}
@@ -156,20 +156,18 @@ public class AccountActivity extends Activity{
 			_menu.findItem(R.id.menu_port).setTitle(R.string.menu_port);
 		}
 	}
-	
+
 	@Override
 	protected void onNewIntent(Intent intent) 
 	{
 		super.onNewIntent(intent);
-		//To check if is not orientation change
-		if(intent.getExtras() != null){
-			initIntentForActivity(intent);
-			if(_menu != null){
-				initMenu();
-			}
+
+		initIntentForActivity(intent);
+		if(_menu != null){
+			initMenu();
 		}
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
@@ -234,7 +232,7 @@ public class AccountActivity extends Activity{
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	private void initIntent(Intent intent){
 		intent.putExtra(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
 		intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);

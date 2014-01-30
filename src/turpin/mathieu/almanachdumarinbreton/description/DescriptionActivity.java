@@ -48,7 +48,7 @@ public abstract class DescriptionActivity extends Activity implements LoginDialo
 
 		Intent intent = getIntent();
 		//Orientation change
-		if (savedInstanceState != null && intent.getExtras() == null) {
+		if (savedInstanceState != null) {
 			this.mode = savedInstanceState.getInt(EXTRA_MODE_MAP,R.id.map_offline);
 			this.courtNamePort = savedInstanceState.getString(EXTRA_COURT_PORT);
 			this.port = savedInstanceState.getString(EXTRA_PORT);
@@ -121,15 +121,13 @@ public abstract class DescriptionActivity extends Activity implements LoginDialo
 	}
 	
 	@Override
-    protected void onNewIntent(Intent intent)
-    {
+	protected void onNewIntent(Intent intent) 
+	{
 		super.onNewIntent(intent);
-		//To check if is not orientation change
-		if(intent.getExtras() != null){
-			initIntentForActivity(intent);
-			if(_menu != null){
-				initMenu();
-			}
+
+		initIntentForActivity(intent);
+		if(_menu != null){
+			initMenu();
 		}
 	}
 	

@@ -94,7 +94,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		boolean showMyLocation = true;
 		Intent intent = getIntent();
 		//Orientation change
-		if (savedInstanceState != null && intent.getExtras() == null) {
+		if (savedInstanceState != null) {
 			this.mode = savedInstanceState.getInt(EXTRA_MODE_MAP,R.id.map_offline);
 			this.courtNamePort = savedInstanceState.getString(EXTRA_COURT_PORT);
 			this.port = savedInstanceState.getString(EXTRA_PORT);
@@ -102,9 +102,6 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			showMyLocation = false;
 		}
 		else{
-			if(intent.getExtras() != null){
-				showMyLocation = false;
-			}
 			initIntentForActivity(intent);
 		}
 
@@ -307,12 +304,9 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	protected void onNewIntent(Intent intent)
 	{
 		super.onNewIntent(intent);
-		//To check if is not orientation change
-		if(intent.getExtras() != null){
-			initIntentForActivity(intent);
-			if(_menu != null){
-				initMenu();
-			}
+		initIntentForActivity(intent);
+		if(_menu != null){
+			initMenu();
 		}
 	}
 
