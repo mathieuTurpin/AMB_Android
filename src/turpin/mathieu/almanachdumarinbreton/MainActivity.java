@@ -68,7 +68,9 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	final String EXTRA_COURT_PORT = "port_court_name";
 	final String EXTRA_MODE_MAP = "mode_map";
 
+	private int mode;
 	private String courtNamePort ="";
+	private String port ="";
 
 	private AccountManager accountManager;
 
@@ -86,17 +88,31 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		this.mapView = new MyMapView(this);
 		String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
 		cacheDirectoryPath = externalStorageDirectory + "/Android/data/org.mapsforge.android.maps/map/bretagne.map";
-		this.mapView.setMapFile(new File(cacheDirectoryPath));
-		//this.mapView.getFileSystemTileCache().setPersistent(false);
-		
+		this.mapView.setMapFile(new File(cacheDirectoryPath));		
+		this.mapView.getFileSystemTileCache().setPersistent(false);
+
+		boolean showMyLocation = true;
 		Intent intent = getIntent();
-		initIntentForActivity(intent);
+		//Orientation change
+		if (savedInstanceState != null && intent.getExtras() == null) {
+			this.mode = savedInstanceState.getInt(EXTRA_MODE_MAP,R.id.map_offline);
+			this.courtNamePort = savedInstanceState.getString(EXTRA_COURT_PORT);
+			this.port = savedInstanceState.getString(EXTRA_PORT);
+			initActivity();
+			showMyLocation = false;
+		}
+		else{
+			if(intent.getExtras() != null){
+				showMyLocation = false;
+			}
+			initIntentForActivity(intent);
+		}
 
 		configureMap();
 
 		relative.addView(this.mapView);
 
-		initLocation();
+		initLocation(showMyLocation);
 
 		this.snapToLocationView = (ToggleButton) findViewById(R.id.snapToLocationView);
 		this.snapToLocationView.setOnClickListener(new OnClickListener() {
@@ -125,7 +141,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		this.mapView.getController().setZoom(14);
 	}
 
-	private void initLocation(){
+	private void initLocation(boolean showMyLocation){
 		// get the pointers to different system services
 		this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		this.myLocationListener = new MyLocationListener(this);
@@ -146,7 +162,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		//sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		//this.mySensorListener = new MySensorListener(this,sensorManager);
 
-		showMyLocation(true);
+		showMyLocation(showMyLocation);
 	}
 
 	/**
@@ -178,7 +194,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		this.mapView.addItem(myPositionItem);
 
 		//Center the map to MyPosition
-		this.myLocationListener.setCenterAtFirstFix(true);
+		this.myLocationListener.setCenterAtFirstFix(centerAtFirstFix);
 		//Update MyPosition every second
 		this.locationManager.requestLocationUpdates(bestProvider, 1000, 0, this.myLocationListener);
 	}
@@ -231,63 +247,84 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		if(_menu.findItem(R.id.menu_sounding).isChecked()){
 			this.mapView.showSounding();
 		}
+		initMenu();
 
-		Intent intent = getIntent();
-		initIntentForMenu(intent);
-		
 		return true;
 	}
 	
 	private void initIntentForActivity(Intent intent){
-		this.mapView.getFileSystemTileCache().setPersistent(false);
 		if (intent != null) {
-			int mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
-			if(mode == R.id.map_online){
-				this.mapView.setMapGenerator(new MapnikTileDownloader());
-			}
-			else{
-				this.mapView.setMapGenerator(new DatabaseRenderer());
-			}
-
-			String courtName = intent.getStringExtra(EXTRA_COURT_PORT);
-			if(courtName != null){
-				this.courtNamePort = courtName;
-			}
+			//Get parameters
+			this.mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
+			this.courtNamePort = intent.getStringExtra(EXTRA_COURT_PORT);
+			this.port = intent.getStringExtra(EXTRA_PORT);
+			initActivity();
 		}
 		else{
 			this.mapView.setMapGenerator(new DatabaseRenderer());
 		}
 	}
 	
-	private void initIntentForMenu(Intent intent){
-		if (intent != null) {
-			int mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
-			if(mode == R.id.map_online){
-				_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
-				_menu.findItem(R.id.map_online).setEnabled(false);
-				_menu.findItem(R.id.map_offline).setEnabled(true);
-			}
-
-			String port = intent.getStringExtra(EXTRA_PORT);
-			if(port != null && port.equals(getResources().getString(R.string.menu_marina))){
-				goToMarina(port);
-			}
+	private void initActivity(){
+		if(this.mode == R.id.map_online){
+			this.mapView.setMapGenerator(new MapnikTileDownloader());
 		}
-		accountManager = new AccountManager(getApplicationContext());
-
-		if(accountManager.isLoggedIn()){
-			_menu.findItem(R.id.menu_compte).setTitle(getResources().getString(R.string.menu_compte));
+		else{
+			this.mapView.setMapGenerator(new DatabaseRenderer());
 		}
 	}
 	
+	private void initMenu(){
+		if(this.mode == R.id.map_online){
+			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
+			_menu.findItem(R.id.map_online).setEnabled(false);
+			_menu.findItem(R.id.map_offline).setEnabled(true);
+		}
+		else{
+			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_offline);
+			_menu.findItem(R.id.map_online).setEnabled(true);
+			_menu.findItem(R.id.map_offline).setEnabled(false);
+		}
+		
+		if(this.port != null && port.equals(getResources().getString(R.string.menu_marina))){
+			goToMarina(this.port);
+		}
+		else{
+			_menu.findItem(R.id.menu_port).setTitle(R.string.menu_port);
+		}
+		
+		accountManager = new AccountManager(getApplicationContext());
+
+		if(accountManager.isLoggedIn()){
+			_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);
+		}
+		else{
+			_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_login);
+		}
+	}
+
 	@Override
-    protected void onNewIntent(Intent intent)
-    {
+	protected void onNewIntent(Intent intent)
+	{
 		super.onNewIntent(intent);
-		//Restart thread before init the map with new configuration
-		this.mapView.onResume();
-		initIntentForActivity(intent);
-		initIntentForMenu(intent);
+		//To check if is not orientation change
+		if(intent.getExtras() != null){
+			initIntentForActivity(intent);
+			if(_menu != null){
+				initMenu();
+			}
+		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putString(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
+		savedInstanceState.putString(EXTRA_COURT_PORT, this.courtNamePort);
+		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+			savedInstanceState.putInt(EXTRA_MODE_MAP, R.id.map_online);
+		}
 	}
 
 	private void goToMarina(String name){
@@ -300,7 +337,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
-		
+
 		switch (item.getItemId()) {
 		case R.id.menu_marina:
 			// Button behavior "Marina"
@@ -328,11 +365,11 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 				Toast.makeText(MainActivity.this, R.string.error_missing_port, Toast.LENGTH_SHORT).show();
 				return true;
 			}
-			
+
 			intent = new Intent(MainActivity.this, DescriptionActivityWebLocal.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			initIntent(intent);
-			
+
 			startActivity(intent);
 			return true;
 		case R.id.menu_forum:
@@ -404,7 +441,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	private void initIntent(Intent intent){
 		intent.putExtra(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
 		intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
@@ -423,7 +460,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			case Activity.RESULT_CANCELED:
 				_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_login);
 				break;
-			//Always login
+				//Always login
 			case Activity.RESULT_OK:
 				//Nothing to do
 				break;

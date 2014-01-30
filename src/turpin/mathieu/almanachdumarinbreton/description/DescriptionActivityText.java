@@ -14,7 +14,7 @@ public class DescriptionActivityText extends DescriptionActivity{
 	private TextView serviceTextView = null;
 	private ImageView mapImageView = null;
 
-
+	//Not used
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

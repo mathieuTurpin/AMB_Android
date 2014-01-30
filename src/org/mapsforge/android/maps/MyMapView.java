@@ -76,7 +76,7 @@ public class MyMapView extends MapView {
 	private final MapWorker myMapWorker;
 
 	//Cache for OpenStreetMap
-	private final InMemoryTileCache inMemoryTileCacheOpenStreetMap;
+	private InMemoryTileCache inMemoryTileCacheOpenStreetMap;
 
 	//Cache for OpenSeaMap
 	private final InMemoryTileCacheOpenSeaMap inMemoryTileCacheOpenSeaMap;
@@ -145,8 +145,7 @@ public class MyMapView extends MapView {
 		xmlParser = new MyXmlParser(context);
 		this.myJobParameters = new JobParameters(MapView.DEFAULT_RENDER_THEME, DEFAULT_TEXT_SCALE);
 
-		//Initialize cache for OpenStreetMap
-		this.inMemoryTileCacheOpenStreetMap = new InMemoryTileCache(50);
+		//Set new parameters for cache OpenStreetMap
 		this.getFileSystemTileCache().setCapacity(200);
 		this.getFileSystemTileCache().setPersistent(false);
 
@@ -192,7 +191,7 @@ public class MyMapView extends MapView {
 	@Override
 	public void setMapGenerator(MapGenerator mapGenerator){
 		super.setMapGenerator(mapGenerator);
-		this.myMapWorker.setMapGenerator(mapGenerator);
+		this.myMapWorker.setMapGenerator(this.getMapGenerator());
 		this.getFileSystemTileCache().setPersistent(false);
 	}
 
@@ -468,6 +467,10 @@ public class MyMapView extends MapView {
 
 	@Override
 	public InMemoryTileCache getInMemoryTileCache(){
+		//Because it is use on super()
+		if(inMemoryTileCacheOpenStreetMap == null){
+			inMemoryTileCacheOpenStreetMap = new InMemoryTileCache(50);
+		}
 		return this.inMemoryTileCacheOpenStreetMap;
 	}
 
@@ -565,12 +568,14 @@ public class MyMapView extends MapView {
 	@Override
 	void onPause() {
 		super.onPause();
+		this.myMapWorker.pause();
 		this.mapWorkerOpenSeaMap.pause();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		this.myMapWorker.proceed();
 		this.mapWorkerOpenSeaMap.proceed();
 	}
 
@@ -592,8 +597,10 @@ public class MyMapView extends MapView {
 	@Override
 	void destroy() {
 		this.myMapWorker.interrupt();
+		this.mapWorkerOpenSeaMap.interrupt();
 		try {
 			this.myMapWorker.join();
+			this.mapWorkerOpenSeaMap.join();
 		} catch (InterruptedException e) {
 			// restore the interrupted status
 			Thread.currentThread().interrupt();

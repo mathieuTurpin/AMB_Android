@@ -24,7 +24,9 @@ public class AccountActivity extends Activity{
 	final String EXTRA_COURT_PORT = "port_court_name";
 	final String EXTRA_MODE_MAP = "mode_map";
 
+	private int mode;
 	private String courtNamePort ="";
+	private String port ="";
 
 	private Menu _menu;
 
@@ -39,7 +41,15 @@ public class AccountActivity extends Activity{
 		setContentView(R.layout.activity_account);
 
 		Intent intent = getIntent();
-		initIntentForActivity(intent);
+		//Orientation change
+		if (savedInstanceState != null && intent.getExtras() == null) {
+			this.mode = savedInstanceState.getInt(EXTRA_MODE_MAP,R.id.map_offline);
+			this.courtNamePort = savedInstanceState.getString(EXTRA_COURT_PORT);
+			this.port = savedInstanceState.getString(EXTRA_PORT);
+		}
+		else{
+			initIntentForActivity(intent);
+		}
 
 		accountManager = new AccountManager(getApplicationContext());
 
@@ -113,43 +123,62 @@ public class AccountActivity extends Activity{
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.account, menu);
 		_menu = menu;
-		Intent intent = getIntent();
-		initIntentForMenu(intent);
+		initMenu();
 
 		return true;
 	}
 	
 	private void initIntentForActivity(Intent intent){
 		if (intent != null) {
-			String courtName = intent.getStringExtra(EXTRA_COURT_PORT);
-			if(courtName != null){
-				this.courtNamePort = courtName;
-			}
+			//Get parameters
+			this.mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
+			this.courtNamePort = intent.getStringExtra(EXTRA_COURT_PORT);
+			this.port = intent.getStringExtra(EXTRA_PORT);
 		}
 	}
 	
-	private void initIntentForMenu(Intent intent){
-		if (intent != null) {
-			int mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
-			if(mode == R.id.map_online){
-				_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
-				_menu.findItem(R.id.map_online).setEnabled(false);
-				_menu.findItem(R.id.map_offline).setEnabled(true);
-			}
-
-			String port = intent.getStringExtra(EXTRA_PORT);
-			if(port != null && port.equals(getResources().getString(R.string.menu_marina))){
-				_menu.findItem(R.id.menu_port).setTitle(port);
+	private void initMenu(){
+		if(this.mode == R.id.map_online){
+			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
+			_menu.findItem(R.id.map_online).setEnabled(false);
+			_menu.findItem(R.id.map_offline).setEnabled(true);
+		}
+		else{
+			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_offline);
+			_menu.findItem(R.id.map_online).setEnabled(true);
+			_menu.findItem(R.id.map_offline).setEnabled(false);
+		}
+		
+		if(this.port != null && port.equals(getResources().getString(R.string.menu_marina))){
+			_menu.findItem(R.id.menu_port).setTitle(port);
+		}
+		else{
+			_menu.findItem(R.id.menu_port).setTitle(R.string.menu_port);
+		}
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) 
+	{
+		super.onNewIntent(intent);
+		//To check if is not orientation change
+		if(intent.getExtras() != null){
+			initIntentForActivity(intent);
+			if(_menu != null){
+				initMenu();
 			}
 		}
 	}
 	
 	@Override
-    protected void onNewIntent(Intent intent) 
-    {
-		super.onNewIntent(intent);
-		initIntentForActivity(intent);
-		initIntentForMenu(intent);
+	protected void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putString(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
+		savedInstanceState.putString(EXTRA_COURT_PORT, this.courtNamePort);
+		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+			savedInstanceState.putInt(EXTRA_MODE_MAP, R.id.map_online);
+		}
 	}
 
 	@Override

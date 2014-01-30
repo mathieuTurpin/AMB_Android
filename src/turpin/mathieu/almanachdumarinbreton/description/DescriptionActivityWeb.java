@@ -1,7 +1,6 @@
 package turpin.mathieu.almanachdumarinbreton.description;
 
 import turpin.mathieu.almanachdumarinbreton.R;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +12,7 @@ import android.webkit.WebView;
 public class DescriptionActivityWeb extends DescriptionActivity{
 
 	private WebView mWebView = null;
+	private String url;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +40,25 @@ public class DescriptionActivityWeb extends DescriptionActivity{
 		});
 		mWebView.getSettings().setJavaScriptEnabled(true);
 		mWebView.getSettings().setBuiltInZoomControls(true);
-
+				
 		Intent intent = getIntent();
-		if (intent != null) {
-			String url = intent.getStringExtra(EXTRA_URL);
-			if(url != null){
-				mWebView.loadUrl(url);
-			}
+		//Orientation change
+		if (savedInstanceState != null && intent.getExtras() == null) {
+			url = savedInstanceState.getString(EXTRA_URL);
 		}
+		else{
+			url = intent.getStringExtra(EXTRA_URL);
+		}
+		
+		if(url != null){
+			mWebView.loadUrl(url);
+		}
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putString(EXTRA_URL,url);
 	}
 
 }

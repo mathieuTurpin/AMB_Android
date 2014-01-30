@@ -33,7 +33,10 @@ public abstract class DescriptionActivity extends Activity implements LoginDialo
 	final String EXTRA_COURT_PORT = "port_court_name";
 	final String EXTRA_MODE_DESCRIPTION = "mode_description";
 
+	protected int mode;
 	protected String courtNamePort ="";
+	protected String port ="";
+	protected int modeDescription;
 
 	private Menu _menu;
 
@@ -42,8 +45,18 @@ public abstract class DescriptionActivity extends Activity implements LoginDialo
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		Intent intent = getIntent();
-		initIntentForActivity(intent);
+		//Orientation change
+		if (savedInstanceState != null && intent.getExtras() == null) {
+			this.mode = savedInstanceState.getInt(EXTRA_MODE_MAP,R.id.map_offline);
+			this.courtNamePort = savedInstanceState.getString(EXTRA_COURT_PORT);
+			this.port = savedInstanceState.getString(EXTRA_PORT);
+			this.modeDescription = savedInstanceState.getInt(EXTRA_MODE_DESCRIPTION, R.id.menu_details);
+		}
+		else{
+			initIntentForActivity(intent);
+		}
 	}
 
 	@Override
@@ -53,50 +66,57 @@ public abstract class DescriptionActivity extends Activity implements LoginDialo
 		inflater.inflate(R.menu.description, menu);
 		_menu = menu;
 
-		Intent intent = getIntent();
-		initIntentForMenu(intent);
+		initMenu();
 
 		return true;
 	}
 	
 	private void initIntentForActivity(Intent intent){
 		if (intent != null) {
-			String courtName = intent.getStringExtra(EXTRA_COURT_PORT);
-			if(courtName != null){
-				this.courtNamePort = courtName;
-			}
+			//Get parameters
+			this.mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
+			this.courtNamePort = intent.getStringExtra(EXTRA_COURT_PORT);
+			this.port = intent.getStringExtra(EXTRA_PORT);
+			this.modeDescription = intent.getIntExtra(EXTRA_MODE_DESCRIPTION, R.id.menu_details);
 		}
 	}
 	
-	private void initIntentForMenu(Intent intent){
-		if (intent != null) {
-			int mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
-			if(mode == R.id.map_online){
-				_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
-				_menu.findItem(R.id.map_online).setEnabled(false);
-				_menu.findItem(R.id.map_offline).setEnabled(true);
-			}
-
-			String port = intent.getStringExtra(EXTRA_PORT);
-			if(port != null && port.equals(getResources().getString(R.string.menu_marina))){
-				_menu.findItem(R.id.menu_port).setTitle(port);
-			}
-			
-			int modeDescription = intent.getIntExtra(EXTRA_MODE_DESCRIPTION, R.id.menu_details);
-			if(modeDescription != R.id.menu_details){
-				MenuItem item = _menu.findItem(modeDescription);
-				_menu.findItem(R.id.menu_affichage).setTitle(item.getTitle());
-				_menu.findItem(R.id.menu_details).setEnabled(true);
-				item.setEnabled(false);
-			}
-			if(modeDescription == R.id.menu_meteo){
-				_menu.findItem(R.id.menu_connexion).setEnabled(false);
-			}
+	private void initMenu(){
+		if(this.mode == R.id.map_online){
+			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
+			_menu.findItem(R.id.map_online).setEnabled(false);
+			_menu.findItem(R.id.map_offline).setEnabled(true);
 		}
+		else{
+			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_offline);
+			_menu.findItem(R.id.map_online).setEnabled(true);
+			_menu.findItem(R.id.map_offline).setEnabled(false);
+		}
+		
+		if(this.port != null && port.equals(getResources().getString(R.string.menu_marina))){
+			_menu.findItem(R.id.menu_port).setTitle(port);
+		}
+		else{
+			_menu.findItem(R.id.menu_port).setTitle(R.string.menu_port);
+		}
+		
 		accountManager = new AccountManager(getApplicationContext());
 
 		if(accountManager.isLoggedIn()){
-			_menu.findItem(R.id.menu_compte).setTitle(getResources().getString(R.string.menu_compte));
+			_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);
+		}
+		else{
+			_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_login);
+		}
+		
+		if(modeDescription != R.id.menu_details){
+			MenuItem item = _menu.findItem(modeDescription);
+			_menu.findItem(R.id.menu_affichage).setTitle(item.getTitle());
+			_menu.findItem(R.id.menu_details).setEnabled(true);
+			item.setEnabled(false);
+		}
+		if(modeDescription == R.id.menu_meteo){
+			_menu.findItem(R.id.menu_connexion).setEnabled(false);
 		}
 	}
 	
@@ -104,8 +124,24 @@ public abstract class DescriptionActivity extends Activity implements LoginDialo
     protected void onNewIntent(Intent intent)
     {
 		super.onNewIntent(intent);
-		initIntentForActivity(intent);
-		initIntentForMenu(intent);
+		//To check if is not orientation change
+		if(intent.getExtras() != null){
+			initIntentForActivity(intent);
+			if(_menu != null){
+				initMenu();
+			}
+		}
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putString(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
+		savedInstanceState.putString(EXTRA_COURT_PORT, this.courtNamePort);
+		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+			savedInstanceState.putInt(EXTRA_MODE_MAP, R.id.map_online);
+		}
 	}
 
 	private void goToWebDescription(int id_mode_description,String url){
