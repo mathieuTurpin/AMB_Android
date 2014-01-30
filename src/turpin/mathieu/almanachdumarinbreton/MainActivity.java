@@ -283,7 +283,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		else{
 			_menu.findItem(R.id.menu_port).setTitle(R.string.menu_port);
 		}
-		
+
 		accountManager = new AccountManager(getApplicationContext());
 
 		if(accountManager.isLoggedIn()){
@@ -299,6 +299,11 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	{
 		super.onNewIntent(intent);
 		initIntentForActivity(intent);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
 		if(_menu != null){
 			initMenu();
 		}
