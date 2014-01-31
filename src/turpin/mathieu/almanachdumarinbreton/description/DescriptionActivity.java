@@ -4,13 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import turpin.mathieu.almanachdumarinbreton.MainActivity;
 import turpin.mathieu.almanachdumarinbreton.MyActivity;
 import turpin.mathieu.almanachdumarinbreton.R;
-import turpin.mathieu.almanachdumarinbreton.forum.AccountActivity;
-import turpin.mathieu.almanachdumarinbreton.forum.ForumActivity;
-import turpin.mathieu.almanachdumarinbreton.forum.LoginDialog;
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -79,106 +75,26 @@ public abstract class DescriptionActivity extends MyActivity{
 		savedInstanceState.putInt(EXTRA_MODE_DESCRIPTION, this.modeDescription);
 	}
 
-	private void goToWebDescription(int id_mode_description,String url){
-		Intent intent = new Intent(DescriptionActivity.this, DescriptionActivityWeb.class);
-		initIntent(intent);
-		intent.putExtra(EXTRA_MODE_DESCRIPTION, id_mode_description);
-		intent.putExtra(EXTRA_URL, url);
-		startActivity(intent);
-	}
-
-	private void goToWebLocalDescription(int id_mode_description){
-		Intent intent = new Intent(DescriptionActivity.this, DescriptionActivityWebLocal.class);
-		initIntent(intent);
-		intent.putExtra(EXTRA_MODE_DESCRIPTION, id_mode_description);
-		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-		startActivity(intent);
-	}
-
-	/*
-	private void goToTextDescription(int id_mode_description){
-		Intent intent = new Intent(DescriptionActivity.this, DescriptionActivityText.class);
-		intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
-		intent.putExtra(EXTRA_MODE_DESCRIPTION, id_mode_description);
-		intent.putExtra(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
-		startActivity(intent);
-	}*/
-
-	private void goToImageDescription(int id_mode_description){
-		Intent intent = new Intent(DescriptionActivity.this, DescriptionActivityImage.class);
-		initIntent(intent);
-		intent.putExtra(EXTRA_MODE_DESCRIPTION, id_mode_description);
-		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-		startActivity(intent);
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
 		switch (item.getItemId()) {
-		case R.id.menu_marina:
-			// Button behavior "Marina"
-			return true;
-		case R.id.map:
-			intent = new Intent(DescriptionActivity.this, MainActivity.class);
-			initIntent(intent);
-			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			startActivity(intent);
-			return true;
-		case R.id.map_offline:
-			// Button behavior "Map offline"
-			_menu.findItem(R.id.map_online).setEnabled(true);
-			_menu.findItem(R.id.map_offline).setEnabled(false);
-			_menu.findItem(R.id.menu_connexion).setTitle(item.getTitle());
-			return true;
-		case R.id.map_online:
-			// Button behavior "Map Online"
-			_menu.findItem(R.id.map_online).setEnabled(false);
-			_menu.findItem(R.id.map_offline).setEnabled(true);
-			_menu.findItem(R.id.menu_connexion).setTitle(item.getTitle());
-			return true;
-		case R.id.menu_forum:
-			intent = new Intent(DescriptionActivity.this, ForumActivity.class);
-			initIntent(intent);
-			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			startActivity(intent);
-			return true;
 		case R.id.menu_details:
-			// Button behavior "Details"
 			goToWebLocalDescription(R.id.menu_details);
 			return true;
 		case R.id.menu_courant:
-			// Button behavior "Courant"
 			goToImageDescription(R.id.menu_courant);
 			return true;
 		case R.id.menu_marees:
-			// Button behavior "Marees"
 			String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
 			if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
 				goToWebDescription(R.id.menu_marees,getString(R.string.url_marees));
 			}
 			else{
 				String nameFile = "maree.pdf";
-				if(copyReadPdfAssets(nameFile)){
-					intent = new Intent(Intent.ACTION_VIEW);
-					intent.setDataAndType(
-							Uri.parse("file://" + getFilesDir() + "/"+nameFile),
-							"application/pdf");
-					try {
-						startActivity(intent);
-						return true;
-					} catch (ActivityNotFoundException e) {
-						Toast.makeText(this, "Erreur: vous n'avez pas d'application pour lire un pdf", Toast.LENGTH_SHORT).show();
-					}
-				}
-				else{
-					Toast.makeText(this, "Erreur: Fichier pdf non disponible", Toast.LENGTH_SHORT).show();
-				}
+				displayPdf(nameFile);
 			}
-
 			return true;
 		case R.id.menu_meteo:
-			// Button behavior "Meteo"
 			String connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
 			if(connexion.equals(getResources().getString(R.string.menu_online))){
 				goToWebDescription(R.id.menu_meteo,getString(R.string.url_meteo));
@@ -187,26 +103,54 @@ public abstract class DescriptionActivity extends MyActivity{
 				Toast.makeText(this, "Non disponible en mode offline", Toast.LENGTH_SHORT).show();
 			}
 			return true;
-		case R.id.menu_compte:
-			// Button behavior "Compte"
-			if(accountManager.isLoggedIn()){
-				intent = new Intent(DescriptionActivity.this, AccountActivity.class);
-				initIntent(intent);
-				intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-				startActivityForResult(intent, RESULT_IS_LOGIN);
-			}
-			else{
-				// Create an instance of the dialog fragment and show it
-				LoginDialog dialog = new LoginDialog();
-				dialog.show(getFragmentManager(), "LoginDialog");
-			}
-
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+	private void goToWebDescription(int id_mode_description,String url){
+		Intent intent = new Intent(this, DescriptionActivityWeb.class);
+		initIntent(intent);
+		intent.putExtra(EXTRA_MODE_DESCRIPTION, id_mode_description);
+		intent.putExtra(EXTRA_URL, url);
+		startActivity(intent);
+	}
 
+	private void goToWebLocalDescription(int id_mode_description){
+		Intent intent = new Intent(this, DescriptionActivityWebLocal.class);
+		initIntent(intent);
+		intent.putExtra(EXTRA_MODE_DESCRIPTION, id_mode_description);
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		startActivity(intent);
+	}
+
+	private void goToImageDescription(int id_mode_description){
+		Intent intent = new Intent(this, DescriptionActivityImage.class);
+		initIntent(intent);
+		intent.putExtra(EXTRA_MODE_DESCRIPTION, id_mode_description);
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		startActivity(intent);
+	}
+	
+	private void displayPdf(String nameFile){
+		if(copyReadPdfAssets(nameFile)){
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setDataAndType(
+					Uri.parse("file://" + getFilesDir() + "/"+nameFile),
+					"application/pdf");
+			try {
+				startActivity(intent);
+				return;
+			} catch (ActivityNotFoundException e) {
+				Toast.makeText(this, "Erreur: vous n'avez pas d'application pour lire un pdf", Toast.LENGTH_SHORT).show();
+			}
+		}
+		else{
+			Toast.makeText(this, "Erreur: Fichier pdf non disponible", Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	@SuppressLint("WorldReadableFiles")
 	private boolean copyReadPdfAssets(String nameFile)
 	{
 		InputStream in = null;

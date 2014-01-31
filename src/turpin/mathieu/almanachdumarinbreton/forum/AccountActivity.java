@@ -1,22 +1,17 @@
 package turpin.mathieu.almanachdumarinbreton.forum;
 
-import turpin.mathieu.almanachdumarinbreton.MainActivity;
 import turpin.mathieu.almanachdumarinbreton.MyActivity;
 import turpin.mathieu.almanachdumarinbreton.R;
-import turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityWebLocal;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 public class AccountActivity extends MyActivity{
 
@@ -98,60 +93,6 @@ public class AccountActivity extends MyActivity{
 			return (RadioButton) findViewById(R.id.radioPartagePrivate);
 		default:
 			return null;
-		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-		case R.id.menu_marina:
-			// Button behavior "Marina"
-			_menu.findItem(R.id.menu_port).setTitle(item.getTitle().toString());
-			this.courtNamePort = getResources().getString(R.string.name_marina);
-			return true;
-		case R.id.map:
-			intent = new Intent(AccountActivity.this, MainActivity.class);
-			initIntent(intent);
-			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			startActivity(intent);
-			return true;
-		case R.id.map_description:
-			// Button behavior "Map Decription"
-			// if no port is selected
-			String namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
-			if(namePort.equals(getResources().getString(R.string.menu_port))){
-				Toast.makeText(AccountActivity.this, R.string.error_missing_port, Toast.LENGTH_SHORT).show();
-				return true;
-			}
-			intent = new Intent(AccountActivity.this, DescriptionActivityWebLocal.class);
-			initIntent(intent);
-			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			startActivity(intent);
-			return true;
-		case R.id.map_offline:
-			// Button behavior "Map offline"
-			_menu.findItem(R.id.map_online).setEnabled(true);
-			_menu.findItem(R.id.map_offline).setEnabled(false);
-			_menu.findItem(R.id.menu_connexion).setTitle(item.getTitle());
-			return true;
-		case R.id.map_online:
-			// Button behavior "Map Online"
-			_menu.findItem(R.id.map_online).setEnabled(false);
-			_menu.findItem(R.id.map_offline).setEnabled(true);
-			_menu.findItem(R.id.menu_connexion).setTitle(item.getTitle());
-			return true;
-		case R.id.menu_forum:
-			intent = new Intent(AccountActivity.this, ForumActivity.class);
-			initIntent(intent);
-			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			startActivity(intent);
-			return true;
-		case R.id.menu_compte:
-			// Button behavior "Compte"
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
 		}
 	}
 }

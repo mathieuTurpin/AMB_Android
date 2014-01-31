@@ -43,6 +43,7 @@
     <item
         android:id="@+id/menu_compte"
         android:showAsAction="ifRoom"
+        android:enabled="false"
         android:title="@string/menu_compte"/>
 
 </menu>
