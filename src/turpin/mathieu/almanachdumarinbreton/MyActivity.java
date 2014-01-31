@@ -217,8 +217,8 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 	}
 
 	private void setConnectionMode(boolean online,CharSequence title){
-		_menu.findItem(R.id.map_online).setEnabled(online);
-		_menu.findItem(R.id.map_offline).setEnabled(!online);
+		_menu.findItem(R.id.map_online).setEnabled(!online);
+		_menu.findItem(R.id.map_offline).setEnabled(online);
 		_menu.findItem(R.id.menu_connexion).setTitle(title);
 	}
 

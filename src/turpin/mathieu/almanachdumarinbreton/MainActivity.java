@@ -116,7 +116,135 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 				}
 			}
 		});
+	}
+	
+	private void initIntentForActivity(Intent intent){
+		if (intent != null) {
+			//Get parameters
+			this.mode = intent.getIntExtra(MyActivity.EXTRA_MODE_MAP,R.id.map_offline);
+			this.courtNamePort = intent.getStringExtra(MyActivity.EXTRA_COURT_PORT);
+			this.port = intent.getStringExtra(MyActivity.EXTRA_PORT);
+			initActivity();
+		}
+		else{
+			this.mapView.setMapGenerator(new DatabaseRenderer());
+		}
+	}
+	
+	private void initActivity(){
+		if(this.mode == R.id.map_online){
+			this.mapView.setMapGenerator(new MapnikTileDownloader());
+		}
+		else{
+			this.mapView.setMapGenerator(new DatabaseRenderer());
+		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		_menu = menu;
+		if(_menu.findItem(R.id.menu_OSM).isChecked()){
+			this.mapView.showBaliseOSM();
+		}
+		if(_menu.findItem(R.id.menu_service).isChecked()){
+			this.mapView.showService();
+		}
+		if(_menu.findItem(R.id.menu_ponton).isChecked()){
+			this.mapView.showText();
+		}
+		if(_menu.findItem(R.id.menu_sounding).isChecked()){
+			this.mapView.showSounding();
+		}
+		initMenu();
 
+		return true;
+	}
+	
+	private void initMenu(){
+		if(this.mode == R.id.map_online){
+			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
+			_menu.findItem(R.id.map_online).setEnabled(false);
+			_menu.findItem(R.id.map_offline).setEnabled(true);
+		}
+		else{
+			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_offline);
+			_menu.findItem(R.id.map_online).setEnabled(true);
+			_menu.findItem(R.id.map_offline).setEnabled(false);
+		}
+		
+		if(this.port != null && port.equals(getResources().getString(R.string.menu_marina))){
+			goToPort(R.id.menu_marina);
+		}
+		else{
+			_menu.findItem(R.id.menu_port).setTitle(R.string.menu_port);
+		}
+
+		accountManager = new AccountManager(getApplicationContext());
+
+		if(accountManager.isLoggedIn()){
+			_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);
+		}
+		else{
+			_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_login);
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent)
+	{
+		super.onNewIntent(intent);
+		initIntentForActivity(intent);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if(_menu != null){
+			initMenu();
+		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putString(MyActivity.EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
+		savedInstanceState.putString(MyActivity.EXTRA_COURT_PORT, this.courtNamePort);
+		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+			savedInstanceState.putInt(MyActivity.EXTRA_MODE_MAP, R.id.map_online);
+		}
+	}
+	
+	private void initIntent(Intent intent){
+		intent.putExtra(MyActivity.EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
+		intent.putExtra(MyActivity.EXTRA_COURT_PORT, this.courtNamePort);
+		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+			intent.putExtra(MyActivity.EXTRA_MODE_MAP, R.id.map_online);
+		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch(requestCode){
+		case MyActivity.RESULT_IS_LOGIN:
+			switch(resultCode){
+			//Logout
+			case Activity.RESULT_CANCELED:
+				_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_login);
+				break;
+				//Always login
+			case Activity.RESULT_OK:
+				//Nothing to do
+				break;
+			}
+			break;
+		default:
+			return;
+		}
 	}
 
 	private void configureMap(){
@@ -218,161 +346,41 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			this.mapView.setClickable(true);
 		}
 	}
-
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
-		_menu = menu;
-		if(_menu.findItem(R.id.menu_OSM).isChecked()){
-			this.mapView.showBaliseOSM();
-		}
-		if(_menu.findItem(R.id.menu_service).isChecked()){
-			this.mapView.showService();
-		}
-		if(_menu.findItem(R.id.menu_ponton).isChecked()){
-			this.mapView.showText();
-		}
-		if(_menu.findItem(R.id.menu_sounding).isChecked()){
-			this.mapView.showSounding();
-		}
-		initMenu();
-
-		return true;
-	}
-	
-	private void initIntentForActivity(Intent intent){
-		if (intent != null) {
-			//Get parameters
-			this.mode = intent.getIntExtra(MyActivity.EXTRA_MODE_MAP,R.id.map_offline);
-			this.courtNamePort = intent.getStringExtra(MyActivity.EXTRA_COURT_PORT);
-			this.port = intent.getStringExtra(MyActivity.EXTRA_PORT);
-			initActivity();
-		}
-		else{
-			this.mapView.setMapGenerator(new DatabaseRenderer());
-		}
-	}
-	
-	private void initActivity(){
-		if(this.mode == R.id.map_online){
-			this.mapView.setMapGenerator(new MapnikTileDownloader());
-		}
-		else{
-			this.mapView.setMapGenerator(new DatabaseRenderer());
-		}
-	}
-	
-	private void initMenu(){
-		if(this.mode == R.id.map_online){
-			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
-			_menu.findItem(R.id.map_online).setEnabled(false);
-			_menu.findItem(R.id.map_offline).setEnabled(true);
-		}
-		else{
-			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_offline);
-			_menu.findItem(R.id.map_online).setEnabled(true);
-			_menu.findItem(R.id.map_offline).setEnabled(false);
-		}
-		
-		if(this.port != null && port.equals(getResources().getString(R.string.menu_marina))){
-			goToMarina(this.port);
-		}
-		else{
-			_menu.findItem(R.id.menu_port).setTitle(R.string.menu_port);
-		}
-
-		accountManager = new AccountManager(getApplicationContext());
-
-		if(accountManager.isLoggedIn()){
-			_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);
-		}
-		else{
-			_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_login);
-		}
-	}
-
-	@Override
-	protected void onNewIntent(Intent intent)
-	{
-		super.onNewIntent(intent);
-		initIntentForActivity(intent);
-	}
 	
 	@Override
-	public void onResume() {
-		super.onResume();
-		if(_menu != null){
-			initMenu();
-		}
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
-		savedInstanceState.putString(MyActivity.EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
-		savedInstanceState.putString(MyActivity.EXTRA_COURT_PORT, this.courtNamePort);
-		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-			savedInstanceState.putInt(MyActivity.EXTRA_MODE_MAP, R.id.map_online);
-		}
-	}
-
-	private void goToMarina(String name){
-		_menu.findItem(R.id.menu_port).setTitle(name);
-		this.courtNamePort = getResources().getString(R.string.name_marina);
-		this.mapView.getController().setZoom(16);
-		this.mapView.setCenter(new GeoPoint(48.377972, -4.491666));
+	public void setIsLogin() {
+		_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-
 		switch (item.getItemId()) {
 		case R.id.menu_marina:
-			// Button behavior "Marina"
-			goToMarina(item.getTitle().toString());
-			return true;
-		case R.id.map_offline:
-			// Button behavior "Map offline"
-			_menu.findItem(R.id.map_online).setEnabled(true);
-			_menu.findItem(R.id.map_offline).setEnabled(false);
-			_menu.findItem(R.id.menu_connexion).setTitle(item.getTitle());
-			this.mapView.setMapGenerator(new DatabaseRenderer());
-			return true;
-		case R.id.map_online:
-			// Button behavior "Map Online"
-			_menu.findItem(R.id.map_online).setEnabled(false);
-			_menu.findItem(R.id.map_offline).setEnabled(true);
-			_menu.findItem(R.id.menu_connexion).setTitle(item.getTitle());
-			this.mapView.setMapGenerator(new MapnikTileDownloader());
+			goToPort(R.id.menu_marina);
 			return true;
 		case R.id.map_description:
-			// Button behavior "Map Decription"
-			// if no port is selected
-			String namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
-			if(namePort.equals(getResources().getString(R.string.menu_port))){
-				Toast.makeText(MainActivity.this, R.string.error_missing_port, Toast.LENGTH_SHORT).show();
-				return true;
-			}
-
-			intent = new Intent(MainActivity.this, DescriptionActivityWebLocal.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			initIntent(intent);
-
-			startActivity(intent);
+			goToDescription();
 			return true;
 		case R.id.menu_forum:
-			intent = new Intent(MainActivity.this, ForumActivity.class);
-			initIntent(intent);
-			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			startActivity(intent);
+			goToForum();
+			return true;
+		case R.id.map_offline:
+			this.mode = R.id.map_offline;
+			setConnectionMode(false,item.getTitle());
+			return true;
+		case R.id.map_online:
+			this.mode = R.id.map_online;
+			setConnectionMode(true,item.getTitle());
+			return true;
+		case R.id.menu_compte:
+			if(accountManager.isLoggedIn()){
+				goToAccount();
+			}
+			else{
+				goToLogin();
+			}
 			return true;
 		case R.id.menu_OSM:
-			// Button behavior "OSM"
 			if(item.isChecked()){
 				item.setChecked(false);
 				this.mapView.hiddenBalise();
@@ -383,7 +391,6 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			}
 			return true;
 		case R.id.menu_service:
-			// Button behavior "Service"
 			if(item.isChecked()){
 				item.setChecked(false);
 				this.mapView.hiddenService();
@@ -394,7 +401,6 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			}
 			return true;
 		case R.id.menu_ponton:
-			// Button behavior "Ponton"
 			if(item.isChecked()){
 				item.setChecked(false);
 				this.mapView.hiddenText();
@@ -405,7 +411,6 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			}
 			return true;
 		case R.id.menu_sounding:
-			// Button behavior "Sounding"
 			if(item.isChecked()){
 				item.setChecked(false);
 				this.mapView.hiddenSounding();
@@ -415,58 +420,66 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 				this.mapView.showSounding();
 			}
 			return true;
-		case R.id.menu_compte:
-			// Button behavior "Compte"
-			if(accountManager.isLoggedIn()){
-				intent = new Intent(MainActivity.this, AccountActivity.class);
-				initIntent(intent);
-				intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-				startActivityForResult(intent, MyActivity.RESULT_IS_LOGIN);
-			}
-			else{
-				// Create an instance of the dialog fragment and show it
-				LoginDialog dialog = new LoginDialog();
-				dialog.show(getFragmentManager(), "LoginDialog");
-			}
-
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-	private void initIntent(Intent intent){
-		intent.putExtra(MyActivity.EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
-		intent.putExtra(MyActivity.EXTRA_COURT_PORT, this.courtNamePort);
-		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-			intent.putExtra(MyActivity.EXTRA_MODE_MAP, R.id.map_online);
+	
+	private void goToPort(int idPort){
+		String namePort = _menu.findItem(idPort).getTitle().toString();
+		_menu.findItem(R.id.menu_port).setTitle(namePort);
+		switch(idPort){
+		case R.id.menu_marina:
+			this.port = namePort;
+			this.courtNamePort = getResources().getString(R.string.name_marina);
+			this.mapView.getController().setZoom(16);
+			this.mapView.setCenter(new GeoPoint(48.377972, -4.491666));
+			break;
 		}
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch(requestCode){
-		case MyActivity.RESULT_IS_LOGIN:
-			switch(resultCode){
-			//Logout
-			case Activity.RESULT_CANCELED:
-				_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_login);
-				break;
-				//Always login
-			case Activity.RESULT_OK:
-				//Nothing to do
-				break;
-			}
-			break;
-		default:
+	private void goToDescription(){
+		// if no port is selected
+		String namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
+		if(namePort.equals(getResources().getString(R.string.menu_port))){
+			Toast.makeText(this, R.string.error_missing_port, Toast.LENGTH_SHORT).show();
 			return;
 		}
+		Intent intent = new Intent(this, DescriptionActivityWebLocal.class);
+		initIntent(intent);
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		startActivity(intent);
+	}
+	
+	private void goToForum(){
+		Intent intent = new Intent(this, ForumActivity.class);
+		initIntent(intent);
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		startActivity(intent);
 	}
 
-	@Override
-	public void setIsLogin() {
-		_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);
+	private void setConnectionMode(boolean online,CharSequence title){
+		_menu.findItem(R.id.map_online).setEnabled(!online);
+		_menu.findItem(R.id.map_offline).setEnabled(online);
+		_menu.findItem(R.id.menu_connexion).setTitle(title);
+		if(online){
+			this.mapView.setMapGenerator(new MapnikTileDownloader());
+		}
+		else{
+			this.mapView.setMapGenerator(new DatabaseRenderer());
+		}
 	}
-
+	
+	private void goToAccount(){
+		Intent intent = new Intent(this, AccountActivity.class);
+		initIntent(intent);
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		startActivityForResult(intent, MyActivity.RESULT_IS_LOGIN);
+	}
+	
+	private void goToLogin(){
+		// Create an instance of the dialog fragment and show it
+		LoginDialog dialog = new LoginDialog();
+		dialog.show(getFragmentManager(), "LoginDialog");
+	}
 }
