@@ -31,9 +31,9 @@
         android:id="@+id/linearLayoutPartage"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayoutPseudo"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:layout_below="@+id/linearLayoutPseudo"
         android:paddingLeft="@dimen/activity_horizontal_margin" >
 
         <TextView
@@ -68,6 +68,14 @@
                 android:text="@string/share_position_private" />
         </RadioGroup>
     </LinearLayout>
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/linearLayoutPartage"
+        android:layout_above="@+id/border" />
 
     <View
         android:id="@+id/border"

@@ -142,6 +142,7 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 
 	@Override
 	public void setIsLogin() {
+		Toast.makeText(this, "Authenfication réussie", Toast.LENGTH_SHORT).show();
 		_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);
 	}
 
@@ -208,7 +209,7 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		startActivity(intent);
 	}
-	
+
 	private void goToForum(){
 		Intent intent = new Intent(this, ForumActivity.class);
 		initIntent(intent);
@@ -228,7 +229,7 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		startActivityForResult(intent, MyActivity.RESULT_IS_LOGIN);
 	}
-	
+
 	private void goToLogin(){
 		// Create an instance of the dialog fragment and show it
 		LoginDialog dialog = new LoginDialog();

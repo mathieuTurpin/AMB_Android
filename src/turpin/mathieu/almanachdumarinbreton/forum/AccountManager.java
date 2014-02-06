@@ -1,5 +1,6 @@
 package turpin.mathieu.almanachdumarinbreton.forum;
 
+import eu.telecom_bretagne.ambSocialNetwork.data.model.UtilisateurDTO;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -70,8 +71,20 @@ public class AccountManager {
 		return pref.getInt(KEY_SHARED, NO_PARTAGE);
 	}
 	
-	public void logIn(String email){
-		setEmail(email);
+	public void logIn(UtilisateurDTO user){
+		if(user.getPartagePosition()){
+			if(user.getPartagePositionPublic()){
+				setPartage(PARTAGE_PUBLIC);
+			}
+			else{
+				setPartage(PARTAGE_PRIVATE);
+			}
+		}
+		else{
+			setPartage(NO_PARTAGE);
+		}
+		setPseudo(user.getNom() + " " + user.getPrenom());
+		setEmail(user.getEmail());
 		setIsLoggedIn(true);
 	}
 	

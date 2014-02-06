@@ -349,6 +349,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	
 	@Override
 	public void setIsLogin() {
+		Toast.makeText(this, "Authenfication réussie", Toast.LENGTH_SHORT).show();
 		_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);
 	}
 
