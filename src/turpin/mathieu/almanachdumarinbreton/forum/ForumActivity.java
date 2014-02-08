@@ -1,24 +1,46 @@
 package turpin.mathieu.almanachdumarinbreton.forum;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import eu.telecom_bretagne.ambSocialNetwork.data.controller.CentreInteretController;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CommentaireDTO;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CommentairesDTOList;
 import turpin.mathieu.almanachdumarinbreton.MainActivity;
 import turpin.mathieu.almanachdumarinbreton.MyActivity;
 import turpin.mathieu.almanachdumarinbreton.R;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 public class ForumActivity extends MyActivity{
+
+	//-----------------------------------------------------------------------------
+	private static final String TAG_NOM = "nom_commentaire";
+	private static final String TAG_ID_USER = "id_user";
+	private static final String TAG_DATE = "date";
+	//-----------------------------------------------------------------------------
 	
+	private ListView lv;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_forum);
+		
+		lv = (ListView) findViewById(android.R.id.list);
 
 		Button addComment = (Button) findViewById(R.id.boutonAdd);
 		addComment.setOnClickListener(new OnClickListener()
@@ -52,6 +74,8 @@ public class ForumActivity extends MyActivity{
 				builder.create().show();
 			}
 		});
+		
+		new ChargementCommentairesAsyncTask().execute();
 	}
 
 	@Override
@@ -62,4 +86,61 @@ public class ForumActivity extends MyActivity{
 
 		return super.onCreateOptionsMenu(menu);
 	}
+
+	//-----------------------------------------------------------------------------
+	// extends AsyncTask<Params, Progress, Result>
+	protected class ChargementCommentairesAsyncTask extends AsyncTask<Void, Integer, CommentairesDTOList>
+	{
+		private ProgressDialog progressDialog;
+		@Override
+		protected void onPreExecute()
+		{
+			super.onPreExecute();
+			progressDialog = new ProgressDialog(ForumActivity.this);
+			progressDialog.setTitle("Chargement de la liste des commentaires");
+			progressDialog.setMessage("En cours...");
+			progressDialog.setCancelable(true);
+			progressDialog.show();
+		}
+		@Override
+		// doInBackground(Params... params)
+		protected CommentairesDTOList doInBackground(Void... formValues)
+		{
+			CentreInteretController centreInteretController = CentreInteretController.getInstance();
+			try
+			{
+				return centreInteretController.findAllCommentairesJson();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+			return null;
+		}
+		@Override
+		// onPostExecute(Result response)
+		protected void onPostExecute(CommentairesDTOList commentaires)
+		{
+			progressDialog.dismiss();
+
+			ArrayList<HashMap<String, String>> listeAffichageCommentaires = new ArrayList<HashMap<String,String>>();
+			for(CommentaireDTO commentaire : commentaires)
+			{
+				HashMap<String,String> commentaireAffichage = new HashMap<String, String>();
+				commentaireAffichage.put(TAG_ID_USER, ""+commentaire.getUtilisateurId());
+				commentaireAffichage.put(TAG_NOM, commentaire.getContenu());
+				commentaireAffichage.put(TAG_DATE, commentaire.getDatePublication().toLocaleString());
+				listeAffichageCommentaires.add(commentaireAffichage);
+			}
+
+			ListAdapter adapter = new SimpleAdapter(ForumActivity.this, 
+					listeAffichageCommentaires,
+					R.layout.list_item_commentaire,
+					new String[] {TAG_ID_USER,TAG_NOM,TAG_DATE}, 
+					new int[] { R.id.id_user,R.id.nom_commentaire,R.id.date});
+
+			lv.setAdapter(adapter);
+		}
+	}
+	//-----------------------------------------------------------------------------
 }

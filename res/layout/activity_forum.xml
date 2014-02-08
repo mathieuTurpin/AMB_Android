@@ -3,12 +3,20 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context=".forum.AccountActivity" >
+    
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/boutonAdd"
+        android:paddingLeft="@dimen/activity_horizontal_margin" />
 
     <Button
         android:id="@+id/boutonAdd"
+        android:layout_above="@+id/maxime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:text="Ajouter un commentaire" />
 
     <include android:id="@+id/maxime" layout="@layout/maxime"/>
