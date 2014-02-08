@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -29,6 +30,9 @@ public class ForumActivity extends MyActivity{
 
 	public static final String EXTRA_ID_CENTRE = "id_centre";
 	private int idCentreInteret;
+	private boolean onlyMyComment = false;
+	private AccountManager accountManager;
+	
 	//-----------------------------------------------------------------------------
 	private static final String TAG_NOM = "nom_commentaire";
 	private static final String TAG_ID_USER = "id_user";
@@ -85,6 +89,7 @@ public class ForumActivity extends MyActivity{
 				builder.create().show();
 			}
 		});
+		accountManager = new AccountManager(this);
 		
 		new ChargementCommentairesAsyncTask().execute();
 	}
@@ -111,6 +116,28 @@ public class ForumActivity extends MyActivity{
 		super.onSaveInstanceState(savedInstanceState);
 		savedInstanceState.putInt(EXTRA_ID_CENTRE, this.idCentreInteret);
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_all_comment:
+			ChargementCommentaires(false,R.string.menu_all_comment);
+			return true;
+		case R.id.menu_my_comment:
+			ChargementCommentaires(true,R.string.menu_my_comment);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	public void ChargementCommentaires(boolean myComment,int id){
+		_menu.findItem(R.id.menu_affichage).setTitle(getResources().getString(id));
+		_menu.findItem(R.id.menu_all_comment).setEnabled(myComment);
+		_menu.findItem(R.id.menu_my_comment).setEnabled(!myComment);
+		this.onlyMyComment = myComment;
+		new ChargementCommentairesAsyncTask().execute();
+	}
 
 	//-----------------------------------------------------------------------------
 	// extends AsyncTask<Params, Progress, Result>
@@ -135,12 +162,17 @@ public class ForumActivity extends MyActivity{
 			try
 			{
 				if(idCentreInteret == -1){
-					return centreInteretController.findAllCommentairesJson();
+					if(onlyMyComment){
+						String idUtilisateur = Integer.toString(accountManager.getId());
+						return centreInteretController.listeDesCommentairesPourUnUtilisateur(idUtilisateur);
+					}
+					else{
+						return centreInteretController.findAllCommentairesJson();
+					}
 				}
 				else{
 					return centreInteretController.listeDesCommentairesPourUnCentreInteret(Integer.toString(idCentreInteret));
 				}
-				
 			}
 			catch (IOException e)
 			{

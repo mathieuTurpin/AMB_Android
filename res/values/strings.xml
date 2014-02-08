@@ -46,5 +46,7 @@
     <string name="share_position_private">Partage ma position de manière privée</string>
     <string name="pseudo">mon pseudo</string>
     <string name="logout">Se déconnecter</string>
+    <string name="menu_all_comment">Tous les commentaires</string>
+    <string name="menu_my_comment">Mes commentaires</string>
     
 </resources>

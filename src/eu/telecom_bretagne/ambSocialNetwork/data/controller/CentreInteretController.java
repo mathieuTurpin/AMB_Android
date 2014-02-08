@@ -109,6 +109,30 @@ public class CentreInteretController extends Controller
 		return ul;
 	}
 
+	//-----------------------------------------------------------------------------
+	public CommentairesDTOList listeDesCommentairesPourUnUtilisateur(String id) throws IOException
+	{
+		Map<String,String> formValues = new HashMap<String, String>();
+		formValues.put("id_utilisateur", id);
+
+		String jsonData = downloadContent(URL_CENTRE_INTERET + "/comm_ut", formValues);
+
+		// Décodage de la réponse.
+		CommentairesDTOList ul = null;
+		if(jsonData != null)
+		{
+			JsonParser   jParser  = jFactory.createParser(jsonData);
+			try
+			{
+				ul = oMapper.readValue(jParser, CommentairesDTOList.class);
+			}
+			catch(JsonParseException jpe)
+			{
+			}
+		}
+		return ul;
+	}
+
 	public Map<String,String> prepareAddComment(String idUtilisateur, String idCentreInteret, String contenu, String partagePublic){
 		Map<String,String> formValues = new HashMap<String, String>();
 		formValues.put("id_utilisateur", idUtilisateur);
