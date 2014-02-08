@@ -1,16 +1,18 @@
 package turpin.mathieu.almanachdumarinbreton.forum;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
 
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.UtilisateurController;
-import eu.telecom_bretagne.ambSocialNetwork.data.model.UtilisateurDTO;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.UtilisateurDTO;
 import turpin.mathieu.almanachdumarinbreton.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -77,39 +79,48 @@ public class LoginDialog extends DialogFragment{
 			Button positiveButton = (Button) d.getButton(Dialog.BUTTON_POSITIVE);
 			positiveButton.setOnClickListener(new View.OnClickListener()
 			{
+				@SuppressWarnings("unchecked")
 				@Override
 				public void onClick(View v)
 				{
-					String emailText = emailaddr.getText().toString();
-					String passwordText = password.getText().toString();
-
-					String[] params = {emailText, passwordText};
-
+					//String emailText = emailaddr.getText().toString();
+					//String passwordText = password.getText().toString();
+					
+					String emailText = "mathieu.turpin@telecom-bretagne.eu";
+					String passwordText = "amb";
+					
+					Map<String,String> params = UtilisateurController.getInstance().prepareLogin(emailText, passwordText);					
 					new AuthentificationAsyncTask().execute(params);
 				}
 			});
 		}
 	}
 
-	protected class AuthentificationAsyncTask extends AsyncTask<String, Void, UtilisateurDTO>
+	protected class AuthentificationAsyncTask extends AsyncTask<Map<String,String>, Void, UtilisateurDTO>
 	{
+		private ProgressDialog progressDialog;
 		@Override
-		protected UtilisateurDTO doInBackground(String... params)
+		protected void onPreExecute()
+		{
+			super.onPreExecute();
+			progressDialog = new ProgressDialog(activity);
+			progressDialog.setTitle("Authentification");
+			progressDialog.setMessage("En cours...");
+			progressDialog.setCancelable(true);
+			progressDialog.show();
+		}
+		
+		@Override
+		protected UtilisateurDTO doInBackground(Map<String,String>... params)
 		{
 			UtilisateurController utilisateurController = UtilisateurController.getInstance();
 			try
 			{
-				if(params.length < 2){
+				if(params.length < 1){
 					return null;
 				}
 				else{
-					//String email = params[0];
-					//String password = params[1];
-					
-					//For test
-					String email = "mathieu.turpin@telecom-bretagne.eu";
-					String password = "amb";
-					UtilisateurDTO utilisateur = utilisateurController.authentification(email,password);
+					UtilisateurDTO utilisateur = utilisateurController.authentification(params[0]);
 					return utilisateur;
 				}
 			}
@@ -126,6 +137,7 @@ public class LoginDialog extends DialogFragment{
 
 		@Override
 		protected void onPostExecute (UtilisateurDTO user) {
+			progressDialog.dismiss();
 			if(user != null){
 				//Save parameters of this user
 				AccountManager accountManager = new AccountManager(activity);

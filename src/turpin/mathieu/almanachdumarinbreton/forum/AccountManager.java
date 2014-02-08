@@ -1,6 +1,6 @@
 package turpin.mathieu.almanachdumarinbreton.forum;
 
-import eu.telecom_bretagne.ambSocialNetwork.data.model.UtilisateurDTO;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.UtilisateurDTO;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -22,12 +22,21 @@ public class AccountManager {
 	// Sharedpref file name
 	private static final String PREF_NAME = "AMB_ACCOUNT";
 
-	// User pseudo
-	public static final String KEY_PSEUDO = "pseudo";
-	
+	// User name
+	public static final String KEY_NAME = "name";
+
+	// User prenom
+	public static final String KEY_FIRST_NAME = "first_name";
+
+	// User descrition
+	public static final String KEY_DESCRIPTION = "description";
+
+	// User id
+	public static final String KEY_ID = "id";
+
 	// User email
 	private static final String KEY_EMAIL = "email";
-	
+
 	// User is logged in
 	private static final String KEY_IS_LOGGED_IN = "isLogin";
 
@@ -47,18 +56,54 @@ public class AccountManager {
 		editor = pref.edit();
 	}
 
-	public void setPseudo(String pseudo){
-		// Storing pseudo in pref
-		editor.putString(KEY_PSEUDO, pseudo);
+	public void setName(String name){
+		// Storing name in pref
+		editor.putString(KEY_NAME, name);
+
+		// commit changes
+		editor.commit();
+	}
+	
+	public void setFirstName(String firstName){
+		// Storing name in pref
+		editor.putString(KEY_FIRST_NAME, firstName);
+
+		// commit changes
+		editor.commit();
+	}
+	
+	public void setDescription(String description){
+		// Storing name in pref
+		editor.putString(KEY_DESCRIPTION, description);
+
+		// commit changes
+		editor.commit();
+	}
+
+	public Integer getId(){
+		return pref.getInt(KEY_ID, -1);
+	}
+
+	public void setId(Integer id){
+		// Storing id in pref
+		editor.putInt(KEY_ID, id);
 
 		// commit changes
 		editor.commit();
 	}   
 
-	public String getPseudo(){
-		return pref.getString(KEY_PSEUDO, "");
+	public String getName(){
+		return pref.getString(KEY_NAME, "");
 	}
 	
+	public String getFirstName(){
+		return pref.getString(KEY_FIRST_NAME, "");
+	}
+	
+	public String getDescription(){
+		return pref.getString(KEY_DESCRIPTION, "");
+	}
+
 	public void setPartage(int partage){
 		// Storing partage in pref
 		editor.putInt(KEY_SHARED, partage);
@@ -70,7 +115,7 @@ public class AccountManager {
 	public int getPartage(){
 		return pref.getInt(KEY_SHARED, NO_PARTAGE);
 	}
-	
+
 	public void logIn(UtilisateurDTO user){
 		if(user.getPartagePosition()){
 			if(user.getPartagePositionPublic()){
@@ -83,17 +128,20 @@ public class AccountManager {
 		else{
 			setPartage(NO_PARTAGE);
 		}
-		setPseudo(user.getNom() + " " + user.getPrenom());
+		setName(user.getNom());
+		setFirstName(user.getPrenom());
+		setDescription(user.getDescription());
 		setEmail(user.getEmail());
+		setId(user.getId());
 		setIsLoggedIn(true);
 	}
-	
+
 	public void logOut(){
 		editor.clear();
-		
+
 		editor.commit();
 	}
-	
+
 	private void setEmail(String email){
 		// Storing email in pref
 		editor.putString(KEY_EMAIL, email);
@@ -101,11 +149,11 @@ public class AccountManager {
 		// commit changes
 		editor.commit();
 	}
-	
+
 	public String getEmail(){
 		return pref.getString(KEY_EMAIL, null);
 	}
-	
+
 	private void setIsLoggedIn(boolean logged){
 		editor.putBoolean(KEY_IS_LOGGED_IN, logged);
 
@@ -116,4 +164,13 @@ public class AccountManager {
 	public boolean isLoggedIn(){
 		return pref.getBoolean(KEY_IS_LOGGED_IN, false);
 	}
+	
+	public boolean getNoPartage(){
+		return getPartage() == NO_PARTAGE;		
+	}
+	
+	public boolean getPartagePublic(){
+		return getPartage() == PARTAGE_PUBLIC;		
+	}
+
 }

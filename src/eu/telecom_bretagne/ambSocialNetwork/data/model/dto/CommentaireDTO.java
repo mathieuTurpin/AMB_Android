@@ -1,4 +1,4 @@
-package eu.telecom_bretagne.ambSocialNetwork.data.model;
+package eu.telecom_bretagne.ambSocialNetwork.data.model.dto;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

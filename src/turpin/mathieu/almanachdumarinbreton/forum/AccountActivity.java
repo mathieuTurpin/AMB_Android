@@ -3,10 +3,11 @@ package turpin.mathieu.almanachdumarinbreton.forum;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.UtilisateurController;
-import eu.telecom_bretagne.ambSocialNetwork.data.model.UtilisateurDTO;
-import eu.telecom_bretagne.ambSocialNetwork.data.model.UtilisateursList;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.UtilisateurDTO;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.UtilisateursDTOList;
 import turpin.mathieu.almanachdumarinbreton.MyActivity;
 import turpin.mathieu.almanachdumarinbreton.R;
 import android.app.Activity;
@@ -25,15 +26,16 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 public class AccountActivity extends MyActivity{
 	//-----------------------------------------------------------------------------
-	private static final String TAG_ID          = "id_utilisateur";
 	private static final String TAG_NOM_COMPLET = "nom_complet_utilisateur";
-	private static final String TAG_EMAIL       = "email_utilisateur";
 	//-----------------------------------------------------------------------------
 
-	private EditText pseudoEdit;
+	private EditText nomEdit;
+	private EditText prenomEdit;
+	private EditText descriptionEdit;
 	private RadioGroup radioGroup;
 
 	private ListView lv;
@@ -45,9 +47,17 @@ public class AccountActivity extends MyActivity{
 
 		lv = (ListView) findViewById(android.R.id.list);
 
-		String myPseudo = accountManager.getPseudo();
-		pseudoEdit = (EditText) findViewById(R.id.pseudo);
-		pseudoEdit.setText(myPseudo);
+		String myName = accountManager.getName();
+		nomEdit = (EditText) findViewById(R.id.nom);
+		nomEdit.setText(myName);
+
+		String myFirstName = accountManager.getFirstName();
+		prenomEdit = (EditText) findViewById(R.id.prenom);
+		prenomEdit.setText(myFirstName);
+
+		String myDescription = accountManager.getDescription();
+		descriptionEdit = (EditText) findViewById(R.id.description);
+		descriptionEdit.setText(myDescription);
 
 		radioGroup = (RadioGroup) findViewById(R.id.radioPartageGroup); 
 		int sharedMode = accountManager.getPartage();
@@ -56,17 +66,22 @@ public class AccountActivity extends MyActivity{
 		Button btnSave = (Button) findViewById(R.id.boutonSave);
 		btnSave.setOnClickListener(new OnClickListener()
 		{
+			@SuppressWarnings("unchecked")
 			@Override
 			public void onClick(View v)
 			{
-				String newPseudo = pseudoEdit.getText().toString();
-				accountManager.setPseudo(newPseudo);
+				String newName = nomEdit.getText().toString();
+
+				String newFirstName = prenomEdit.getText().toString();
+
+				String newDescription = descriptionEdit.getText().toString();
 
 				int idButtonChecked = radioGroup.getCheckedRadioButtonId();
 				int sharedMode = getSharedModeByButton(idButtonChecked);
 				accountManager.setPartage(sharedMode);
-				setResult(Activity.RESULT_OK);
-				finish();
+				
+				Map<String,String> formValues = UtilisateurController.getInstance().prepareUpdate(""+accountManager.getId(),newName,newFirstName, accountManager.getEmail(),newDescription, ""+!accountManager.getNoPartage(), ""+accountManager.getPartagePublic());
+				new UpdateUtilisateurAsyncTask().execute(formValues);
 			}
 		});
 
@@ -122,7 +137,7 @@ public class AccountActivity extends MyActivity{
 
 	//-----------------------------------------------------------------------------
 	// extends AsyncTask<Params, Progress, Result>
-	protected class ChargementUtilisateursAsyncTask extends AsyncTask<String, Integer, UtilisateursList>
+	protected class ChargementUtilisateursAsyncTask extends AsyncTask<Void, Integer, UtilisateursDTOList>
 	{
 		private ProgressDialog progressDialog;
 		@Override
@@ -137,7 +152,7 @@ public class AccountActivity extends MyActivity{
 		}
 		@Override
 		// doInBackground(Params... params)
-		protected UtilisateursList doInBackground(String... params)
+		protected UtilisateursDTOList doInBackground(Void... formValues)
 		{
 			UtilisateurController utilisateurController = UtilisateurController.getInstance();
 			try
@@ -153,7 +168,7 @@ public class AccountActivity extends MyActivity{
 		}
 		@Override
 		// onPostExecute(Result response)
-		protected void onPostExecute(UtilisateursList utilisateurs)
+		protected void onPostExecute(UtilisateursDTOList utilisateurs)
 		{
 			progressDialog.dismiss();
 
@@ -161,20 +176,71 @@ public class AccountActivity extends MyActivity{
 			for(UtilisateurDTO utilisateur : utilisateurs)
 			{
 				HashMap<String,String> utilisateurAffichage = new HashMap<String, String>();
-				utilisateurAffichage.put(TAG_ID,          utilisateur.getId() + "");
 				utilisateurAffichage.put(TAG_NOM_COMPLET, utilisateur.getNom() + " " + utilisateur.getPrenom());
-				utilisateurAffichage.put(TAG_EMAIL,       utilisateur.getEmail());
 				listeAffichageUtilisateurs.add(utilisateurAffichage);
 			}
 
 			ListAdapter adapter = new SimpleAdapter(AccountActivity.this, 
 					listeAffichageUtilisateurs,
 					R.layout.list_item_utilisateur,
-					new String[] { TAG_ID, TAG_NOM_COMPLET, TAG_EMAIL}, 
-					new int[] { R.id.id_utilisateur, R.id.nom_complet_utilisateur, R.id.email_utilisateur});
+					new String[] {TAG_NOM_COMPLET}, 
+					new int[] { R.id.nom_complet_utilisateur});
 
 			lv.setAdapter(adapter);
 		}
 	}
 	//-----------------------------------------------------------------------------
+	
+
+	protected class UpdateUtilisateurAsyncTask extends AsyncTask<Map<String,String>, Void, UtilisateurDTO>{
+		private ProgressDialog progressDialog;
+		@Override
+		protected void onPreExecute()
+		{
+			super.onPreExecute();
+			progressDialog = new ProgressDialog(AccountActivity.this);
+			progressDialog.setTitle("Enregistrement");
+			progressDialog.setMessage("En cours...");
+			progressDialog.setCancelable(true);
+			progressDialog.show();
+		}
+		
+		@Override
+		// doInBackground(Params... params)
+		protected UtilisateurDTO doInBackground(Map<String,String>... formValues)
+		{
+			UtilisateurController utilisateurController = UtilisateurController.getInstance();
+			try
+			{
+				if(formValues.length < 1){
+					return null;
+				}
+				else{			
+					return utilisateurController.update(formValues[0]);
+				}
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute (UtilisateurDTO user) {
+			progressDialog.dismiss();
+			if(user!=null){
+				//Save new parameters
+				accountManager.logIn(user);
+				
+				Toast.makeText(AccountActivity.this, "Enregistrement terminé", Toast.LENGTH_SHORT).show();
+				//AccountActivity.this.setResult(Activity.RESULT_OK);
+				//AccountActivity.this.finish();
+			}
+			else{
+				Toast.makeText(AccountActivity.this, "Erreur lors de l'enregistrement", Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
+
 }

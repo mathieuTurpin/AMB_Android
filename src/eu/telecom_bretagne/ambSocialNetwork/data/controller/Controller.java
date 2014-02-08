@@ -22,11 +22,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public abstract class Controller
 {
   //-----------------------------------------------------------------------------
-  //protected static final String hostname = "192.108.117.199";   // @IP srv-labs-006
-  //protected static final String port     = "80";
-  protected static final String hostname = "10.29.226.130";     // @IP Télécom Bretagne
+  protected static final String hostname = "192.108.117.199";   // @IP srv-labs-006
+  protected static final String port     = "80";
+  //protected static final String hostname = "10.29.226.130";     // @IP Télécom Bretagne
   //protected static final String hostname = "192.168.1.7";       // @IP Maison
-  protected static final String port     = "8080";
+  //protected static final String port     = "8080";
 
   protected static final String       URL = "http://" + hostname + ":" + port + "/AMBSocialNetworkServerWeb/RestWebServices";
   protected static       ObjectMapper oMapper;
