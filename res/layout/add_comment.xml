@@ -25,8 +25,8 @@
             android:id="@+id/comment"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:lines="2"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine"
+            android:lines="2" />
     </LinearLayout>
 
     <RadioGroup
@@ -51,10 +51,17 @@
     </RadioGroup>
 
     <TextView
-        android:id="@+id/position"
+        android:id="@+id/centreInteret"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/radioPartageGroup"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/centreInteret"
         android:textStyle="bold" />
 
 </RelativeLayout>

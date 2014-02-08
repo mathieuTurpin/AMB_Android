@@ -27,6 +27,8 @@ import android.widget.SimpleAdapter;
 
 public class ForumActivity extends MyActivity{
 
+	public static final String EXTRA_ID_CENTRE = "id_centre";
+	private int idCentreInteret;
 	//-----------------------------------------------------------------------------
 	private static final String TAG_NOM = "nom_commentaire";
 	private static final String TAG_ID_USER = "id_user";
@@ -39,6 +41,15 @@ public class ForumActivity extends MyActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_forum);
+		
+		Intent intent = getIntent();
+		//Orientation change
+		if (savedInstanceState != null) {
+			this.idCentreInteret = savedInstanceState.getInt(EXTRA_ID_CENTRE, -1);
+		}
+		else{
+			initIntentForActivity(intent);
+		}
 		
 		lv = (ListView) findViewById(android.R.id.list);
 
@@ -77,6 +88,14 @@ public class ForumActivity extends MyActivity{
 		
 		new ChargementCommentairesAsyncTask().execute();
 	}
+	
+	@Override
+	protected void initIntentForActivity(Intent intent){
+		super.initIntentForActivity(intent);
+		if (intent != null) {
+			this.idCentreInteret = intent.getIntExtra(EXTRA_ID_CENTRE, -1);
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,6 +104,12 @@ public class ForumActivity extends MyActivity{
 		inflater.inflate(R.menu.forum, menu);
 
 		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putInt(EXTRA_ID_CENTRE, this.idCentreInteret);
 	}
 
 	//-----------------------------------------------------------------------------
@@ -109,7 +134,13 @@ public class ForumActivity extends MyActivity{
 			CentreInteretController centreInteretController = CentreInteretController.getInstance();
 			try
 			{
-				return centreInteretController.findAllCommentairesJson();
+				if(idCentreInteret == -1){
+					return centreInteretController.findAllCommentairesJson();
+				}
+				else{
+					return centreInteretController.listeDesCommentairesPourUnCentreInteret(Integer.toString(idCentreInteret));
+				}
+				
 			}
 			catch (IOException e)
 			{

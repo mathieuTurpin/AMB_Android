@@ -7,8 +7,8 @@ import java.util.List;
 import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
@@ -76,12 +76,11 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		OverlayItem item = createItem(index);
 
 		if (item != null && !item.getSnippet().equals("noTap")) {
-			Builder builder = new AlertDialog.Builder(this.context);
-			builder.setIcon(android.R.drawable.ic_menu_info_details);
-			builder.setTitle(item.getTitle());
-			builder.setMessage(item.getSnippet());
-			builder.setPositiveButton("OK", null);
-			builder.show();
+			double lat = item.getPoint().getLatitude();
+			double lon = item.getPoint().getLongitude();
+			InfoOverlayItemDialog dialog = InfoOverlayItemDialog.getInstance(item.getTitle(),item.getSnippet(),lat,lon);
+			Activity activity = (Activity) this.context;
+			dialog.show(activity.getFragmentManager(), "InfoOverlayItemDialog");
 			return true;
 		}
 		return false;

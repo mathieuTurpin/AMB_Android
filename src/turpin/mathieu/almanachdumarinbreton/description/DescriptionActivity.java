@@ -39,6 +39,7 @@ public abstract class DescriptionActivity extends MyActivity{
 		}
 	}
 	
+	@Override
 	protected void initIntentForActivity(Intent intent){
 		super.initIntentForActivity(intent);
 		if (intent != null) {

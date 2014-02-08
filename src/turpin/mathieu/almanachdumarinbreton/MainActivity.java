@@ -16,6 +16,7 @@ import turpin.mathieu.almanachdumarinbreton.forum.AccountActivity;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountManager;
 import turpin.mathieu.almanachdumarinbreton.forum.ForumActivity;
 import turpin.mathieu.almanachdumarinbreton.forum.LoginDialog;
+import turpin.mathieu.almanachdumarinbreton.overlay.InfoOverlayItemDialog.InfoOverlayItemDialogListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -36,7 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class MainActivity extends MapActivity implements LoginDialog.LoginDialogListener{
+public class MainActivity extends MapActivity implements LoginDialog.LoginDialogListener, InfoOverlayItemDialogListener{
 	private static final int DIALOG_LOCATION_PROVIDER_DISABLED = 2;
 
 	public MyMapView mapView;
@@ -482,5 +483,13 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		// Create an instance of the dialog fragment and show it
 		LoginDialog dialog = new LoginDialog();
 		dialog.show(getFragmentManager(), "LoginDialog");
+	}
+
+	@Override
+	public void commentByIdCentreInteret(int id) {
+		Intent afficheListeCommentaires = new Intent(this, ForumActivity.class);
+		afficheListeCommentaires.putExtra(ForumActivity.EXTRA_ID_CENTRE, id);
+		startActivity(afficheListeCommentaires);
+		
 	}
 }
