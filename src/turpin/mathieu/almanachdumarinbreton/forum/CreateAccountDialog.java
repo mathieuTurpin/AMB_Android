@@ -22,10 +22,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class LoginDialog extends DialogFragment{
+public class CreateAccountDialog extends DialogFragment{
 	private Activity activity;
+	private EditText nom;
+	private EditText prenom;
 	private EditText emailaddr;
 	private EditText password;
+	private EditText description;
 
 	public interface LoginDialogListener {
 		void setIsLogin();
@@ -37,19 +40,22 @@ public class LoginDialog extends DialogFragment{
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		// Set the dialog title
-		builder.setTitle(R.string.menu_login);
+		builder.setTitle("Creer un compte");
 
 		// Get the layout inflater
 		LayoutInflater inflater = activity.getLayoutInflater();
 
 		// Inflate and set the layout for the dialog
 		// Pass null as the parent view because its going in the dialog layout
-		View v = inflater.inflate(R.layout.login, null);
+		View v = inflater.inflate(R.layout.create_account, null);
 		builder.setView(v);
 
 		//getView
+		nom = (EditText) v.findViewById(R.id.nom);
+		prenom = (EditText) v.findViewById(R.id.prenom);
 		emailaddr = (EditText) v.findViewById(R.id.email);
 		password = (EditText) v.findViewById(R.id.password);
+		description = (EditText) v.findViewById(R.id.description);
 
 		// Add action buttons
 		builder.setPositiveButton(R.string.menu_login, new DialogInterface.OnClickListener() {
@@ -63,13 +69,6 @@ public class LoginDialog extends DialogFragment{
 			public void onClick(DialogInterface dialog, int id) {
 				// User cancelled the dialog
 				dialog.cancel();
-			}
-		})
-		.setNeutralButton("Créer un compte",new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				// Create an instance of the dialog fragment and show it
-				CreateAccountDialog dialogAccount = new CreateAccountDialog();
-				dialogAccount.show(activity.getFragmentManager(), "CreateAccountDialog");
 			}
 		});
 		// Create the AlertDialog object and return it
@@ -90,13 +89,13 @@ public class LoginDialog extends DialogFragment{
 				@Override
 				public void onClick(View v)
 				{
-					//String emailText = emailaddr.getText().toString();
-					//String passwordText = password.getText().toString();
+					String nomText =nom.getText().toString();
+					String prenomText = prenom.getText().toString();
+					String emailText = emailaddr.getText().toString();
+					String passwordText = password.getText().toString();
+					String descriptionText = description.getText().toString();
 					
-					String emailText = "mathieu.turpin@telecom-bretagne.eu";
-					String passwordText = "amb";
-					
-					Map<String,String> params = UtilisateurController.getInstance().prepareLogin(emailText, passwordText);					
+					Map<String,String> params = UtilisateurController.getInstance().prepareCreateAccount(nomText,prenomText,emailText, passwordText,descriptionText);					
 					new AuthentificationAsyncTask().execute(params);
 				}
 			});
@@ -111,7 +110,7 @@ public class LoginDialog extends DialogFragment{
 		{
 			super.onPreExecute();
 			progressDialog = new ProgressDialog(activity);
-			progressDialog.setTitle("Authentification");
+			progressDialog.setTitle("Création du compte");
 			progressDialog.setMessage("En cours...");
 			progressDialog.setCancelable(true);
 			progressDialog.show();
@@ -127,7 +126,7 @@ public class LoginDialog extends DialogFragment{
 					return null;
 				}
 				else{
-					UtilisateurDTO utilisateur = utilisateurController.authentification(params[0]);
+					UtilisateurDTO utilisateur = utilisateurController.createAccount(params[0]);
 					return utilisateur;
 				}
 			}
@@ -153,12 +152,9 @@ public class LoginDialog extends DialogFragment{
 				//Give result to currentActivity
 				LoginDialogListener mActivity = (LoginDialogListener) activity;
 				mActivity.setIsLogin();
-
-				//Close the dialog
-				dismiss();
 			}
 			else{
-				Toast.makeText(activity, "Erreur lors de l'authenfication", Toast.LENGTH_SHORT).show();
+				Toast.makeText(activity, "Erreur lors de la création du compte", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

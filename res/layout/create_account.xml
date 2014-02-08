@@ -1,0 +1,118 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutNom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/nomTitle"
+            android:layout_width="85dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/my_marginRight"
+            android:text="Nom"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/nom"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:inputType="text" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/linearLayoutPrenom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayoutNom"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/prenomTitle"
+            android:layout_width="85dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/my_marginRight"
+            android:text="Prenom"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/prenom"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:inputType="text" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/linearLayoutEmail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayoutPrenom"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/emailTitle"
+            android:layout_width="85dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/my_marginRight"
+            android:text="Email"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:inputType="textEmailAddress" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayoutEmail"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/passwordTitle"
+            android:layout_width="85dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/my_marginRight"
+            android:text="Password"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:inputType="textPassword" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/linearLayoutDescription"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayoutPassword"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/descriptionTitle"
+            android:layout_width="85dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/my_marginRight"
+            android:text="Description"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/description"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:inputType="text" />
+    </LinearLayout>
+
+</RelativeLayout>

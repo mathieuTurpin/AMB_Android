@@ -20,11 +20,11 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 public class InfoOverlayItemDialog extends DialogFragment {
-	
+
 	public interface InfoOverlayItemDialogListener {
 		void commentByIdCentreInteret(int id);
 	}
-	
+
 	private Activity activity;
 	private double latitude;
 	private double longitude;
@@ -88,6 +88,7 @@ public class InfoOverlayItemDialog extends DialogFragment {
 			progressDialog.setMessage("En cours...");
 			progressDialog.setCancelable(true);
 			progressDialog.show();
+
 		}
 
 		@Override
@@ -116,7 +117,7 @@ public class InfoOverlayItemDialog extends DialogFragment {
 		}
 
 	}
-	
+
 	protected class commentByIdCentreInteretAsyncTask extends getIdCentreInteretAsyncTask{
 		@Override
 		protected void onPostExecute (CentreInteretDTO centreInteret) {
@@ -130,23 +131,32 @@ public class InfoOverlayItemDialog extends DialogFragment {
 			}
 		}
 	}
-	
+
 	protected class addCommentAsyncTask extends getIdCentreInteretAsyncTask{
+
+		private AccountManager accountManager;
+		@Override
+		protected void onPreExecute()
+		{
+			accountManager = new AccountManager(activity);
+			if(accountManager.isLoggedIn()){
+				super.onPreExecute();
+			}
+			else{
+				cancel(true);
+				Toast.makeText(activity, "Veuillez vous connecter", Toast.LENGTH_SHORT).show();
+			}
+		}
+
 		@Override
 		protected void onPostExecute (CentreInteretDTO centreInteret) {
 			progressDialog.dismiss();
 			if(centreInteret != null){
-				AccountManager accountManager = new AccountManager(activity);
-				if(accountManager.isLoggedIn()){
-					int idUtilisateur = accountManager.getId();
-					int idCentreUtilisateur = centreInteret.getId();
-					String nomCentreInteret = centreInteret.getNom();
-					AddCommentDialog dialog = AddCommentDialog.getInstance(idUtilisateur,idCentreUtilisateur,latitude,longitude,nomCentreInteret);
-					dialog.show(activity.getFragmentManager(), "AddCommentDialog");
-				}
-				else{
-					Toast.makeText(activity, "Veuillez vous connecter", Toast.LENGTH_SHORT).show();
-				}
+				int idUtilisateur = accountManager.getId();
+				int idCentreUtilisateur = centreInteret.getId();
+				String nomCentreInteret = centreInteret.getNom();
+				AddCommentDialog dialog = AddCommentDialog.getInstance(idUtilisateur,idCentreUtilisateur,latitude,longitude,nomCentreInteret);
+				dialog.show(activity.getFragmentManager(), "AddCommentDialog");
 			}
 			else{
 				Toast.makeText(activity, "Erreur lors de la recherche du centre d'interet sur le serveur", Toast.LENGTH_SHORT).show();
