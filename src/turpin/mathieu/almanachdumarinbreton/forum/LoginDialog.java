@@ -90,11 +90,11 @@ public class LoginDialog extends DialogFragment{
 				@Override
 				public void onClick(View v)
 				{
-					//String emailText = emailaddr.getText().toString();
-					//String passwordText = password.getText().toString();
+					String emailText = emailaddr.getText().toString();
+					String passwordText = password.getText().toString();
 					
-					String emailText = "mathieu.turpin@telecom-bretagne.eu";
-					String passwordText = "amb";
+					//String emailText = "mathieu.turpin@telecom-bretagne.eu";
+					//String passwordText = "amb";
 					
 					Map<String,String> params = UtilisateurController.getInstance().prepareLogin(emailText, passwordText);					
 					new AuthentificationAsyncTask().execute(params);

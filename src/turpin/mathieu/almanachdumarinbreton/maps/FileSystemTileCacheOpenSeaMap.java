@@ -208,7 +208,7 @@ public class FileSystemTileCacheOpenSeaMap extends FileSystemTileCache {
 	 */
 	public FileSystemTileCacheOpenSeaMap(int capacity, int mapViewId) {
 		super(capacity,mapViewId);
-	
+		this.persistent = true;
 		String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
 		String cacheDirectoryPath = externalStorageDirectory + CACHE_DIRECTORY;
 		rootDirectory = cacheDirectoryPath;
@@ -234,9 +234,9 @@ public class FileSystemTileCacheOpenSeaMap extends FileSystemTileCache {
 		super.destroy();
 		if (!this.persistent || !serializeMap(this.cacheDirectoryOpenSeaMap, this.myMap)) {
 			for (File file : this.myMap.values()) {
-				if (!file.delete()) {
+				/*if (!file.delete()) {
 					file.deleteOnExit();
-				}
+				}*/
 			}
 			this.myMap.clear();
 
