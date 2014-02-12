@@ -8,6 +8,7 @@ import org.apache.http.client.ClientProtocolException;
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.UtilisateurController;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.UtilisateurDTO;
 import turpin.mathieu.almanachdumarinbreton.R;
+import turpin.mathieu.almanachdumarinbreton.forum.LoginDialog.LoginDialogListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,10 +30,6 @@ public class CreateAccountDialog extends DialogFragment{
 	private EditText emailaddr;
 	private EditText password;
 	private EditText description;
-
-	public interface LoginDialogListener {
-		void setIsLogin();
-	}
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
