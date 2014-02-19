@@ -6,10 +6,77 @@
     android:paddingRight="@dimen/activity_horizontal_margin" >
 
     <LinearLayout
+        android:id="@+id/radioTypeGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:contentDescription="remarque"
+                android:src="@drawable/bon_plan" />
+
+            <RadioButton
+                android:id="@+id/radioTypeRemarque"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="remarque" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:contentDescription="remarque"
+                android:src="@drawable/attention" />
+
+            <RadioButton
+                android:id="@+id/radioTypeSecurite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="securite" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:contentDescription="remarque"
+                android:src="@drawable/poisson" />
+
+            <RadioButton
+                android:id="@+id/radioTypePeche"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="peche" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/linearLayoutComment"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/radioTypeGroup"
         android:gravity="center_vertical"
         android:orientation="horizontal" >
 
