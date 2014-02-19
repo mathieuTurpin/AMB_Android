@@ -6,13 +6,13 @@ import java.util.Map;
 import org.apache.http.client.ClientProtocolException;
 
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
-import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CommentaireDTO;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
 import turpin.mathieu.almanachdumarinbreton.R;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,51 +23,49 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AddCommentDialog extends DialogFragment{
-	private Activity activity;
+public class AddPoiDialog extends DialogFragment{
 	
-	public static AddCommentDialog getInstance(int idUtilisateur, int idCentreInteret, double latitude, double longitude, String nomCentreInteret) {
-		AddCommentDialog dialog = new AddCommentDialog();
+	private Context context;
+	
+	/**
+	 * 
+	 * @param title
+	 * @return
+	 */
+	public static AddPoiDialog getInstance(double latitude, double longitude) {
+		AddPoiDialog dialog = new AddPoiDialog();
         Bundle args = new Bundle();
-        args.putInt("idUtilisateur", idUtilisateur);
-        args.putInt("idCentreInteret", idCentreInteret);
         args.putDouble("lat", latitude);
         args.putDouble("lon", longitude);
-        args.putString("nomCentreInteret", nomCentreInteret);
         dialog.setArguments(args);
         return dialog;
     }
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		this.activity = getActivity();
-		
+		context = getActivity();
 		//Get argument
-		String nomCentreInteret = getArguments().getString("nomCentreInteret");
-		final int id_utilisateur = getArguments().getInt("idUtilisateur");
-		final int id_centre_interet = getArguments().getInt("idCentreInteret");
-		double lat = getArguments().getDouble("lat");
-		double lon = getArguments().getDouble("lon");
+		final double lat = getArguments().getDouble("lat");
+		final double lon = getArguments().getDouble("lon");
+		final AccountManager acc = new AccountManager(context);
 		
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		// Set the dialog title
-		builder.setTitle("Ajouter un commentaire");
+		builder.setTitle("Ajouter un point d'interet");
 
 		// Get the layout inflater
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 
 		// Inflate and set the layout for the dialog
 		// Pass null as the parent view because its going in the dialog layout
-		View v = inflater.inflate(R.layout.add_comment, null);
+		View v = inflater.inflate(R.layout.add_centre, null);
 		builder.setView(v);
 
 		//getView
-		final TextView nomCentreInteretText = (TextView) v.findViewById(R.id.centreInteret);
 		final EditText commentEdit = (EditText) v.findViewById(R.id.comment);
 		final TextView positionTextView = (TextView) v.findViewById(R.id.position);
 		final RadioGroup radioGroup = (RadioGroup) v.findViewById(R.id.radioPartageGroup);
-		nomCentreInteretText.setText("Nom du centre d'interet : "+nomCentreInteret);
 		
 		//Init position
 		String position = "Lat: " + Double.toString(lat) +"°, Lon: " + Double.toString(lon)+"°";
@@ -76,15 +74,20 @@ public class AddCommentDialog extends DialogFragment{
 		// Add action buttons
 		builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
 			@SuppressWarnings("unchecked")
-			public void onClick(DialogInterface dialog, int id) {	
-				String idUtilisateur = Integer.toString(id_utilisateur);
-				String idCentreInteret = Integer.toString(id_centre_interet);
-				String contenu = commentEdit.getText().toString();
-				int idButtonChecked = radioGroup.getCheckedRadioButtonId();
-				String partagePublic = Boolean.toString(isShared(idButtonChecked));
-				
-				Map<String,String> formValues = PoiController.getInstance().prepareAddComment(idUtilisateur, idCentreInteret, contenu, partagePublic);
-				new AddCommentAsyncTask().execute(formValues);
+			public void onClick(DialogInterface dialog, int id) {
+				int idUser = acc.getId();
+				if(idUser == -1){
+					Toast.makeText(context, "Veuillez vous connecter", Toast.LENGTH_SHORT).show();
+				}
+				else{
+					String idUtilisateur = Integer.toString(idUser);
+					String type ="remarque";
+					String commentText = commentEdit.getText().toString();
+					int idButtonChecked = radioGroup.getCheckedRadioButtonId();
+					String partagePublic = Boolean.toString(isShared(idButtonChecked));
+					Map<String,String> params = PoiController.getInstance().prepareAddPoi(Double.toString(lat), Double.toString(lon),type,idUtilisateur,commentText,partagePublic);
+					new addPoiAsyncTask().execute(params);
+				}
 			}
 		})
 		.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -95,7 +98,7 @@ public class AddCommentDialog extends DialogFragment{
 		// Create the AlertDialog object and return it
 		return builder.create();
 	}
-
+	
 	private boolean isShared(int id){
 		switch(id){
 		case R.id.radioPartagePublic:
@@ -107,32 +110,33 @@ public class AddCommentDialog extends DialogFragment{
 		}
 	}
 	
-	protected class AddCommentAsyncTask extends AsyncTask<Map<String,String>, Void, CommentaireDTO>
+	protected class addPoiAsyncTask extends AsyncTask<Map<String,String>, Void, PoiDTO>
 	{
-		private ProgressDialog progressDialog;
+		protected ProgressDialog progressDialog;
 		@Override
 		protected void onPreExecute()
 		{
 			super.onPreExecute();
-			progressDialog = new ProgressDialog(activity);
-			progressDialog.setTitle("Ajout de commentaire");
+			progressDialog = new ProgressDialog(context);
+			progressDialog.setTitle("Contact serveur");
 			progressDialog.setMessage("En cours...");
 			progressDialog.setCancelable(true);
 			progressDialog.show();
+
 		}
-		
+
 		@Override
-		protected CommentaireDTO doInBackground(Map<String,String>... params)
+		protected PoiDTO doInBackground(Map<String,String>... params)
 		{
-			PoiController centreInteretController = PoiController.getInstance();
+			PoiController poiController = PoiController.getInstance();
 			try
 			{
 				if(params.length < 1){
 					return null;
 				}
 				else{
-					CommentaireDTO commentaire = centreInteretController.addComment(params[0]);
-					return commentaire;
+					PoiDTO poi = poiController.addPoi(params[0]);
+					return poi;
 				}
 			}
 			catch (ClientProtocolException e)
@@ -145,16 +149,17 @@ public class AddCommentDialog extends DialogFragment{
 			}
 			return null;
 		}
-
+		
 		@Override
-		protected void onPostExecute (CommentaireDTO user) {
+		protected void onPostExecute (PoiDTO poi) {
 			progressDialog.dismiss();
-			if(user != null){
-				Toast.makeText(activity, "Commentaire ajouté", Toast.LENGTH_SHORT).show();
+			if(poi!=null){			
+				Toast.makeText(context, "Enregistrement terminé", Toast.LENGTH_SHORT).show();
 			}
 			else{
-				Toast.makeText(activity, "Erreur lors de l'ajout du commentaire", Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "Erreur lors de l'enregistrement", Toast.LENGTH_SHORT).show();
 			}
 		}
+
 	}
 }

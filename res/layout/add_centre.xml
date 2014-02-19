@@ -24,14 +24,35 @@
         <EditText
             android:id="@+id/comment"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/radioPartageGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayoutComment"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radioPartagePublic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="public" />
+
+        <RadioButton
+            android:id="@+id/radioPartagePrivate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="privé" />
+    </RadioGroup>
 
     <TextView
         android:id="@+id/position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayoutComment"
+        android:layout_below="@+id/radioPartageGroup"
         android:textStyle="bold" />
 
 </RelativeLayout>

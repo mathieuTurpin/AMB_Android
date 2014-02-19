@@ -12,7 +12,7 @@ public class CommentaireDTO implements Serializable {
 	private Timestamp datePublication;
 	private Boolean   partageCommentairePublic;
 	private String    urlPhoto;
-	private Integer   centreInteretId;
+	private Integer   pointId;
 	private Integer   utilisateurId;
 
 	public CommentaireDTO() {
@@ -20,7 +20,7 @@ public class CommentaireDTO implements Serializable {
 
 	public Integer   getId()                       { return this.id;                       }
   public Integer   getUtilisateurId()            { return this.utilisateurId;            }
-  public Integer   getCentreInteretId()          { return this.centreInteretId;          }
+  public Integer   getPointId()                  { return this.pointId;                  }
   public String    getContenu()                  { return this.contenu;                  }
   public String    getUrlPhoto()                 { return this.urlPhoto;                 }
   public Timestamp getDatePublication()          { return this.datePublication;          }
@@ -28,7 +28,7 @@ public class CommentaireDTO implements Serializable {
 
 	public void setId(Integer id)                                             { this.id                       = id;                       }
   public void setUtilisateurId(Integer utilisateurId)                       { this.utilisateurId            = utilisateurId;            }
-  public void setCentreInteretId(Integer centreInteretId)                   { this.centreInteretId          = centreInteretId;          }
+  public void setPointId(Integer pointId)                                   { this.pointId                  = pointId;                  }
   public void setContenu(String contenu)                                    { this.contenu                  = contenu;                  }
   public void setUrlPhoto(String urlPhoto)                                  { this.urlPhoto                 = urlPhoto;                 }
 	public void setDatePublication(Timestamp datePublication)                 { this.datePublication          = datePublication;          }
@@ -37,7 +37,7 @@ public class CommentaireDTO implements Serializable {
   @Override
   public String toString()
   {
-    return "CommentaireDTO [id=" + id + ", contenu=" + contenu + ", datePublication=" + datePublication + ", partageCommentairePublic=" + partageCommentairePublic + ", centreInteretId=" + centreInteretId + ", utilisateurId=" + utilisateurId + "]";
+    return "CommentaireDTO [id=" + id + ", contenu=" + contenu + ", datePublication=" + datePublication + ", partageCommentairePublic=" + partageCommentairePublic + ", centreInteretId=" + pointId + ", utilisateurId=" + utilisateurId + "]";
   }
 
 }

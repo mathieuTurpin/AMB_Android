@@ -5,6 +5,8 @@ import org.mapsforge.core.GeoPoint;
 import org.mapsforge.core.MapPosition;
 import org.mapsforge.core.MercatorProjection;
 
+import turpin.mathieu.almanachdumarinbreton.R;
+import turpin.mathieu.almanachdumarinbreton.R.drawable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;

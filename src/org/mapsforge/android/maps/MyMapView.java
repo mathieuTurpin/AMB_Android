@@ -26,7 +26,7 @@ import org.mapsforge.core.Tile;
 
 import turpin.mathieu.almanachdumarinbreton.MyXmlParser;
 import turpin.mathieu.almanachdumarinbreton.R;
-import turpin.mathieu.almanachdumarinbreton.forum.AddCentreInteretDialog;
+import turpin.mathieu.almanachdumarinbreton.forum.AddPoiDialog;
 import turpin.mathieu.almanachdumarinbreton.maps.FileSystemTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.InMemoryTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.MyMapWorker;
@@ -587,7 +587,7 @@ public class MyMapView extends MapView {
 			double lat = longPressPoint.getLatitude();
 			double lon = longPressPoint.getLongitude(); 
 			// Create an instance of the dialog fragment and show it
-			AddCentreInteretDialog dialog = AddCentreInteretDialog.getInstance(lat,lon);
+			AddPoiDialog dialog = AddPoiDialog.getInstance(lat,lon);
 			
 			Activity activity = (Activity) getContext();
 			dialog.show(activity.getFragmentManager(), "AddCommentDialog");

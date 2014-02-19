@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import eu.telecom_bretagne.ambSocialNetwork.data.controller.CentreInteretController;
+import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CommentaireDTO;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CommentairesDTOList;
 import turpin.mathieu.almanachdumarinbreton.MainActivity;
@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 public class ForumActivity extends MyActivity{
 
@@ -158,20 +159,20 @@ public class ForumActivity extends MyActivity{
 		// doInBackground(Params... params)
 		protected CommentairesDTOList doInBackground(Void... formValues)
 		{
-			CentreInteretController centreInteretController = CentreInteretController.getInstance();
+			PoiController poiController = PoiController.getInstance();
 			try
 			{
 				if(idCentreInteret == -1){
 					if(onlyMyComment){
 						String idUtilisateur = Integer.toString(accountManager.getId());
-						return centreInteretController.listeDesCommentairesPourUnUtilisateur(idUtilisateur);
+						return poiController.listeDesCommentairesPourUnUtilisateur(idUtilisateur);
 					}
 					else{
-						return centreInteretController.findAllCommentairesJson();
+						return poiController.findAllCommentairesJson();
 					}
 				}
 				else{
-					return centreInteretController.listeDesCommentairesPourUnCentreInteret(Integer.toString(idCentreInteret));
+					return poiController.listeDesCommentairesPourUnPoint(Integer.toString(idCentreInteret));
 				}
 			}
 			catch (IOException e)
@@ -185,24 +186,29 @@ public class ForumActivity extends MyActivity{
 		protected void onPostExecute(CommentairesDTOList commentaires)
 		{
 			progressDialog.dismiss();
+			idCentreInteret = -1;
+			if(commentaires!=null){
+				ArrayList<HashMap<String, String>> listeAffichageCommentaires = new ArrayList<HashMap<String,String>>();
+				for(CommentaireDTO commentaire : commentaires)
+				{
+					HashMap<String,String> commentaireAffichage = new HashMap<String, String>();
+					commentaireAffichage.put(TAG_ID_USER, ""+commentaire.getUtilisateurId());
+					commentaireAffichage.put(TAG_NOM, commentaire.getContenu());
+					commentaireAffichage.put(TAG_DATE, commentaire.getDatePublication().toLocaleString());
+					listeAffichageCommentaires.add(commentaireAffichage);
+				}
 
-			ArrayList<HashMap<String, String>> listeAffichageCommentaires = new ArrayList<HashMap<String,String>>();
-			for(CommentaireDTO commentaire : commentaires)
-			{
-				HashMap<String,String> commentaireAffichage = new HashMap<String, String>();
-				commentaireAffichage.put(TAG_ID_USER, ""+commentaire.getUtilisateurId());
-				commentaireAffichage.put(TAG_NOM, commentaire.getContenu());
-				commentaireAffichage.put(TAG_DATE, commentaire.getDatePublication().toLocaleString());
-				listeAffichageCommentaires.add(commentaireAffichage);
+				ListAdapter adapter = new SimpleAdapter(ForumActivity.this, 
+						listeAffichageCommentaires,
+						R.layout.list_item_commentaire,
+						new String[] {TAG_ID_USER,TAG_NOM,TAG_DATE}, 
+						new int[] { R.id.id_user,R.id.nom_commentaire,R.id.date});
+
+				lv.setAdapter(adapter);
 			}
-
-			ListAdapter adapter = new SimpleAdapter(ForumActivity.this, 
-					listeAffichageCommentaires,
-					R.layout.list_item_commentaire,
-					new String[] {TAG_ID_USER,TAG_NOM,TAG_DATE}, 
-					new int[] { R.id.id_user,R.id.nom_commentaire,R.id.date});
-
-			lv.setAdapter(adapter);
+			else{
+				Toast.makeText(ForumActivity.this, "Aucun commentaire", Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 	//-----------------------------------------------------------------------------

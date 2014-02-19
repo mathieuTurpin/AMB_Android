@@ -7,26 +7,27 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 
-import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CentreInteretDTO;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CommentaireDTO;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CommentairesDTOList;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.ServiceDTO;
 
-public class CentreInteretController extends Controller
+public class PoiController extends Controller
 {
 	//-----------------------------------------------------------------------------
-	private static CentreInteretController instance = null;
+	private static PoiController instance = null;
 
-	private static final String URL_CENTRE_INTERET = URL + "/centre_interet";
+	private static final String URL_CENTRE_INTERET = URL + "/point";
 	//-----------------------------------------------------------------------------
-	private CentreInteretController()
+	private PoiController()
 	{
 		super();
 	}
 	//-----------------------------------------------------------------------------
-	public static CentreInteretController getInstance()
+	public static PoiController getInstance()
 	{
 		if(instance == null)
-			instance = new CentreInteretController();
+			instance = new PoiController();
 		return instance;
 	}
 	//-----------------------------------------------------------------------------
@@ -57,18 +58,18 @@ public class CentreInteretController extends Controller
 	}
 
 	//-----------------------------------------------------------------------------
-	public CentreInteretDTO findCentreInteretByPosition(Map<String,String> formValues) throws IOException
+	public PoiDTO findPoiByPosition(Map<String,String> formValues) throws IOException
 	{
-		String jsonData = downloadContent(URL_CENTRE_INTERET + "/getByPosition", formValues);
+		String jsonData = downloadContent(URL_CENTRE_INTERET + "/getPoiByPosition", formValues);
 
 		// Décodage de la réponse.
-		CentreInteretDTO ul = null;
+		PoiDTO ul = null;
 		if(jsonData != null)
 		{
 			JsonParser   jParser  = jFactory.createParser(jsonData);
 			try
 			{
-				ul = oMapper.readValue(jParser, CentreInteretDTO.class);
+				ul = oMapper.readValue(jParser, PoiDTO.class);
 			}
 			catch(JsonParseException jpe)
 			{
@@ -84,14 +85,36 @@ public class CentreInteretController extends Controller
 
 		return formValues;
 	}
+	
 
 	//-----------------------------------------------------------------------------
-	public CommentairesDTOList listeDesCommentairesPourUnCentreInteret(String id) throws IOException
+	public ServiceDTO findServiceByPosition(Map<String,String> formValues) throws IOException
+	{
+		String jsonData = downloadContent(URL_CENTRE_INTERET + "/getServiceByPosition", formValues);
+
+		// Décodage de la réponse.
+		ServiceDTO ul = null;
+		if(jsonData != null)
+		{
+			JsonParser   jParser  = jFactory.createParser(jsonData);
+			try
+			{
+				ul = oMapper.readValue(jParser, ServiceDTO.class);
+			}
+			catch(JsonParseException jpe)
+			{
+			}
+		}
+		return ul;
+	}
+
+	//-----------------------------------------------------------------------------
+	public CommentairesDTOList listeDesCommentairesPourUnPoint(String id) throws IOException
 	{
 		Map<String,String> formValues = new HashMap<String, String>();
-		formValues.put("id_centre_interet", id);
+		formValues.put("id_point", id);
 
-		String jsonData = downloadContent(URL_CENTRE_INTERET + "/comm_ci", formValues);
+		String jsonData = downloadContent(URL_CENTRE_INTERET + "/comm_point", formValues);
 
 		// Décodage de la réponse.
 		CommentairesDTOList ul = null;
@@ -133,10 +156,10 @@ public class CentreInteretController extends Controller
 		return ul;
 	}
 
-	public Map<String,String> prepareAddComment(String idUtilisateur, String idCentreInteret, String contenu, String partagePublic){
+	public Map<String,String> prepareAddComment(String idUtilisateur, String idPoint, String contenu, String partagePublic){
 		Map<String,String> formValues = new HashMap<String, String>();
 		formValues.put("id_utilisateur", idUtilisateur);
-		formValues.put("id_centre_interet", idCentreInteret);
+		formValues.put("id_point", idPoint);
 		formValues.put("contenu", contenu);
 		formValues.put("partage_public", partagePublic);
 
@@ -156,6 +179,39 @@ public class CentreInteretController extends Controller
 			try
 			{
 				ul = oMapper.readValue(jParser, CommentaireDTO.class);
+			}
+			catch(JsonParseException jpe)
+			{
+			}
+		}
+		return ul;
+	}
+
+	public Map<String,String> prepareAddPoi(String latitude, String longitude, String type, String idUtilisateur, String contenu, String partagePublic){
+		Map<String,String> formValues = new HashMap<String, String>();
+		formValues.put("latitude", latitude);
+		formValues.put("longitude", longitude);
+		formValues.put("type", type);
+		formValues.put("id_utilisateur", idUtilisateur);
+		formValues.put("contenu", contenu);
+		formValues.put("partage_public", partagePublic);
+
+		return formValues;
+	}
+	
+	//-----------------------------------------------------------------------------
+	public PoiDTO addPoi(Map<String,String> formValues) throws IOException
+	{
+		String jsonData = downloadContent(URL_CENTRE_INTERET + "/new_poi_comment", formValues);
+
+		// Décodage de la réponse.
+		PoiDTO ul = null;
+		if(jsonData != null)
+		{
+			JsonParser   jParser  = jFactory.createParser(jsonData);
+			try
+			{
+				ul = oMapper.readValue(jParser, PoiDTO.class);
 			}
 			catch(JsonParseException jpe)
 			{
