@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="6H00">
+                android:text="PM+6">
             </TextView>
 
             <ImageView
@@ -36,7 +36,7 @@
                 android:scaleType="matrix"  
        			android:adjustViewBounds="true" 
                 android:contentDescription="Image 1"
-                android:src="@drawable/ouestbretagneminus6h" />
+                android:src="@drawable/ts0" />
         </LinearLayout>
 
         <!-- Layout 2 for 2nd Screen -->
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="7H00">
+                android:text="PM+5">
             </TextView>
             
             <ImageView
@@ -60,7 +60,7 @@
                 android:scaleType="matrix"  
        			android:adjustViewBounds="true"
                 android:contentDescription="Image 2"
-                android:src="@drawable/ouestbretagneminus5h" />
+                android:src="@drawable/ts1" />
         </LinearLayout>
         
         <!-- Layout 3 for 3rd Screen -->
@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="8H00">
+                android:text="PM+4">
             </TextView>
             
             <ImageView
@@ -84,7 +84,7 @@
                 android:scaleType="matrix"  
        			android:adjustViewBounds="true"
                 android:contentDescription="Image 3"
-                android:src="@drawable/ouestbretagneminus4h" />
+                android:src="@drawable/ts2" />
         </LinearLayout>
         
         <!-- Layout 4 for 4th Screen -->
@@ -98,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="9H00">
+                android:text="PM+3">
             </TextView>
             
             <ImageView
@@ -108,7 +108,7 @@
                 android:scaleType="matrix"  
        			android:adjustViewBounds="true"
                 android:contentDescription="Image 4"
-                android:src="@drawable/ouestbretagneminus3h" />
+                android:src="@drawable/ts3" />
         </LinearLayout>
         
         <!-- Layout 5 for 5th Screen -->
@@ -122,7 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="10H00">
+                android:text="PM+2">
             </TextView>
             
             <ImageView
@@ -132,7 +132,7 @@
                 android:scaleType="matrix"  
        			android:adjustViewBounds="true"
                 android:contentDescription="Image 5"
-                android:src="@drawable/ouestbretagneminus2h" />
+                android:src="@drawable/ts4" />
         </LinearLayout>
         
         <!-- Layout 6 for 6th Screen -->
@@ -146,7 +146,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="11H00">
+                android:text="PM+1">
             </TextView>
             
             <ImageView
@@ -156,7 +156,7 @@
                 android:scaleType="matrix"  
        			android:adjustViewBounds="true"
                 android:contentDescription="Image 6"
-                android:src="@drawable/ouestbretagneminus1h" />
+                android:src="@drawable/ts5" />
         </LinearLayout>
         
         <!-- Layout 7 for 7th Screen -->
@@ -170,7 +170,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="12H00">
+                android:text="PM">
             </TextView>
             
             <ImageView
@@ -180,7 +180,7 @@
                 android:scaleType="matrix"  
        			android:adjustViewBounds="true"
                 android:contentDescription="Image 7"
-                android:src="@drawable/ouestbretagnepm" />
+                android:src="@drawable/ts6" />
         </LinearLayout>
         
         <!-- Layout 8 for 8th Screen -->
@@ -194,7 +194,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="13H00">
+                android:text="PM-1">
             </TextView>
             
             <ImageView
@@ -204,7 +204,7 @@
                 android:scaleType="matrix"  
        			android:adjustViewBounds="true"
                 android:contentDescription="Image 8"
-                android:src="@drawable/ouestbretagne1h" />
+                android:src="@drawable/ts7" />
         </LinearLayout>
         
         <!-- Layout 9 for 9th Screen -->
@@ -218,7 +218,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="14H00">
+                android:text="PM-2">
             </TextView>
             
             <ImageView
@@ -228,7 +228,7 @@
                 android:scaleType="matrix"  
        			android:adjustViewBounds="true"
                 android:contentDescription="Image 9"
-                android:src="@drawable/ouestbretagne2h" />
+                android:src="@drawable/ts8" />
         </LinearLayout>
         
         <!-- Layout 10 for 10th Screen -->
@@ -242,7 +242,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="15H00">
+                android:text="PM-3">
             </TextView>
             
             <ImageView
@@ -252,7 +252,7 @@
                 android:scaleType="matrix"  
        			android:adjustViewBounds="true"
                 android:contentDescription="Image 10"
-                android:src="@drawable/ouestbretagne3h" />
+                android:src="@drawable/ts9" />
         </LinearLayout>
         
         <!-- Layout 11 for 11th Screen -->
@@ -266,7 +266,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="16H00">
+                android:text="PM-4">
             </TextView>
             
             <ImageView
@@ -276,7 +276,7 @@
                 android:scaleType="matrix"  
        			android:adjustViewBounds="true"
                 android:contentDescription="Image 11"
-                android:src="@drawable/ouestbretagne4h" />
+                android:src="@drawable/ts10" />
         </LinearLayout>
         
         <!-- Layout 12 for 12th Screen -->
@@ -290,7 +290,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="17H00">
+                android:text="PM-5">
             </TextView>
             
             <ImageView
@@ -300,7 +300,7 @@
                 android:scaleType="matrix"  
        			android:adjustViewBounds="true"
                 android:contentDescription="Image 12"
-                android:src="@drawable/ouestbretagne5h" />
+                android:src="@drawable/ts11" />
         </LinearLayout>
         
         <!-- Layout 13 for 13th Screen -->
@@ -314,7 +314,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="18H00">
+                android:text="PM-6">
             </TextView>
             
             <ImageView
@@ -324,7 +324,7 @@
                 android:scaleType="matrix"  
        			android:adjustViewBounds="true"
                 android:contentDescription="Image 13"
-                android:src="@drawable/ouestbretagne6h" />
+                android:src="@drawable/ts12" />
         </LinearLayout>
         
     </ViewFlipper>

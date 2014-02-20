@@ -28,7 +28,7 @@ public abstract class DescriptionActivity extends MyActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		Intent intent = getIntent();
 		//Orientation change
 		if (savedInstanceState != null) {
@@ -126,7 +126,7 @@ public abstract class DescriptionActivity extends MyActivity{
 	}
 
 	private void goToImageDescription(int id_mode_description){
-		Intent intent = new Intent(this, DescriptionActivityImage.class);
+		Intent intent = new Intent(this, DescriptionActivityStream.class);
 		initIntent(intent);
 		intent.putExtra(EXTRA_MODE_DESCRIPTION, id_mode_description);
 		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

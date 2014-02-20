@@ -39,6 +39,9 @@
             android:name=".description.DescriptionActivityImage"
             android:label="" />
         <activity
+            android:name=".description.DescriptionActivityStream"
+            android:label="" />
+        <activity
             android:name=".forum.AccountActivity"
             android:label="" />
         <activity

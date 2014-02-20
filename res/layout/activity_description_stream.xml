@@ -1,0 +1,125 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".description.DescriptionActivityStream" >
+    
+    <LinearLayout 
+    android:id="@+id/linearLayoutButton" 
+    android:orientation="vertical"
+    android:layout_centerVertical="true"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    
+        <RadioGroup 
+        android:id="@+id/radio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+        
+	    	<RadioButton 
+	        android:id="@+id/streamButton0"
+	        android:text="@string/streamTime0"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        />
+	    	<RadioButton 
+	        android:id="@+id/streamButton1"
+	        android:text="@string/streamTime1"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        />
+	 	    <RadioButton 
+	        android:id="@+id/streamButton2"
+	        android:text="@string/streamTime2"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        />
+	    	<RadioButton 
+	        android:id="@+id/streamButton3"
+	        android:text="@string/streamTime3"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        />
+	    	<RadioButton 
+	        android:id="@+id/streamButton4"
+	        android:text="@string/streamTime4"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        />
+	    	<RadioButton 
+	        android:id="@+id/streamButton5"
+	        android:text="@string/streamTime5"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        />
+	   		<RadioButton 
+	        android:id="@+id/streamButton6"
+	        android:text="@string/streamTime6"
+	        android:checked="true"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        />
+	    	<RadioButton 
+	        android:id="@+id/streamButton7"
+	        android:text="@string/streamTime7"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        />
+	    	<RadioButton 
+	        android:id="@+id/streamButton8"
+	        android:text="@string/streamTime8"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        />
+	    	<RadioButton 
+	        android:id="@+id/streamButton9"
+	        android:text="@string/streamTime9"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        />
+	    	<RadioButton 
+	        android:id="@+id/streamButton10"
+	        android:text="@string/streamTime10"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        />
+	    	<RadioButton 
+	        android:id="@+id/streamButton11"
+	        android:text="@string/streamTime11"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        />
+	   	    <RadioButton 
+	        android:id="@+id/streamButton12"
+	        android:text="@string/streamTime12"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        />
+   	    
+   	    </RadioGroup>
+   	    
+	</LinearLayout>
+    
+    <LinearLayout 
+        android:id="@+id/linearLayoutImage" 
+    	android:orientation="vertical"
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:layout_toRightOf="@+id/linearLayoutButton"
+        >
+
+    <ImageView
+        android:id="@+id/streamView"
+        android:src="@drawable/ts6"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="image courant"
+        android:scaleType="matrix"
+        />
+    
+</LinearLayout>
+
+    <include android:id="@+id/maxime" layout="@layout/maxime"/>
+
+</RelativeLayout>
