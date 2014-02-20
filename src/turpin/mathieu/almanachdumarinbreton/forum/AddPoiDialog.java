@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
+import org.mapsforge.android.maps.overlay.ItemizedOverlay;
+import org.mapsforge.android.maps.overlay.OverlayItem;
+import org.mapsforge.core.GeoPoint;
 
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
@@ -30,6 +33,11 @@ public class AddPoiDialog extends DialogFragment{
 	private RadioButton remarqueButton;
 	private RadioButton pecheButton;
 	private RadioButton securiteButton;
+	private String commentText;
+	
+	public interface AddPoiListener {
+		void addPoi(OverlayItem item);
+	}
 
 	/**
 	 * 
@@ -110,7 +118,7 @@ public class AddPoiDialog extends DialogFragment{
 				}
 				else{
 					String idUtilisateur = Integer.toString(idUser);
-					String commentText = commentEdit.getText().toString();
+					commentText = commentEdit.getText().toString();
 					int idPartageChecked = radioGroup.getCheckedRadioButtonId();
 					String partagePublic = Boolean.toString(isShared(idPartageChecked));
 					String type = getTypeByButton();
@@ -194,7 +202,28 @@ public class AddPoiDialog extends DialogFragment{
 			@Override
 			protected void onPostExecute (PoiDTO poi) {
 				progressDialog.dismiss();
-				if(poi!=null){			
+				if(poi!=null){	
+					OverlayItem item = new OverlayItem();
+					
+					double lat = Double.parseDouble(poi.getLatitude());
+					double lon = Double.parseDouble(poi.getLongitude());
+					item.setPoint(new GeoPoint(lat,lon));
+					
+					int idDrawable = R.drawable.bon_plan;
+					String type = poi.getType();
+					
+					if(type.equals("peche")){
+		        		idDrawable = R.drawable.poisson;
+		        	}
+		        	else if(type.equals("securite")){
+		        		idDrawable = R.drawable.attention;
+		        	}
+					item.setMarker(ItemizedOverlay.boundCenter(context.getResources().getDrawable(idDrawable)));
+					
+					item.setSnippet(commentText);
+					item.setTitle(type);
+					AddPoiListener listener = (AddPoiListener) context;
+					listener.addPoi(item);
 					Toast.makeText(context, "Enregistrement terminé", Toast.LENGTH_SHORT).show();
 				}
 				else{

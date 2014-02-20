@@ -71,6 +71,12 @@
                     android:checked="false"
                     android:title="@string/menu_sounding"
                     android:titleCondensed="Sounding"/>
+                <item
+                    android:id="@+id/menu_comment"
+                    android:checkable="true"
+                    android:checked="true"
+                    android:title="@string/menu_comment"
+                    android:titleCondensed="Commentaire"/>
             </group>
         </menu>
     </item>

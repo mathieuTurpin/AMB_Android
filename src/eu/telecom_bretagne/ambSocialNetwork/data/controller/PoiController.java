@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CommentaireDTO;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CommentairesDTOList;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoisDTOList;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.ServiceDTO;
 
 public class PoiController extends Controller
@@ -49,6 +50,27 @@ public class PoiController extends Controller
 			try
 			{
 				ul = oMapper.readValue(jParser, CommentairesDTOList.class);
+			}
+			catch(JsonParseException jpe)
+			{
+			}
+		}
+		return ul;
+	}
+	
+	//-----------------------------------------------------------------------------
+	public PoisDTOList findAllPoiJson() throws IOException
+	{
+		String jsonData = downloadContent(URL_CENTRE_INTERET + "/poi");
+
+		// Décodage de la réponse.
+		PoisDTOList ul = null;
+		if(jsonData != null)
+		{
+			JsonParser   jParser  = jFactory.createParser(jsonData);
+			try
+			{
+				ul = oMapper.readValue(jParser, PoisDTOList.class);
 			}
 			catch(JsonParseException jpe)
 			{

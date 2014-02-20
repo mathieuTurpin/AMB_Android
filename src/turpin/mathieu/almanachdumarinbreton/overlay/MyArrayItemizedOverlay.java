@@ -19,6 +19,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	private final List<OverlayItem> overlayItemsDisplay;
 	private final ArrayList<OverlayItem> overlayService;
+	private final ArrayList<OverlayItem> overlayPoi;
 	private final ArrayList<OverlayItem> overlayOSM;
 
 	/**
@@ -46,6 +47,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		this.context = context;
 		this.overlayItemsDisplay = new ArrayList<OverlayItem>(2*INITIAL_CAPACITY);
 		this.overlayService = new ArrayList<OverlayItem>(INITIAL_CAPACITY);
+		this.overlayPoi = new ArrayList<OverlayItem>(INITIAL_CAPACITY);
 		this.overlayOSM = new ArrayList<OverlayItem>(INITIAL_CAPACITY);
 	}
 
@@ -121,6 +123,14 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 		addItem(overlayItem,false);
 	}
+	
+	public void addItemPoi(OverlayItem overlayItem) {
+		synchronized (this.overlayPoi) {
+			this.overlayPoi.add(overlayItem);
+		}
+
+		addItem(overlayItem,false);
+	}
 
 
 	/**
@@ -154,6 +164,22 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		}
 		populate();
 	}
+	
+	public void initItemsPoi(Collection<? extends OverlayItem> c) {
+		synchronized (this.overlayPoi) {
+			this.overlayPoi.addAll(c);
+		}
+	}
+
+	public void addItemsPoi(Collection<? extends OverlayItem> c) {
+		synchronized (this.overlayPoi) {
+			this.overlayPoi.addAll(c);
+		}
+		synchronized (this.overlayItemsDisplay) {
+			this.overlayItemsDisplay.addAll(c);
+		}
+		populate();
+	}
 
 	/**
 	 * Removes all items from the overlay.
@@ -173,6 +199,14 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		}
 		populate();
 	}
+	
+	public void clearPoi() {
+		hiddenService();
+		synchronized (this.overlayPoi) {
+			this.overlayPoi.clear();
+		}
+		populate();
+	}
 
 	/**
 	 * Removes all items from all list.
@@ -180,6 +214,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	public void clearAll() {
 		clearOSM();
 		clearService();
+		clearPoi();
 	}
 
 	@Override
@@ -213,6 +248,13 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		}
 		removeItem(overlayItem);
 	}
+	
+	public void removeItemPoi(OverlayItem overlayItem) {
+		synchronized (this.overlayPoi) {
+			this.overlayPoi.remove(overlayItem);
+		}
+		removeItem(overlayItem);
+	}
 
 	public void displayOSM(){
 		if(overlayOSM == null || this.overlayItemsDisplay.containsAll(overlayOSM)) return;
@@ -237,6 +279,20 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		synchronized (this.overlayService) {
 			synchronized (this.overlayItemsDisplay) {
 				this.overlayItemsDisplay.removeAll(overlayService);
+			}
+		}
+		populate();
+	}
+	
+	public void displayPoi(){
+		if(overlayPoi == null || this.overlayItemsDisplay.containsAll(overlayPoi)) return;
+		this.addItemsService(overlayPoi);
+	}
+
+	public void hiddenPoi(){
+		synchronized (this.overlayPoi) {
+			synchronized (this.overlayItemsDisplay) {
+				this.overlayItemsDisplay.removeAll(overlayPoi);
 			}
 		}
 		populate();

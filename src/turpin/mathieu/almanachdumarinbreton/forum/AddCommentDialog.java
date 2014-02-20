@@ -147,9 +147,9 @@ public class AddCommentDialog extends DialogFragment{
 		}
 
 		@Override
-		protected void onPostExecute (CommentaireDTO user) {
+		protected void onPostExecute (CommentaireDTO commentaire) {
 			progressDialog.dismiss();
-			if(user != null){
+			if(commentaire != null){
 				Toast.makeText(activity, "Commentaire ajouté", Toast.LENGTH_SHORT).show();
 			}
 			else{

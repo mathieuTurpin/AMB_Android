@@ -24,9 +24,13 @@ import org.mapsforge.core.MapPosition;
 import org.mapsforge.core.MercatorProjection;
 import org.mapsforge.core.Tile;
 
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoisDTOList;
 import turpin.mathieu.almanachdumarinbreton.MyXmlParser;
 import turpin.mathieu.almanachdumarinbreton.R;
 import turpin.mathieu.almanachdumarinbreton.forum.AddPoiDialog;
+import turpin.mathieu.almanachdumarinbreton.forum.getPoiAsyncTask;
+import turpin.mathieu.almanachdumarinbreton.forum.getPoiInfoAsyncTask;
 import turpin.mathieu.almanachdumarinbreton.maps.FileSystemTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.InMemoryTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.MyMapWorker;
@@ -59,7 +63,7 @@ import android.view.MotionEvent;
  * {@link Overlay Overlays} can be used to display geographical data such as points and ways. To draw an overlay on top
  * of the map, add it to the list returned by {@link #getOverlays()}.
  */
-public class MyMapView extends MapView {
+public class MyMapView extends MapView{
 	private static final float DEFAULT_TEXT_SCALE = 1;
 	private static final int DEFAULT_TILE_CACHE_SIZE_FILE_SYSTEM = 100;
 	private static final int DEFAULT_TILE_CACHE_SIZE_IN_MEMORY = 10;
@@ -95,6 +99,7 @@ public class MyMapView extends MapView {
 
 	private boolean isEnableShowBaliseOSM;
 	private boolean isEnableShowService;
+	private boolean isEnableShowPoi;
 	private boolean isEnableShowText;
 	private boolean isEnableShowSounding;
 
@@ -105,7 +110,7 @@ public class MyMapView extends MapView {
 	 * has been panned.
 	 */
 	private GeoPoint lastMapCenter;
-	
+
 	private float previousPositionX;
 	private float previousPositionY;
 
@@ -163,16 +168,19 @@ public class MyMapView extends MapView {
 		this.mapWorkerOpenSeaMap = new MyMapWorker(this);
 		this.mapWorkerOpenSeaMap.setMapGeneratorOpenSeaMap(OpenSeaMapTileDownloader.getInstance());
 		this.mapWorkerOpenSeaMap.start();
-
+				
 		//Initialize overlay that gets tiles from OpenSeaMap Server
 		overlayOpenSeaMap = new MyArrayItemizedOverlay(this.getContext(),null);
 		this.getOverlays().add(MyMapView.DEFAULT_OVERLAY,overlayOpenSeaMap);
+		
+		//Get po from server
+		new getPoiAsyncTask().execute(this);
 
 		//Get service
 		ArrayList<OverlayItem> serviceOverlay = xmlParser.getService();
 		overlayOpenSeaMap.initItemsService(serviceOverlay);
 		//overlayOpenSeaMap.addItemsService(serviceOverlay);
-
+		
 		this.overlayDraw = new ArrayDrawOverlay();
 		this.getOverlays().add(overlayDraw);
 
@@ -227,6 +235,17 @@ public class MyMapView extends MapView {
 					//Hidden service
 					else if(mapPosition.zoomLevel < 16){
 						this.overlayOpenSeaMap.hiddenService();
+					}
+				}
+				
+				if(this.isEnableShowPoi){
+					//Display service
+					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
+						overlayOpenSeaMap.displayPoi();
+					}
+					//Hidden service
+					else if(mapPosition.zoomLevel < 16){
+						this.overlayOpenSeaMap.hiddenPoi();
 					}
 				}
 
@@ -510,6 +529,23 @@ public class MyMapView extends MapView {
 		this.isEnableShowService = false;
 		this.overlayOpenSeaMap.hiddenService();
 	}
+	
+	public void showPoi(){
+		MapPosition mapPosition = this.getMapPosition().getMapPosition();
+		if (mapPosition == null) {
+			return;
+		}
+
+		this.isEnableShowPoi = true;
+		if(mapPosition.zoomLevel >= 16){
+			this.overlayOpenSeaMap.displayPoi();
+		}
+	}
+
+	public void hiddenPoi(){
+		this.isEnableShowPoi = false;
+		this.overlayOpenSeaMap.hiddenPoi();
+	}
 
 	public void showText(){
 		MapPosition mapPosition = this.getMapPosition().getMapPosition();
@@ -564,6 +600,37 @@ public class MyMapView extends MapView {
 		OverlayItem baliseItem = new OverlayItem(positionBalise,"","noTap",ItemizedOverlay.boundCenter(baliseIcon));
 		overlayOpenSeaMap.addItemOSM(baliseItem);
 	}
+	
+	public void setPoi(PoisDTOList poiList){
+		ArrayList<OverlayItem> poiOverlay = new ArrayList<OverlayItem>();
+		for(int i=0; i<poiList.size(); i++){
+			PoiDTO poi = poiList.get(i);
+			
+			OverlayItem item = new OverlayItem();
+			
+			double latitude = Double.parseDouble(poi.getLatitude());
+			double longitude = Double.parseDouble(poi.getLongitude());
+			
+			int idDrawable = R.drawable.bon_plan;
+			String type = poi.getType();
+			
+			if(type.equals("peche")){
+        		idDrawable = R.drawable.poisson;
+        	}
+        	else if(type.equals("securite")){
+        		idDrawable = R.drawable.attention;
+        	}
+			
+			item.setMarker(ItemizedOverlay.boundCenter(getContext().getResources().getDrawable(idDrawable)));
+			//save id in snippet
+			item.setSnippet(poi.getId().toString());
+			item.setTitle(type);
+			item.setPoint(new GeoPoint(latitude,longitude));
+			new getPoiInfoAsyncTask().execute(item);
+			poiOverlay.add(item);
+		}
+		overlayOpenSeaMap.initItemsPoi(poiOverlay);
+	}
 
 	@Override
 	void onPause() {
@@ -588,12 +655,12 @@ public class MyMapView extends MapView {
 			double lon = longPressPoint.getLongitude(); 
 			// Create an instance of the dialog fragment and show it
 			AddPoiDialog dialog = AddPoiDialog.getInstance(lat,lon);
-			
+
 			Activity activity = (Activity) getContext();
 			dialog.show(activity.getFragmentManager(), "AddCommentDialog");
 		}   
 	};
-	
+
 	@Override
 	void destroy() {
 		this.myMapWorker.interrupt();
@@ -614,12 +681,12 @@ public class MyMapView extends MapView {
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
 		boolean result = super.onTouchEvent(event);
-		
+
 		switch(event.getAction()){
 
 		case MotionEvent.ACTION_DOWN:
 			int index = event.getActionIndex();
-		    int pointerId = event.getPointerId(index);
+			int pointerId = event.getPointerId(index);
 			int pointerIndex = event.findPointerIndex(pointerId);
 			// save the position of the event
 			this.previousPositionX = event.getX(pointerIndex);
@@ -647,5 +714,9 @@ public class MyMapView extends MapView {
 			handler.removeCallbacks(mLongPressed);
 		}
 		return result;
+	}
+
+	public void addPoi(OverlayItem item) {
+		this.overlayOpenSeaMap.addItemPoi(item);
 	}
 }

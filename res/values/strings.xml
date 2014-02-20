@@ -48,5 +48,6 @@
     <string name="logout">Se déconnecter</string>
     <string name="menu_all_comment">Tous les commentaires</string>
     <string name="menu_my_comment">Mes commentaires</string>
+    <string name="menu_comment">Commentaire</string>
     
 </resources>

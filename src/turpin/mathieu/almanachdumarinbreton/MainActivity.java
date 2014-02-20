@@ -16,6 +16,7 @@ import turpin.mathieu.almanachdumarinbreton.forum.AccountActivity;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountManager;
 import turpin.mathieu.almanachdumarinbreton.forum.ForumActivity;
 import turpin.mathieu.almanachdumarinbreton.forum.LoginDialog;
+import turpin.mathieu.almanachdumarinbreton.forum.AddPoiDialog.AddPoiListener;
 import turpin.mathieu.almanachdumarinbreton.overlay.InfoOverlayItemDialog.InfoOverlayItemDialogListener;
 import android.app.Activity;
 import android.content.Context;
@@ -37,7 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class MainActivity extends MapActivity implements LoginDialog.LoginDialogListener, InfoOverlayItemDialogListener{
+public class MainActivity extends MapActivity implements LoginDialog.LoginDialogListener, InfoOverlayItemDialogListener, AddPoiListener{
 	private static final int DIALOG_LOCATION_PROVIDER_DISABLED = 2;
 
 	public MyMapView mapView;
@@ -158,6 +159,9 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		}
 		if(_menu.findItem(R.id.menu_sounding).isChecked()){
 			this.mapView.showSounding();
+		}
+		if(_menu.findItem(R.id.menu_comment).isChecked()){
+			this.mapView.showPoi();
 		}
 		initMenu();
 
@@ -422,6 +426,16 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 				this.mapView.showSounding();
 			}
 			return true;
+		case R.id.menu_comment:
+			if(item.isChecked()){
+				item.setChecked(false);
+				this.mapView.hiddenPoi();
+			}
+			else{
+				item.setChecked(true);
+				this.mapView.showPoi();
+			}
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -491,5 +505,10 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		afficheListeCommentaires.putExtra(ForumActivity.EXTRA_ID_CENTRE, id);
 		startActivity(afficheListeCommentaires);
 		
+	}
+
+	@Override
+	public void addPoi(OverlayItem item) {
+		this.mapView.addPoi(item);
 	}
 }
