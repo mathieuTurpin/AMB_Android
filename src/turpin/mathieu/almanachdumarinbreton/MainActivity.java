@@ -11,12 +11,13 @@ import org.mapsforge.android.maps.overlay.OverlayCircle;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.mapsforge.core.GeoPoint;
 
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
+import turpin.mathieu.almanachdumarinbreton.asynctask.AddPoiAsyncTask.AddPoiListener;
 import turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityWebLocal;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountActivity;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountManager;
 import turpin.mathieu.almanachdumarinbreton.forum.ForumActivity;
 import turpin.mathieu.almanachdumarinbreton.forum.LoginDialog;
-import turpin.mathieu.almanachdumarinbreton.forum.AddPoiDialog.AddPoiListener;
 import turpin.mathieu.almanachdumarinbreton.overlay.InfoOverlayItemDialog.InfoOverlayItemDialogListener;
 import android.app.Activity;
 import android.content.Context;
@@ -119,7 +120,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			}
 		});
 	}
-	
+
 	private void initIntentForActivity(Intent intent){
 		if (intent != null) {
 			//Get parameters
@@ -132,7 +133,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			this.mapView.setMapGenerator(new DatabaseRenderer());
 		}
 	}
-	
+
 	private void initActivity(){
 		if(this.mode == R.id.map_online){
 			this.mapView.setMapGenerator(new MapnikTileDownloader());
@@ -141,7 +142,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			this.mapView.setMapGenerator(new DatabaseRenderer());
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -167,7 +168,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 
 		return true;
 	}
-	
+
 	private void initMenu(){
 		if(this.mode == R.id.map_online){
 			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
@@ -179,7 +180,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			_menu.findItem(R.id.map_online).setEnabled(true);
 			_menu.findItem(R.id.map_offline).setEnabled(false);
 		}
-		
+
 		if(this.port != null && port.equals(getResources().getString(R.string.menu_marina))){
 			goToPort(R.id.menu_marina);
 		}
@@ -203,7 +204,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		super.onNewIntent(intent);
 		initIntentForActivity(intent);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -222,7 +223,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			savedInstanceState.putInt(MyActivity.EXTRA_MODE_MAP, R.id.map_online);
 		}
 	}
-	
+
 	private void initIntent(Intent intent){
 		intent.putExtra(MyActivity.EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
 		intent.putExtra(MyActivity.EXTRA_COURT_PORT, this.courtNamePort);
@@ -231,7 +232,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			intent.putExtra(MyActivity.EXTRA_MODE_MAP, R.id.map_online);
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch(requestCode){
@@ -351,7 +352,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			this.mapView.setClickable(true);
 		}
 	}
-	
+
 	@Override
 	public void setIsLogin() {
 		Toast.makeText(this, "Authenfication réussie", Toast.LENGTH_SHORT).show();
@@ -440,7 +441,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	private void goToPort(int idPort){
 		String namePort = _menu.findItem(idPort).getTitle().toString();
 		_menu.findItem(R.id.menu_port).setTitle(namePort);
@@ -466,7 +467,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		startActivity(intent);
 	}
-	
+
 	private void goToForum(){
 		Intent intent = new Intent(this, ForumActivity.class);
 		initIntent(intent);
@@ -485,14 +486,14 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			this.mapView.setMapGenerator(new DatabaseRenderer());
 		}
 	}
-	
+
 	private void goToAccount(){
 		Intent intent = new Intent(this, AccountActivity.class);
 		initIntent(intent);
 		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		startActivityForResult(intent, MyActivity.RESULT_IS_LOGIN);
 	}
-	
+
 	private void goToLogin(){
 		// Create an instance of the dialog fragment and show it
 		LoginDialog dialog = new LoginDialog();
@@ -504,11 +505,30 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		Intent afficheListeCommentaires = new Intent(this, ForumActivity.class);
 		afficheListeCommentaires.putExtra(ForumActivity.EXTRA_ID_CENTRE, id);
 		startActivity(afficheListeCommentaires);
-		
+
 	}
 
 	@Override
-	public void addPoi(OverlayItem item) {
+	public void addPoi(PoiDTO poi,String contenu) {
+		OverlayItem item = new OverlayItem();
+
+		double lat = Double.parseDouble(poi.getLatitude());
+		double lon = Double.parseDouble(poi.getLongitude());
+		item.setPoint(new GeoPoint(lat,lon));
+
+		int idDrawable = R.drawable.bon_plan;
+		String type = poi.getType();
+
+		if(type.equals("peche")){
+			idDrawable = R.drawable.poisson;
+		}
+		else if(type.equals("securite")){
+			idDrawable = R.drawable.attention;
+		}
+		item.setMarker(ItemizedOverlay.boundCenter(getResources().getDrawable(idDrawable)));
+
+		item.setSnippet(contenu);
+		item.setTitle(type);
 		this.mapView.addPoi(item);
 	}
 }

@@ -1,6 +1,5 @@
 package turpin.mathieu.almanachdumarinbreton.forum;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,11 +9,12 @@ import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.UtilisateurDTO;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.UtilisateursDTOList;
 import turpin.mathieu.almanachdumarinbreton.MyActivity;
 import turpin.mathieu.almanachdumarinbreton.R;
+import turpin.mathieu.almanachdumarinbreton.asynctask.ChargementUtilisateursAsyncTask;
+import turpin.mathieu.almanachdumarinbreton.asynctask.ChargementUtilisateursAsyncTask.ChargementUtilisateurListener;
+import turpin.mathieu.almanachdumarinbreton.asynctask.UpdateUtilisateurAsyncTask;
+import turpin.mathieu.almanachdumarinbreton.asynctask.UpdateUtilisateurAsyncTask.UpdateUtilisateurListener;
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -28,7 +28,7 @@ import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-public class AccountActivity extends MyActivity{
+public class AccountActivity extends MyActivity implements ChargementUtilisateurListener, UpdateUtilisateurListener{
 	//-----------------------------------------------------------------------------
 	private static final String TAG_NOM_COMPLET = "nom_complet_utilisateur";
 	//-----------------------------------------------------------------------------
@@ -40,6 +40,7 @@ public class AccountActivity extends MyActivity{
 
 	private ListView lv;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,7 +67,6 @@ public class AccountActivity extends MyActivity{
 		Button btnSave = (Button) findViewById(R.id.boutonSave);
 		btnSave.setOnClickListener(new OnClickListener()
 		{
-			@SuppressWarnings("unchecked")
 			@Override
 			public void onClick(View v)
 			{
@@ -81,7 +81,7 @@ public class AccountActivity extends MyActivity{
 				accountManager.setPartage(sharedMode);
 				
 				Map<String,String> formValues = UtilisateurController.getInstance().prepareUpdate(""+accountManager.getId(),newName,newFirstName, accountManager.getEmail(),newDescription, ""+!accountManager.getNoPartage(), ""+accountManager.getPartagePublic());
-				new UpdateUtilisateurAsyncTask().execute(formValues);
+				new UpdateUtilisateurAsyncTask(AccountActivity.this,"Enregistrement").execute(formValues);
 			}
 		});
 
@@ -96,8 +96,7 @@ public class AccountActivity extends MyActivity{
 				finish();
 			}
 		});
-
-		new ChargementUtilisateursAsyncTask().execute();
+		new ChargementUtilisateursAsyncTask(AccountActivity.this,"Chargement de la liste des utilisateurs").execute();
 	}
 
 	@Override
@@ -134,113 +133,38 @@ public class AccountActivity extends MyActivity{
 			return null;
 		}
 	}
-
-	//-----------------------------------------------------------------------------
-	// extends AsyncTask<Params, Progress, Result>
-	protected class ChargementUtilisateursAsyncTask extends AsyncTask<Void, Integer, UtilisateursDTOList>
-	{
-		private ProgressDialog progressDialog;
-		@Override
-		protected void onPreExecute()
-		{
-			super.onPreExecute();
-			progressDialog = new ProgressDialog(AccountActivity.this);
-			progressDialog.setTitle("Chargement de la liste des utilisateurs");
-			progressDialog.setMessage("En cours...");
-			progressDialog.setCancelable(true);
-			progressDialog.show();
-		}
-		@Override
-		// doInBackground(Params... params)
-		protected UtilisateursDTOList doInBackground(Void... formValues)
-		{
-			UtilisateurController utilisateurController = UtilisateurController.getInstance();
-			try
-			{
-				Log.d("AMBSocialNetwork", "-----------------------------> " + utilisateurController.findAllJson().getClass().getName());
-				return utilisateurController.findAllJson();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-			return null;
-		}
-		@Override
-		// onPostExecute(Result response)
-		protected void onPostExecute(UtilisateursDTOList utilisateurs)
-		{
-			progressDialog.dismiss();
-
-			ArrayList<HashMap<String, String>> listeAffichageUtilisateurs = new ArrayList<HashMap<String,String>>();
-			for(UtilisateurDTO utilisateur : utilisateurs)
-			{
-				HashMap<String,String> utilisateurAffichage = new HashMap<String, String>();
-				utilisateurAffichage.put(TAG_NOM_COMPLET, utilisateur.getNom() + " " + utilisateur.getPrenom());
-				listeAffichageUtilisateurs.add(utilisateurAffichage);
-			}
-
-			ListAdapter adapter = new SimpleAdapter(AccountActivity.this, 
-					listeAffichageUtilisateurs,
-					R.layout.list_item_utilisateur,
-					new String[] {TAG_NOM_COMPLET}, 
-					new int[] { R.id.nom_complet_utilisateur});
-
-			lv.setAdapter(adapter);
-		}
-	}
-	//-----------------------------------------------------------------------------
 	
+	@Override
+	public void chargementUtilisateur(UtilisateursDTOList utilisateurs) {
+		ArrayList<HashMap<String, String>> listeAffichageUtilisateurs = new ArrayList<HashMap<String,String>>();
+		for(UtilisateurDTO utilisateur : utilisateurs)
+		{
+			HashMap<String,String> utilisateurAffichage = new HashMap<String, String>();
+			utilisateurAffichage.put(TAG_NOM_COMPLET, utilisateur.getNom() + " " + utilisateur.getPrenom());
+			listeAffichageUtilisateurs.add(utilisateurAffichage);
+		}
 
-	protected class UpdateUtilisateurAsyncTask extends AsyncTask<Map<String,String>, Void, UtilisateurDTO>{
-		private ProgressDialog progressDialog;
-		@Override
-		protected void onPreExecute()
-		{
-			super.onPreExecute();
-			progressDialog = new ProgressDialog(AccountActivity.this);
-			progressDialog.setTitle("Enregistrement");
-			progressDialog.setMessage("En cours...");
-			progressDialog.setCancelable(true);
-			progressDialog.show();
-		}
-		
-		@Override
-		// doInBackground(Params... params)
-		protected UtilisateurDTO doInBackground(Map<String,String>... formValues)
-		{
-			UtilisateurController utilisateurController = UtilisateurController.getInstance();
-			try
-			{
-				if(formValues.length < 1){
-					return null;
-				}
-				else{			
-					return utilisateurController.update(formValues[0]);
-				}
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-			return null;
-		}
-		
-		@Override
-		protected void onPostExecute (UtilisateurDTO user) {
-			progressDialog.dismiss();
-			if(user!=null){
-				//Save new parameters
-				accountManager.logIn(user);
-				
-				Toast.makeText(AccountActivity.this, "Enregistrement terminé", Toast.LENGTH_SHORT).show();
-				//AccountActivity.this.setResult(Activity.RESULT_OK);
-				//AccountActivity.this.finish();
-			}
-			else{
-				Toast.makeText(AccountActivity.this, "Erreur lors de l'enregistrement", Toast.LENGTH_SHORT).show();
-			}
-		}
+		ListAdapter adapter = new SimpleAdapter(AccountActivity.this, 
+				listeAffichageUtilisateurs,
+				R.layout.list_item_utilisateur,
+				new String[] {TAG_NOM_COMPLET}, 
+				new int[] { R.id.nom_complet_utilisateur});
+
+		lv.setAdapter(adapter);
 	}
 
+	@Override
+	public void updateUtilisateur(UtilisateurDTO user) {
+		if(user!=null){
+			//Save new parameters
+			accountManager.logIn(user);
+
+			Toast.makeText(AccountActivity.this, "Enregistrement terminé", Toast.LENGTH_SHORT).show();
+			//AccountActivity.this.setResult(Activity.RESULT_OK);
+			//AccountActivity.this.finish();
+		}
+		else{
+			Toast.makeText(AccountActivity.this, "Erreur lors de l'enregistrement", Toast.LENGTH_SHORT).show();
+		}
+	}
 }

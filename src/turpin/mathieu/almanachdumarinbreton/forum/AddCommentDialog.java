@@ -1,27 +1,22 @@
 package turpin.mathieu.almanachdumarinbreton.forum;
 
-import java.io.IOException;
 import java.util.Map;
 
-import org.apache.http.client.ClientProtocolException;
 
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
-import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CommentaireDTO;
 import turpin.mathieu.almanachdumarinbreton.R;
+import turpin.mathieu.almanachdumarinbreton.asynctask.AddCommentAsyncTask;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class AddCommentDialog extends DialogFragment{
 	private Activity activity;
@@ -84,7 +79,7 @@ public class AddCommentDialog extends DialogFragment{
 				String partagePublic = Boolean.toString(isShared(idButtonChecked));
 				
 				Map<String,String> formValues = PoiController.getInstance().prepareAddComment(idUtilisateur, idCentreInteret, contenu, partagePublic);
-				new AddCommentAsyncTask().execute(formValues);
+				new AddCommentAsyncTask(activity,"Ajout de commentaire").execute(formValues);
 			}
 		})
 		.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -104,57 +99,6 @@ public class AddCommentDialog extends DialogFragment{
 			return false;
 		default:
 			return false;
-		}
-	}
-	
-	protected class AddCommentAsyncTask extends AsyncTask<Map<String,String>, Void, CommentaireDTO>
-	{
-		private ProgressDialog progressDialog;
-		@Override
-		protected void onPreExecute()
-		{
-			super.onPreExecute();
-			progressDialog = new ProgressDialog(activity);
-			progressDialog.setTitle("Ajout de commentaire");
-			progressDialog.setMessage("En cours...");
-			progressDialog.setCancelable(true);
-			progressDialog.show();
-		}
-		
-		@Override
-		protected CommentaireDTO doInBackground(Map<String,String>... params)
-		{
-			PoiController centreInteretController = PoiController.getInstance();
-			try
-			{
-				if(params.length < 1){
-					return null;
-				}
-				else{
-					CommentaireDTO commentaire = centreInteretController.addComment(params[0]);
-					return commentaire;
-				}
-			}
-			catch (ClientProtocolException e)
-			{
-				e.printStackTrace();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute (CommentaireDTO commentaire) {
-			progressDialog.dismiss();
-			if(commentaire != null){
-				Toast.makeText(activity, "Commentaire ajouté", Toast.LENGTH_SHORT).show();
-			}
-			else{
-				Toast.makeText(activity, "Erreur lors de l'ajout du commentaire", Toast.LENGTH_SHORT).show();
-			}
 		}
 	}
 }

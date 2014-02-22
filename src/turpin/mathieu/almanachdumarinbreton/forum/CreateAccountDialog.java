@@ -1,29 +1,25 @@
 package turpin.mathieu.almanachdumarinbreton.forum;
 
-import java.io.IOException;
 import java.util.Map;
-
-import org.apache.http.client.ClientProtocolException;
 
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.UtilisateurController;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.UtilisateurDTO;
 import turpin.mathieu.almanachdumarinbreton.R;
+import turpin.mathieu.almanachdumarinbreton.asynctask.CreateAccountAsyncTask;
+import turpin.mathieu.almanachdumarinbreton.asynctask.CreateAccountAsyncTask.CreateAccountListener;
 import turpin.mathieu.almanachdumarinbreton.forum.LoginDialog.LoginDialogListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-public class CreateAccountDialog extends DialogFragment{
+public class CreateAccountDialog extends DialogFragment implements CreateAccountListener{
 	private Activity activity;
 	private EditText nom;
 	private EditText prenom;
@@ -91,68 +87,23 @@ public class CreateAccountDialog extends DialogFragment{
 					String emailText = emailaddr.getText().toString();
 					String passwordText = password.getText().toString();
 					String descriptionText = description.getText().toString();
-					
+
 					Map<String,String> params = UtilisateurController.getInstance().prepareCreateAccount(nomText,prenomText,emailText, passwordText,descriptionText);					
-					new AuthentificationAsyncTask().execute(params);
+					new CreateAccountAsyncTask(activity,"Création du compte",CreateAccountDialog.this).execute(params);
 				}
 			});
 		}
 	}
 
-	protected class AuthentificationAsyncTask extends AsyncTask<Map<String,String>, Void, UtilisateurDTO>
-	{
-		private ProgressDialog progressDialog;
-		@Override
-		protected void onPreExecute()
-		{
-			super.onPreExecute();
-			progressDialog = new ProgressDialog(activity);
-			progressDialog.setTitle("Création du compte");
-			progressDialog.setMessage("En cours...");
-			progressDialog.setCancelable(true);
-			progressDialog.show();
-		}
-		
-		@Override
-		protected UtilisateurDTO doInBackground(Map<String,String>... params)
-		{
-			UtilisateurController utilisateurController = UtilisateurController.getInstance();
-			try
-			{
-				if(params.length < 1){
-					return null;
-				}
-				else{
-					UtilisateurDTO utilisateur = utilisateurController.createAccount(params[0]);
-					return utilisateur;
-				}
-			}
-			catch (ClientProtocolException e)
-			{
-				e.printStackTrace();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-			return null;
-		}
+	@Override
+	public void createAccount(UtilisateurDTO user) {
+		//Save parameters of this user
+		AccountManager accountManager = new AccountManager(activity);
+		accountManager.logIn(user);
 
-		@Override
-		protected void onPostExecute (UtilisateurDTO user) {
-			progressDialog.dismiss();
-			if(user != null){
-				//Save parameters of this user
-				AccountManager accountManager = new AccountManager(activity);
-				accountManager.logIn(user);
-
-				//Give result to currentActivity
-				LoginDialogListener mActivity = (LoginDialogListener) activity;
-				mActivity.setIsLogin();
-			}
-			else{
-				Toast.makeText(activity, "Erreur lors de la création du compte", Toast.LENGTH_SHORT).show();
-			}
-		}
+		//Give result to activity
+		LoginDialogListener mActivity = (LoginDialogListener) activity;
+		mActivity.setIsLogin();
+		dismiss();
 	}
 }

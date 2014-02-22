@@ -1,23 +1,15 @@
 package turpin.mathieu.almanachdumarinbreton.forum;
 
-import java.io.IOException;
 import java.util.Map;
 
-import org.apache.http.client.ClientProtocolException;
-import org.mapsforge.android.maps.overlay.ItemizedOverlay;
-import org.mapsforge.android.maps.overlay.OverlayItem;
-import org.mapsforge.core.GeoPoint;
-
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
-import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
 import turpin.mathieu.almanachdumarinbreton.R;
+import turpin.mathieu.almanachdumarinbreton.asynctask.AddPoiAsyncTask;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,10 +26,6 @@ public class AddPoiDialog extends DialogFragment{
 	private RadioButton pecheButton;
 	private RadioButton securiteButton;
 	private String commentText;
-	
-	public interface AddPoiListener {
-		void addPoi(OverlayItem item);
-	}
 
 	/**
 	 * 
@@ -82,21 +70,21 @@ public class AddPoiDialog extends DialogFragment{
 		remarqueButton = (RadioButton) v.findViewById(R.id.radioTypeRemarque);
 		pecheButton = (RadioButton) v.findViewById(R.id.radioTypePeche);
 		securiteButton = (RadioButton) v.findViewById(R.id.radioTypeSecurite);
-		
+
 		remarqueButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				pecheButton.setChecked(false);
 				securiteButton.setChecked(false);
 			}
 		});
-		
+
 		pecheButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				remarqueButton.setChecked(false);
 				securiteButton.setChecked(false);
 			}
 		});
-		
+
 		securiteButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				pecheButton.setChecked(false);
@@ -123,7 +111,7 @@ public class AddPoiDialog extends DialogFragment{
 					String partagePublic = Boolean.toString(isShared(idPartageChecked));
 					String type = getTypeByButton();
 					Map<String,String> params = PoiController.getInstance().prepareAddPoi(Double.toString(lat), Double.toString(lon),type,idUtilisateur,commentText,partagePublic);
-					new addPoiAsyncTask().execute(params);
+					new AddPoiAsyncTask(context,"Contact serveur").execute(params);
 				}
 			}
 		})
@@ -134,102 +122,28 @@ public class AddPoiDialog extends DialogFragment{
 		});
 		// Create the AlertDialog object and return it
 		return builder.create();
-		}
+	}
 
-		private boolean isShared(int id){
-			switch(id){
-			case R.id.radioPartagePublic:
-				return true;
-			case R.id.radioPartagePrivate:
-				return false;
-			default:
-				return false;
-			}
-		}
-		
-		private String getTypeByButton(){
-			if(pecheButton.isChecked()){
-				return "peche";
-			}
-			else if(securiteButton.isChecked()){
-				return "securite";
-			}
-			else{
-				return "remarque";
-			}
-		}
-
-		protected class addPoiAsyncTask extends AsyncTask<Map<String,String>, Void, PoiDTO>
-		{
-			protected ProgressDialog progressDialog;
-			@Override
-			protected void onPreExecute()
-			{
-				super.onPreExecute();
-				progressDialog = new ProgressDialog(context);
-				progressDialog.setTitle("Contact serveur");
-				progressDialog.setMessage("En cours...");
-				progressDialog.setCancelable(true);
-				progressDialog.show();
-
-			}
-
-			@Override
-			protected PoiDTO doInBackground(Map<String,String>... params)
-			{
-				PoiController poiController = PoiController.getInstance();
-				try
-				{
-					if(params.length < 1){
-						return null;
-					}
-					else{
-						PoiDTO poi = poiController.addPoi(params[0]);
-						return poi;
-					}
-				}
-				catch (ClientProtocolException e)
-				{
-					e.printStackTrace();
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-				}
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute (PoiDTO poi) {
-				progressDialog.dismiss();
-				if(poi!=null){	
-					OverlayItem item = new OverlayItem();
-					
-					double lat = Double.parseDouble(poi.getLatitude());
-					double lon = Double.parseDouble(poi.getLongitude());
-					item.setPoint(new GeoPoint(lat,lon));
-					
-					int idDrawable = R.drawable.bon_plan;
-					String type = poi.getType();
-					
-					if(type.equals("peche")){
-		        		idDrawable = R.drawable.poisson;
-		        	}
-		        	else if(type.equals("securite")){
-		        		idDrawable = R.drawable.attention;
-		        	}
-					item.setMarker(ItemizedOverlay.boundCenter(context.getResources().getDrawable(idDrawable)));
-					
-					item.setSnippet(commentText);
-					item.setTitle(type);
-					AddPoiListener listener = (AddPoiListener) context;
-					listener.addPoi(item);
-					Toast.makeText(context, "Enregistrement terminé", Toast.LENGTH_SHORT).show();
-				}
-				else{
-					Toast.makeText(context, "Erreur lors de l'enregistrement", Toast.LENGTH_SHORT).show();
-				}
-			}
-
+	private boolean isShared(int id){
+		switch(id){
+		case R.id.radioPartagePublic:
+			return true;
+		case R.id.radioPartagePrivate:
+			return false;
+		default:
+			return false;
 		}
 	}
+
+	private String getTypeByButton(){
+		if(pecheButton.isChecked()){
+			return "peche";
+		}
+		else if(securiteButton.isChecked()){
+			return "securite";
+		}
+		else{
+			return "remarque";
+		}
+	}
+}

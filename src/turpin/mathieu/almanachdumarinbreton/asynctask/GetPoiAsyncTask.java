@@ -1,31 +1,34 @@
-package turpin.mathieu.almanachdumarinbreton.forum;
+package turpin.mathieu.almanachdumarinbreton.asynctask;
 
 import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
-import org.mapsforge.android.maps.MyMapView;
 
 import android.os.AsyncTask;
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoisDTOList;
 
-public class getPoiAsyncTask extends AsyncTask<MyMapView, Void, PoisDTOList>
+public class GetPoiAsyncTask extends AsyncTask<Void, Void, PoisDTOList>
 {
-	private MyMapView mapView;
+	public interface GetPoiListener {
+		void setPoi(PoisDTOList poi);
+	}
+
+	private GetPoiListener listener;
+
+	public GetPoiAsyncTask(GetPoiListener listener){
+		super();
+		this.listener = listener;
+	}
+
 	@Override
-	protected PoisDTOList doInBackground(MyMapView... params)
+	protected PoisDTOList doInBackground(Void...params)
 	{
-		mapView = params[0];
 		PoiController poiController = PoiController.getInstance();
 		try
 		{
-			if(params.length < 1){
-				return null;
-			}
-			else{
-				PoisDTOList poi = poiController.findAllPoiJson();
-				return poi;
-			}
+			PoisDTOList poi= poiController.findAllPoiJson();
+			return poi;
 		}
 		catch (ClientProtocolException e)
 		{
@@ -41,10 +44,7 @@ public class getPoiAsyncTask extends AsyncTask<MyMapView, Void, PoisDTOList>
 	@Override
 	protected void onPostExecute (PoisDTOList poi) {
 		if(poi!=null){
-			mapView.setPoi(poi);
-		}
-		else{
+			listener.setPoi(poi);
 		}
 	}
-
 }

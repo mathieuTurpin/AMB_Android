@@ -28,9 +28,10 @@ import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoisDTOList;
 import turpin.mathieu.almanachdumarinbreton.MyXmlParser;
 import turpin.mathieu.almanachdumarinbreton.R;
+import turpin.mathieu.almanachdumarinbreton.asynctask.GetPoiAsyncTask;
+import turpin.mathieu.almanachdumarinbreton.asynctask.GetPoiAsyncTask.GetPoiListener;
+import turpin.mathieu.almanachdumarinbreton.asynctask.GetPoiInfoAsyncTask;
 import turpin.mathieu.almanachdumarinbreton.forum.AddPoiDialog;
-import turpin.mathieu.almanachdumarinbreton.forum.getPoiAsyncTask;
-import turpin.mathieu.almanachdumarinbreton.forum.getPoiInfoAsyncTask;
 import turpin.mathieu.almanachdumarinbreton.maps.FileSystemTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.InMemoryTileCacheOpenSeaMap;
 import turpin.mathieu.almanachdumarinbreton.maps.MyMapWorker;
@@ -63,7 +64,7 @@ import android.view.MotionEvent;
  * {@link Overlay Overlays} can be used to display geographical data such as points and ways. To draw an overlay on top
  * of the map, add it to the list returned by {@link #getOverlays()}.
  */
-public class MyMapView extends MapView{
+public class MyMapView extends MapView implements GetPoiListener{
 	private static final float DEFAULT_TEXT_SCALE = 1;
 	private static final int DEFAULT_TILE_CACHE_SIZE_FILE_SYSTEM = 100;
 	private static final int DEFAULT_TILE_CACHE_SIZE_IN_MEMORY = 10;
@@ -174,7 +175,7 @@ public class MyMapView extends MapView{
 		this.getOverlays().add(MyMapView.DEFAULT_OVERLAY,overlayOpenSeaMap);
 		
 		//Get po from server
-		new getPoiAsyncTask().execute(this);
+		new GetPoiAsyncTask(this).execute();
 
 		//Get service
 		ArrayList<OverlayItem> serviceOverlay = xmlParser.getService();
@@ -626,7 +627,7 @@ public class MyMapView extends MapView{
 			item.setSnippet(poi.getId().toString());
 			item.setTitle(type);
 			item.setPoint(new GeoPoint(latitude,longitude));
-			new getPoiInfoAsyncTask().execute(item);
+			new GetPoiInfoAsyncTask(item).execute(poi.getId().toString());
 			poiOverlay.add(item);
 		}
 		overlayOpenSeaMap.initItemsPoi(poiOverlay);

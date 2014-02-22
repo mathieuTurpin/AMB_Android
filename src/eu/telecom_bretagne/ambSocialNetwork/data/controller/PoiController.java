@@ -17,6 +17,7 @@ public class PoiController extends Controller
 {
 	//-----------------------------------------------------------------------------
 	private static PoiController instance = null;
+	public static final String KEY_CONTENU = "contenu";
 
 	private static final String URL_CENTRE_INTERET = URL + "/point";
 	//-----------------------------------------------------------------------------
@@ -215,7 +216,7 @@ public class PoiController extends Controller
 		formValues.put("longitude", longitude);
 		formValues.put("type", type);
 		formValues.put("id_utilisateur", idUtilisateur);
-		formValues.put("contenu", contenu);
+		formValues.put(KEY_CONTENU, contenu);
 		formValues.put("partage_public", partagePublic);
 
 		return formValues;

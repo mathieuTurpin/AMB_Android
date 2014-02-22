@@ -1,4 +1,4 @@
-package turpin.mathieu.almanachdumarinbreton.forum;
+package turpin.mathieu.almanachdumarinbreton.asynctask;
 
 import java.io.IOException;
 
@@ -9,25 +9,29 @@ import android.os.AsyncTask;
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CommentairesDTOList;
 
-public class getPoiInfoAsyncTask extends AsyncTask<OverlayItem, Void, Void>
-{
+public class GetPoiInfoAsyncTask extends AsyncTask<String,Void,String>
+{	
+	OverlayItem item;
+	public GetPoiInfoAsyncTask(OverlayItem item){
+		this.item = item;
+	}
+	
 	@Override
-	protected Void doInBackground(OverlayItem... params)
+	protected String doInBackground(String... params)
 	{
-		OverlayItem item = params[0];
 		PoiController poiController = PoiController.getInstance();
 		try
 		{
 			if(params.length < 1){
-				return null;
+				return "";
 			}
 			else{
-				//get id
-				CommentairesDTOList commentaires = poiController.listeDesCommentairesPourUnPoint(item.getSnippet());
+				String id = (String) params[0];
+				CommentairesDTOList commentaires = poiController.listeDesCommentairesPourUnPoint(id);
+				
 				//get contenu
 				String contenu = commentaires.get(0).getContenu();
-				item.setSnippet(contenu);
-				return null;
+				return contenu;
 			}
 		}
 		catch (ClientProtocolException e)
@@ -38,7 +42,12 @@ public class getPoiInfoAsyncTask extends AsyncTask<OverlayItem, Void, Void>
 		{
 			e.printStackTrace();
 		}
-		return null;
+		return "non charger";
+	}
+	
+	@Override
+	protected void onPostExecute (String contenu) {
+		item.setSnippet(contenu);
 	}
 
 }
