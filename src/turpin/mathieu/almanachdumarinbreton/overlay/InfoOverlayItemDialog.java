@@ -86,7 +86,7 @@ public class InfoOverlayItemDialog extends DialogFragment implements AddCommentL
 		int idUtilisateur = accountManager.getId();
 
 		AddCommentDialog dialog = AddCommentDialog.getInstance(idUtilisateur,idCentreUtilisateur,latitude,longitude,nomCentreInteret);
-		dialog.show(getFragmentManager(), "AddCommentDialog");
+		dialog.show(activity.getFragmentManager(), "AddCommentDialog");
 	}
 	
 }
