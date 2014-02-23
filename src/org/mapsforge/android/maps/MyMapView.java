@@ -104,8 +104,6 @@ public class MyMapView extends MapView implements GetPoiListener{
 	private boolean isEnableShowText;
 	private boolean isEnableShowSounding;
 
-	private MyXmlParser xmlParser;
-
 	/**
 	 * Keep a record of the center of the map, to know if the map
 	 * has been panned.
@@ -148,7 +146,6 @@ public class MyMapView extends MapView implements GetPoiListener{
 	 */
 	public MyMapView(Context context, MapGenerator mapGenerator) {
 		super(context, mapGenerator);
-		xmlParser = new MyXmlParser(context);
 		this.myJobParameters = new JobParameters(MapView.DEFAULT_RENDER_THEME, DEFAULT_TEXT_SCALE);
 
 		//Set new parameters for cache OpenStreetMap
@@ -178,7 +175,7 @@ public class MyMapView extends MapView implements GetPoiListener{
 		new GetPoiAsyncTask(this).execute();
 
 		//Get service
-		ArrayList<OverlayItem> serviceOverlay = xmlParser.getService();
+		ArrayList<OverlayItem> serviceOverlay = MyXmlParser.getInstance().getService(context);
 		overlayOpenSeaMap.initItemsService(serviceOverlay);
 		//overlayOpenSeaMap.addItemsService(serviceOverlay);
 		
@@ -253,7 +250,7 @@ public class MyMapView extends MapView implements GetPoiListener{
 				if(this.isEnableShowText){
 					//Display Text
 					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
-						textOverlay = this.xmlParser.getText();
+						textOverlay = MyXmlParser.getInstance().getText(getContext());
 						if(textOverlay != null){
 							this.overlayDraw.addTexts(textOverlay);
 						}
@@ -267,7 +264,7 @@ public class MyMapView extends MapView implements GetPoiListener{
 				if(this.isEnableShowSounding){
 					//Display Sounding
 					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
-						soundingOverlay = this.xmlParser.getSounding();
+						soundingOverlay = MyXmlParser.getInstance().getSounding(getContext());
 						if(soundingOverlay != null){
 							this.overlayDraw.addTexts(soundingOverlay);
 						}
@@ -553,7 +550,7 @@ public class MyMapView extends MapView implements GetPoiListener{
 		if (mapPosition == null) {
 			return;
 		}
-		textOverlay = this.xmlParser.getText();
+		textOverlay = MyXmlParser.getInstance().getText(getContext());
 
 		if(textOverlay != null){
 			this.isEnableShowText = true;
@@ -573,7 +570,7 @@ public class MyMapView extends MapView implements GetPoiListener{
 		if (mapPosition == null) {
 			return;
 		}
-		soundingOverlay = this.xmlParser.getSounding();
+		soundingOverlay = MyXmlParser.getInstance().getSounding(getContext());
 
 		if(soundingOverlay != null){
 			this.isEnableShowSounding = true;
