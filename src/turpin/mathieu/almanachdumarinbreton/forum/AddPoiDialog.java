@@ -4,7 +4,7 @@ import java.util.Map;
 
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
 import turpin.mathieu.almanachdumarinbreton.R;
-import turpin.mathieu.almanachdumarinbreton.asynctask.AddPoiAsyncTask;
+import turpin.mathieu.almanachdumarinbreton.asynctask.poi.AddPoiAsyncTask;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;

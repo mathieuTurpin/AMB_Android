@@ -1,10 +1,11 @@
-package turpin.mathieu.almanachdumarinbreton.asynctask;
+package turpin.mathieu.almanachdumarinbreton.asynctask.poi;
 
 import java.io.IOException;
 import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
 
+import turpin.mathieu.almanachdumarinbreton.asynctask.MyAsyncTask;
 import android.content.Context;
 import android.widget.Toast;
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;

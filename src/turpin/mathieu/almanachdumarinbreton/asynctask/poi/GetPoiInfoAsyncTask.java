@@ -1,4 +1,4 @@
-package turpin.mathieu.almanachdumarinbreton.asynctask;
+package turpin.mathieu.almanachdumarinbreton.asynctask.poi;
 
 import java.io.IOException;
 

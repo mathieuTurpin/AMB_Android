@@ -12,7 +12,7 @@ import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.mapsforge.core.GeoPoint;
 
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
-import turpin.mathieu.almanachdumarinbreton.asynctask.AddPoiAsyncTask.AddPoiListener;
+import turpin.mathieu.almanachdumarinbreton.asynctask.poi.AddPoiAsyncTask.AddPoiListener;
 import turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityWebLocal;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountActivity;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountManager;

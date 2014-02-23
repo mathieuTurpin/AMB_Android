@@ -1,21 +1,21 @@
-package turpin.mathieu.almanachdumarinbreton.asynctask;
+package turpin.mathieu.almanachdumarinbreton.asynctask.poi;
 
 import turpin.mathieu.almanachdumarinbreton.overlay.InfoOverlayItemDialog.InfoOverlayItemDialogListener;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
 import android.content.Context;
 import android.widget.Toast;
-import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.ServiceDTO;
 
-public class CommentByIdServiceAsyncTask extends GetIdServiceAsyncTask{
-	
-	public CommentByIdServiceAsyncTask(Context context, String title) {
+public class CommentByIdPoiAsyncTask extends GetIdPoiAsyncTask{
+
+	public CommentByIdPoiAsyncTask(Context context, String title) {
 		super(context, title);
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	protected void onPostExecute (Object object) {
 		super.onPostExecute(object);
-		ServiceDTO poi = (ServiceDTO) object;
+		
+		PoiDTO poi = (PoiDTO) object;
 		if(poi != null){
 			int nbComment = poi.getCommentaires().size();
 			if(nbComment<1){
@@ -27,7 +27,8 @@ public class CommentByIdServiceAsyncTask extends GetIdServiceAsyncTask{
 			}
 		}
 		else{
-			new CommentByIdPoiAsyncTask(context,title).execute(params);
+			Toast.makeText(context, "Erreur lors de la recherche du centre d'interet sur le serveur", Toast.LENGTH_SHORT).show();
 		}
 	}
+
 }

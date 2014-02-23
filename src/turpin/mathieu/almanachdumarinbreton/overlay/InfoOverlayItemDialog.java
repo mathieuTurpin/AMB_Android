@@ -3,9 +3,9 @@ package turpin.mathieu.almanachdumarinbreton.overlay;
 import java.util.Map;
 
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
-import turpin.mathieu.almanachdumarinbreton.asynctask.AddCommentListener;
-import turpin.mathieu.almanachdumarinbreton.asynctask.AddCommentServiceAsyncTask;
-import turpin.mathieu.almanachdumarinbreton.asynctask.CommentByIdServiceAsyncTask;
+import turpin.mathieu.almanachdumarinbreton.asynctask.poi.AddCommentListener;
+import turpin.mathieu.almanachdumarinbreton.asynctask.poi.AddCommentServiceAsyncTask;
+import turpin.mathieu.almanachdumarinbreton.asynctask.poi.CommentByIdServiceAsyncTask;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountManager;
 import turpin.mathieu.almanachdumarinbreton.forum.AddCommentDialog;
 import android.app.Activity;

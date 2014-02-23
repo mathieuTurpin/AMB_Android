@@ -1,9 +1,9 @@
-package turpin.mathieu.almanachdumarinbreton.asynctask;
+package turpin.mathieu.almanachdumarinbreton.asynctask.utilisateur;
 
 import java.io.IOException;
-
 import java.util.Map;
 
+import turpin.mathieu.almanachdumarinbreton.asynctask.MyAsyncTask;
 import android.content.Context;
 import android.util.Log;
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.UtilisateurController;

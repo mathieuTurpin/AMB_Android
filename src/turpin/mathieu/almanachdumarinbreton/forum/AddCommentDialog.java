@@ -3,9 +3,10 @@ package turpin.mathieu.almanachdumarinbreton.forum;
 import java.util.Map;
 
 
+
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
 import turpin.mathieu.almanachdumarinbreton.R;
-import turpin.mathieu.almanachdumarinbreton.asynctask.AddCommentAsyncTask;
+import turpin.mathieu.almanachdumarinbreton.asynctask.poi.AddCommentAsyncTask;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

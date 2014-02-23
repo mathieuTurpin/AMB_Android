@@ -1,4 +1,4 @@
-package turpin.mathieu.almanachdumarinbreton.asynctask;
+package turpin.mathieu.almanachdumarinbreton.asynctask.poi;
 
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
 import android.content.Context;
