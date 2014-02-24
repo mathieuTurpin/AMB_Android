@@ -164,6 +164,11 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		if(_menu.findItem(R.id.menu_comment).isChecked()){
 			this.mapView.showPoi();
 		}
+		
+		//Add an arrow
+		String menuMode = getResources().getString(R.string.map);
+		_menu.findItem(R.id.menu_mode).setTitle(menuMode + " ->");
+		
 		initMenu();
 
 		return true;
@@ -171,12 +176,16 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 
 	private void initMenu(){
 		if(this.mode == R.id.map_online){
-			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
+			String mode = getResources().getString(R.string.menu_online);
+			_menu.findItem(R.id.menu_connexion).setTitle(mode + " ->");
+			
 			_menu.findItem(R.id.map_online).setEnabled(false);
 			_menu.findItem(R.id.map_offline).setEnabled(true);
 		}
 		else{
-			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_offline);
+			String mode = getResources().getString(R.string.menu_offline);
+			_menu.findItem(R.id.menu_connexion).setTitle(mode + " ->");
+			
 			_menu.findItem(R.id.map_online).setEnabled(true);
 			_menu.findItem(R.id.map_offline).setEnabled(false);
 		}
@@ -444,7 +453,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 
 	private void goToPort(int idPort){
 		String namePort = _menu.findItem(idPort).getTitle().toString();
-		_menu.findItem(R.id.menu_port).setTitle(namePort);
+		_menu.findItem(R.id.menu_port).setTitle(namePort + " ->");
 		switch(idPort){
 		case R.id.menu_marina:
 			this.port = namePort;
@@ -478,7 +487,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	private void setConnectionMode(boolean online,CharSequence title){
 		_menu.findItem(R.id.map_online).setEnabled(!online);
 		_menu.findItem(R.id.map_offline).setEnabled(online);
-		_menu.findItem(R.id.menu_connexion).setTitle(title);
+		_menu.findItem(R.id.menu_connexion).setTitle(title + " ->");
 		if(online){
 			this.mapView.setMapGenerator(new MapnikTileDownloader());
 		}

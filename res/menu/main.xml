@@ -1,88 +1,100 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/menu_port"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_port">
+        android:showAsAction="always"
+        android:title="Menu">
         <menu>
             <item
-                android:id="@+id/menu_marina"
-                android:title="@string/menu_marina"/>
+                android:id="@+id/menu_port"
+                android:showAsAction="ifRoom"
+                android:title="@string/menu_port">
+                <menu>
+                    <item
+                        android:id="@+id/menu_marina"
+                        android:title="@string/menu_marina"/>
+                </menu>
+            </item>
+            <item
+                android:id="@+id/menu_mode"
+                android:showAsAction="ifRoom"
+                android:title="@string/map">
+                <menu>
+                    <item
+                        android:id="@+id/map"
+                        android:enabled="false"
+                        android:title="@string/map"/>
+                    <item
+                        android:id="@+id/map_description"
+                        android:title="@string/menu_description"/>
+                    <item
+                        android:id="@+id/menu_forum"
+                        android:title="@string/menu_forum"/>
+                </menu>
+            </item>
+            <item
+                android:id="@+id/menu_affichage"
+                android:showAsAction="ifRoom"
+                android:title="@string/menu_affichage">
+                <menu>
+                    <group android:checkableBehavior="all" >
+                        <item
+                            android:id="@+id/menu_OSM"
+                            android:checkable="true"
+                            android:checked="true"
+                            android:title="@string/menu_OSM"
+                            android:titleCondensed="OSM"/>
+                        <item
+                            android:id="@+id/menu_service"
+                            android:checkable="true"
+                            android:checked="true"
+                            android:title="@string/menu_service"
+                            android:titleCondensed="Service"/>
+                        <item
+                            android:id="@+id/menu_ponton"
+                            android:checkable="true"
+                            android:checked="true"
+                            android:title="@string/menu_ponton"
+                            android:titleCondensed="Ponton"/>
+                        <item
+                            android:id="@+id/menu_sounding"
+                            android:checkable="true"
+                            android:checked="false"
+                            android:title="@string/menu_sounding"
+                            android:titleCondensed="Sounding"/>
+                        <item
+                            android:id="@+id/menu_comment"
+                            android:checkable="true"
+                            android:checked="true"
+                            android:title="@string/menu_comment"
+                            android:titleCondensed="Commentaire"/>
+                    </group>
+                </menu>
+            </item>
         </menu>
     </item>
     <item
-        android:id="@+id/menu_mode"
         android:showAsAction="ifRoom"
-        android:title="@string/map">
+        android:title="Paramètres">
         <menu>
             <item
-                android:id="@+id/map"
-                android:enabled="false"
-                android:title="@string/map"/>
+                android:id="@+id/menu_connexion"
+                android:showAsAction="ifRoom"
+                android:title="@string/menu_offline">
+                <menu>
+                    <item
+                        android:id="@+id/map_online"
+                        android:title="@string/menu_online"/>
+                    <item
+                        android:id="@+id/map_offline"
+                        android:enabled="false"
+                        android:title="@string/menu_offline"/>
+                </menu>
+            </item>
             <item
-                android:id="@+id/map_description"
-                android:title="@string/menu_description"/>
-            <item
-                android:id="@+id/menu_forum"
-                android:title="@string/menu_forum"/>
+                android:id="@+id/menu_compte"
+                android:showAsAction="ifRoom"
+                android:title="@string/menu_login"/>
         </menu>
     </item>
-    <item
-        android:id="@+id/menu_connexion"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_offline">
-        <menu>
-            <item
-                android:id="@+id/map_online"
-                android:title="@string/menu_online"/>
-            <item
-                android:id="@+id/map_offline"
-                android:enabled="false"
-                android:title="@string/menu_offline"/>
-        </menu>
-    </item>
-    <item
-        android:id="@+id/menu_affichage"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_affichage">
-        <menu>
-            <group android:checkableBehavior="all" >
-                <item
-                    android:id="@+id/menu_OSM"
-                    android:checkable="true"
-                    android:checked="true"
-                    android:title="@string/menu_OSM"
-                    android:titleCondensed="OSM"/>
-                <item
-                    android:id="@+id/menu_service"
-                    android:checkable="true"
-                    android:checked="true"
-                    android:title="@string/menu_service"
-                    android:titleCondensed="Service"/>
-                <item
-                    android:id="@+id/menu_ponton"
-                    android:checkable="true"
-                    android:checked="true"
-                    android:title="@string/menu_ponton"
-                    android:titleCondensed="Ponton"/>
-                <item
-                    android:id="@+id/menu_sounding"
-                    android:checkable="true"
-                    android:checked="false"
-                    android:title="@string/menu_sounding"
-                    android:titleCondensed="Sounding"/>
-                <item
-                    android:id="@+id/menu_comment"
-                    android:checkable="true"
-                    android:checked="true"
-                    android:title="@string/menu_comment"
-                    android:titleCondensed="Commentaire"/>
-            </group>
-        </menu>
-    </item>
-    <item
-        android:id="@+id/menu_compte"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_login"/>
 
 </menu>
