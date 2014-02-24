@@ -10,7 +10,13 @@ public abstract class MyAsyncTask extends AsyncTask<Map<String,String>, Object, 
 {
 	protected final Context context;
 	protected ProgressDialog progressDialog;
-		
+	
+	/**
+	 * 
+	 * @param context
+	 * @param title
+	 * 		title used to set the title text for this dialog's window
+	 */
 	public MyAsyncTask(Context context,String title){
 		super();
 		this.context = context;
