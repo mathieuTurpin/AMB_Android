@@ -4,13 +4,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
+import eu.telecom_bretagne.ambSocialNetwork.data.controller.UtilisateurController;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CommentaireDTO;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CommentairesDTOList;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.ServiceDTO;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.UtilisateurDTO;
 import turpin.mathieu.almanachdumarinbreton.MainActivity;
 import turpin.mathieu.almanachdumarinbreton.MyActivity;
+import turpin.mathieu.almanachdumarinbreton.MyXmlParser;
 import turpin.mathieu.almanachdumarinbreton.R;
 import turpin.mathieu.almanachdumarinbreton.asynctask.poi.ChargementCommentairesAsyncTask;
 import turpin.mathieu.almanachdumarinbreton.asynctask.poi.ChargementCommentairesAsyncTask.ChargementCommentairesListener;
+import turpin.mathieu.almanachdumarinbreton.asynctask.poi.GetPoiByIdAsyncTask.GetPoiByIdListener;
+import turpin.mathieu.almanachdumarinbreton.asynctask.poi.GetServiceByIdAsyncTask;
+import turpin.mathieu.almanachdumarinbreton.asynctask.poi.GetServiceByIdAsyncTask.GetServiceByIdListener;
+import turpin.mathieu.almanachdumarinbreton.asynctask.utilisateur.GetUserByIdAsyncTask;
+import turpin.mathieu.almanachdumarinbreton.asynctask.utilisateur.GetUserByIdAsyncTask.GetUserByIdListener;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,13 +31,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-public class ForumActivity extends MyActivity implements ChargementCommentairesListener{
+public class ForumActivity extends MyActivity implements ChargementCommentairesListener,GetUserByIdListener,GetServiceByIdListener,GetPoiByIdListener{
 
 	public static final String EXTRA_ID_CENTRE = "id_centre";
 	private int idCentreInteret;
@@ -36,6 +48,7 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 	private static final String TAG_NOM = "nom_commentaire";
 	private static final String TAG_ID_USER = "id_user";
 	private static final String TAG_DATE = "date";
+	private static final String TAG_IMG_TYPE_COMMENT = "img_type_comment";
 	//-----------------------------------------------------------------------------
 
 	private ListView lv;
@@ -116,7 +129,7 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 		//Add an arrow
 		String menuMode = getResources().getString(R.string.menu_forum);
 		menu.findItem(R.id.menu_mode).setTitle(menuMode + MyActivity.ARROW);
-		
+
 		String menuComment = getResources().getString(R.string.menu_all_comment);
 		menu.findItem(R.id.menu_affichage).setTitle(menuComment + MyActivity.ARROW);
 
@@ -160,30 +173,76 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 		new ChargementCommentairesAsyncTask(ForumActivity.this,"Chargement de la liste des commentaires",myComment).execute(params);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void chargementCommentaires(CommentairesDTOList commentaires) {
 		idCentreInteret = -1;
 		if(commentaires!=null){
 			ArrayList<HashMap<String, String>> listeAffichageCommentaires = new ArrayList<HashMap<String,String>>();
-			for(CommentaireDTO commentaire : commentaires)
+			for(int index = 0; index < commentaires.size(); index++)
 			{
+				CommentaireDTO commentaire = commentaires.get(index);
 				HashMap<String,String> commentaireAffichage = new HashMap<String, String>();
-				commentaireAffichage.put(TAG_ID_USER, ""+commentaire.getUtilisateurId());
+
+				Map<String,String> params = new HashMap<String, String>();
+				Integer idUser = commentaire.getUtilisateurId();
+				params.put(UtilisateurController.KEY_ID, Integer.toString(idUser));
+
+				new GetUserByIdAsyncTask(ForumActivity.this,"Recherche info utilisateur",index).execute(params);
+				
+				params = new HashMap<String, String>();
+				Integer idPoi = commentaire.getPointId();
+				params.put(PoiController.KEY_ID, Integer.toString(idPoi));
+				new GetServiceByIdAsyncTask(ForumActivity.this,"Recherche info poi",index).execute(params);
+
 				commentaireAffichage.put(TAG_NOM, commentaire.getContenu());
 				commentaireAffichage.put(TAG_DATE, commentaire.getDatePublication().toLocaleString());
+								
 				listeAffichageCommentaires.add(commentaireAffichage);
 			}
-
 			ListAdapter adapter = new SimpleAdapter(ForumActivity.this, 
 					listeAffichageCommentaires,
 					R.layout.list_item_commentaire,
-					new String[] {TAG_ID_USER,TAG_NOM,TAG_DATE}, 
-					new int[] { R.id.id_user,R.id.nom_commentaire,R.id.date});
+					new String[] {TAG_ID_USER,TAG_NOM,TAG_DATE,TAG_IMG_TYPE_COMMENT}, 
+					new int[] { R.id.id_user,R.id.nom_commentaire,R.id.date,R.id.type_comment});
 
 			lv.setAdapter(adapter);
+			
 		}
 		else{
 			Toast.makeText(ForumActivity.this, "Aucun commentaire", Toast.LENGTH_LONG).show();
 		}
+	}
+
+	@Override
+	public void setUser(UtilisateurDTO user,int index) {
+		@SuppressWarnings("unchecked")
+		HashMap<String,String> commentaireAffichage = (HashMap<String, String>) lv.getAdapter().getItem(index);
+		commentaireAffichage.put(TAG_ID_USER, user.getNom() + " " + user.getPrenom());
+		
+		((BaseAdapter) lv.getAdapter()).notifyDataSetChanged();
+	}
+
+	private void setTypeComment(String type, int index){
+		
+		int idDrawable = MyXmlParser.getInstance().getDrawablePoiByType(type);
+		
+		if(idDrawable != -1){
+			@SuppressWarnings("unchecked")
+			HashMap<String,String> commentaireAffichage = (HashMap<String, String>) lv.getAdapter().getItem(index);
+			commentaireAffichage.put(TAG_IMG_TYPE_COMMENT, Integer.toString(idDrawable));
+			
+			((BaseAdapter) lv.getAdapter()).notifyDataSetChanged();
+		}
+	}
+
+	@Override
+	public void setPoi(PoiDTO poi,int index) {
+		setTypeComment(poi.getType(),index);
+	}
+
+	@Override
+	public void setPoi(ServiceDTO poi,int index) {
+		setTypeComment(poi.getType(),index);
 	}
 }

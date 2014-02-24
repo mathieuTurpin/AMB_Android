@@ -138,37 +138,7 @@ public class MyXmlParser {
 					else if (name.equals("type")){
 						String type = parser.nextText();
 						currentService.setTitle(type);
-						int i = -1;
-						if(type.equals("carburant")){
-							i = R.drawable.carburants;
-						}
-						else if(type.equals("ordure")){
-							i = R.drawable.ordures;
-						}
-						else if(type.equals("wc")){
-							i = R.drawable.toilettes;
-						}
-						else if(type.equals("douche")){
-							i = R.drawable.douches;
-						}
-						else if(type.equals("supermarche")){
-							i = R.drawable.supermaches;
-						}
-						else if(type.equals("manutention")){
-							i = R.drawable.manutention;
-						}
-						else if(type.equals("capitainerie")){
-							i = R.drawable.capitainerie;
-						}
-						else if(type.equals("parking")){
-							i = R.drawable.parking;
-						}
-						else if(type.equals("visiteur")){
-							i = R.drawable.visiteurs;
-						}
-						else if(type.equals("administration")){
-							i = R.drawable.administration;
-						}
+						int i = getDrawablePoiByType(type);
 						if(i!=-1) currentService.setMarker(ItemizedOverlay.boundCenter(context.getResources().getDrawable(i)));
 					}  
 				}
@@ -231,4 +201,48 @@ public class MyXmlParser {
 		}
 		return texts;
 	}	
+	
+	public int getDrawablePoiByType(String type){
+			int idDrawable = -1;
+			if(type.equals("carburant")){
+				idDrawable = R.drawable.carburants;
+			}
+			else if(type.equals("ordure")){
+				idDrawable = R.drawable.ordures;
+			}
+			else if(type.equals("wc")){
+				idDrawable = R.drawable.toilettes;
+			}
+			else if(type.equals("douche")){
+				idDrawable = R.drawable.douches;
+			}
+			else if(type.equals("supermarche")){
+				idDrawable = R.drawable.supermaches;
+			}
+			else if(type.equals("manutention")){
+				idDrawable = R.drawable.manutention;
+			}
+			else if(type.equals("capitainerie")){
+				idDrawable = R.drawable.capitainerie;
+			}
+			else if(type.equals("parking")){
+				idDrawable = R.drawable.parking;
+			}
+			else if(type.equals("visiteur")){
+				idDrawable = R.drawable.visiteurs;
+			}
+			else if(type.equals("administration")){
+				idDrawable = R.drawable.administration;
+			}
+			if(type.equals("peche")){
+				idDrawable = R.drawable.poisson;
+			}
+			else if(type.equals("securite")){
+				idDrawable = R.drawable.attention;
+			}
+			else if(type.equals("remarque")){
+				idDrawable = R.drawable.bon_plan;
+			}
+			return idDrawable;
+	}
 }

@@ -3,7 +3,7 @@ package turpin.mathieu.almanachdumarinbreton.asynctask.poi;
 import android.content.Context;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.ServiceDTO;
 
-public class AddCommentServiceAsyncTask extends GetIdServiceAsyncTask{
+public class AddCommentServiceAsyncTask extends GetServiceByPositionAsyncTask{
 
 	private AddCommentListener listener;
 
@@ -18,7 +18,7 @@ public class AddCommentServiceAsyncTask extends GetIdServiceAsyncTask{
 		super.onPostExecute(object);
 		ServiceDTO poi = (ServiceDTO) object;
 		if(poi != null){
-			listener.addComment(poi.getId(),poi.getType());
+			listener.addCommentService(poi);
 		}
 		else{
 			new AddCommentPoiAsyncTask(context,title,listener).execute(params);

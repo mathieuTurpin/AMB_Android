@@ -4,7 +4,7 @@ import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
 import android.content.Context;
 import android.widget.Toast;
 
-public class AddCommentPoiAsyncTask extends GetIdPoiAsyncTask{
+public class AddCommentPoiAsyncTask extends GetPoiByPositionAsyncTask{
 	
 	private AddCommentListener listener;
 	
@@ -18,11 +18,10 @@ public class AddCommentPoiAsyncTask extends GetIdPoiAsyncTask{
 		super.onPostExecute(object);
 		PoiDTO poi = (PoiDTO) object;
 		if(poi != null){
-			listener.addComment(poi.getId(),poi.getType());
+			listener.addCommentPoi(poi);
 		}
 		else{
 			Toast.makeText(context, "Erreur lors de la recherche du centre d'interet sur le serveur", Toast.LENGTH_SHORT).show();
 		}
 	}
-
 }

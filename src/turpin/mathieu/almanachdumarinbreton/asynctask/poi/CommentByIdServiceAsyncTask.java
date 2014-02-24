@@ -5,7 +5,7 @@ import android.content.Context;
 import android.widget.Toast;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.ServiceDTO;
 
-public class CommentByIdServiceAsyncTask extends GetIdServiceAsyncTask{
+public class CommentByIdServiceAsyncTask extends GetServiceByPositionAsyncTask{
 	
 	public CommentByIdServiceAsyncTask(Context context, String title) {
 		super(context, title);

@@ -10,12 +10,12 @@ import android.content.Context;
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.ServiceDTO;
 
-public abstract class GetIdServiceAsyncTask extends MyAsyncTask{
-	
+public abstract class GetServiceByPositionAsyncTask extends MyAsyncTask{
+
 	protected String title;
 	Map<String,String> params;
 	
-	public GetIdServiceAsyncTask(Context context, String title) {
+	public GetServiceByPositionAsyncTask(Context context, String title) {
 		super(context, title);
 		this.title = title;
 	}

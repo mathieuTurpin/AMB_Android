@@ -14,7 +14,7 @@ import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.UtilisateursDTOList;
 
 public class UtilisateurController extends Controller
 {
-	private static final String KEY_ID = "id";
+	public static final String KEY_ID = "id";
 	private static final String KEY_NOM = "nom";
 	private static final String KEY_PRENOM = "prenom";
 	private static final String KEY_EMAIL = "email";
@@ -54,6 +54,29 @@ public class UtilisateurController extends Controller
 		UtilisateursDTOList ul = oMapper.readValue(jParser, UtilisateursDTOList.class);
 		return ul;
 	}
+	
+	//-----------------------------------------------------------------------------
+	public UtilisateurDTO getUserById(Map<String,String> formValues) throws ClientProtocolException, IOException
+	{
+		String id = formValues.get(KEY_ID);
+		String jsonUtilisateurData = downloadContent(URL_UTILISATEUR + "/" + id);
+
+		// Décodage de la réponse.
+		UtilisateurDTO utilisateur = null;
+		if(jsonUtilisateurData != null)
+		{
+			JsonParser   jParser  = jFactory.createParser(jsonUtilisateurData);
+			try
+			{
+				utilisateur = oMapper.readValue(jParser, UtilisateurDTO.class);
+			}
+			catch(JsonParseException jpe)
+			{
+			}
+		}
+		return utilisateur;
+	}
+	
 	//-----------------------------------------------------------------------------
 	public UtilisateurDTO authentification(Map<String,String> formValues) throws ClientProtocolException, IOException
 	{

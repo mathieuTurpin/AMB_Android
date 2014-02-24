@@ -3,6 +3,8 @@ package turpin.mathieu.almanachdumarinbreton.overlay;
 import java.util.Map;
 
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
+import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.ServiceDTO;
 import turpin.mathieu.almanachdumarinbreton.asynctask.poi.AddCommentListener;
 import turpin.mathieu.almanachdumarinbreton.asynctask.poi.AddCommentServiceAsyncTask;
 import turpin.mathieu.almanachdumarinbreton.asynctask.poi.CommentByIdServiceAsyncTask;
@@ -81,12 +83,20 @@ public class InfoOverlayItemDialog extends DialogFragment implements AddCommentL
 		return builder.create();
 	}
 
-	@Override
-	public void addComment(Integer idCentreUtilisateur, String nomCentreInteret) {
+	private void addComment(Integer idCentreUtilisateur, String nomCentreInteret) {
 		int idUtilisateur = accountManager.getId();
 
 		AddCommentDialog dialog = AddCommentDialog.getInstance(idUtilisateur,idCentreUtilisateur,latitude,longitude,nomCentreInteret);
 		dialog.show(activity.getFragmentManager(), "AddCommentDialog");
 	}
-	
+
+	@Override
+	public void addCommentService(ServiceDTO poi) {
+		addComment(poi.getId(),poi.getDescription());
+	}
+
+	@Override
+	public void addCommentPoi(PoiDTO poi) {
+		addComment(poi.getId(),poi.getType());
+	}
 }

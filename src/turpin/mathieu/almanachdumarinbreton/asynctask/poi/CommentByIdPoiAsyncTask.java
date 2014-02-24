@@ -5,7 +5,7 @@ import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
 import android.content.Context;
 import android.widget.Toast;
 
-public class CommentByIdPoiAsyncTask extends GetIdPoiAsyncTask{
+public class CommentByIdPoiAsyncTask extends GetPoiByPositionAsyncTask{
 
 	public CommentByIdPoiAsyncTask(Context context, String title) {
 		super(context, title);

@@ -10,10 +10,9 @@ import android.content.Context;
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
 
-public abstract class GetIdPoiAsyncTask extends MyAsyncTask
+public abstract class GetPoiByPositionAsyncTask extends MyAsyncTask
 {
-	//A CONTINUER
-	public GetIdPoiAsyncTask(Context context, String title) {
+	public GetPoiByPositionAsyncTask(Context context, String title) {
 		super(context, title);
 	}
 

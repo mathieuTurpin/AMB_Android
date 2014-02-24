@@ -18,6 +18,7 @@ public class PoiController extends Controller
 	//-----------------------------------------------------------------------------
 	private static PoiController instance = null;
 	public static final String KEY_CONTENU = "contenu";
+	public static final String KEY_ID = "id";
 
 	private static final String URL_CENTRE_INTERET = URL + "/point";
 	//-----------------------------------------------------------------------------
@@ -72,6 +73,48 @@ public class PoiController extends Controller
 			try
 			{
 				ul = oMapper.readValue(jParser, PoisDTOList.class);
+			}
+			catch(JsonParseException jpe)
+			{
+			}
+		}
+		return ul;
+	}
+	
+	public PoiDTO findPoiById(Map<String,String> formValues) throws IOException
+	{
+		String id = formValues.get(KEY_ID);
+		String jsonData = downloadContent(URL_CENTRE_INTERET + "/poi/"+id);
+
+		// Décodage de la réponse.
+		PoiDTO ul = null;
+		if(jsonData != null)
+		{
+			JsonParser   jParser  = jFactory.createParser(jsonData);
+			try
+			{
+				ul = oMapper.readValue(jParser, PoiDTO.class);
+			}
+			catch(JsonParseException jpe)
+			{
+			}
+		}
+		return ul;
+	}
+	
+	public ServiceDTO findServiceById(Map<String,String> formValues) throws IOException
+	{
+		String id = formValues.get(KEY_ID);
+		String jsonData = downloadContent(URL_CENTRE_INTERET + "/service/"+id);
+
+		// Décodage de la réponse.
+		ServiceDTO ul = null;
+		if(jsonData != null)
+		{
+			JsonParser   jParser  = jFactory.createParser(jsonData);
+			try
+			{
+				ul = oMapper.readValue(jParser, ServiceDTO.class);
 			}
 			catch(JsonParseException jpe)
 			{

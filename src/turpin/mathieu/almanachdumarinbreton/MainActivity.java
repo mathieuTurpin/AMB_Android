@@ -524,16 +524,12 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		double lon = Double.parseDouble(poi.getLongitude());
 		item.setPoint(new GeoPoint(lat,lon));
 
-		int idDrawable = R.drawable.bon_plan;
 		String type = poi.getType();
-
-		if(type.equals("peche")){
-			idDrawable = R.drawable.poisson;
+		int idDrawable = MyXmlParser.getInstance().getDrawablePoiByType(type);
+		
+		if(idDrawable != -1){
+			item.setMarker(ItemizedOverlay.boundCenter(getResources().getDrawable(idDrawable)));
 		}
-		else if(type.equals("securite")){
-			idDrawable = R.drawable.attention;
-		}
-		item.setMarker(ItemizedOverlay.boundCenter(getResources().getDrawable(idDrawable)));
 
 		item.setSnippet(contenu);
 		item.setTitle(type);
