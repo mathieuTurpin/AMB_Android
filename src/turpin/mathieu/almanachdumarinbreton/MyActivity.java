@@ -19,6 +19,8 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 	public static final String EXTRA_PORT = "port_name";
 	public static final String EXTRA_COURT_PORT = "port_court_name";
 	public static final String EXTRA_MODE_MAP = "mode_map";
+	
+	public static final String ARROW = " ->";
 
 	protected int mode;
 	protected String courtNamePort ="";
@@ -64,18 +66,22 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 
 	protected void initMenu(){
 		if(this.mode == R.id.map_online){
-			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_online);
+			String mode = getResources().getString(R.string.menu_online);
+			_menu.findItem(R.id.menu_connexion).setTitle(mode + MyActivity.ARROW);
+			
 			_menu.findItem(R.id.map_online).setEnabled(false);
 			_menu.findItem(R.id.map_offline).setEnabled(true);
 		}
 		else{
-			_menu.findItem(R.id.menu_connexion).setTitle(R.string.menu_offline);
+			String mode = getResources().getString(R.string.menu_offline);
+			_menu.findItem(R.id.menu_connexion).setTitle(mode + MyActivity.ARROW);
+			
 			_menu.findItem(R.id.map_online).setEnabled(true);
 			_menu.findItem(R.id.map_offline).setEnabled(false);
 		}
 
 		if(this.port != null && port.equals(getResources().getString(R.string.menu_marina))){
-			_menu.findItem(R.id.menu_port).setTitle(port);
+			_menu.findItem(R.id.menu_port).setTitle(port + MyActivity.ARROW);
 		}
 		else{
 			_menu.findItem(R.id.menu_port).setTitle(R.string.menu_port);
@@ -103,7 +109,7 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
-		savedInstanceState.putString(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
+		savedInstanceState.putString(EXTRA_PORT, this.port);
 		savedInstanceState.putString(EXTRA_COURT_PORT, this.courtNamePort);
 		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
 		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
@@ -112,10 +118,10 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 	}
 
 	protected void initIntent(Intent intent){
-		intent.putExtra(EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
+		intent.putExtra(EXTRA_PORT, this.port);
 		intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
 		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+		if(mode_connexion.equals(getResources().getString(R.string.menu_online) + MyActivity.ARROW)){
 			intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
 		}
 	}
@@ -182,7 +188,8 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 
 	private void goToPort(int idPort){
 		String namePort = _menu.findItem(idPort).getTitle().toString();
-		_menu.findItem(R.id.menu_port).setTitle(namePort);
+		this.port = namePort;
+		_menu.findItem(R.id.menu_port).setTitle(namePort + MyActivity.ARROW);
 		switch(idPort){
 		case R.id.menu_marina:
 			this.courtNamePort = getResources().getString(R.string.name_marina);
@@ -199,8 +206,8 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 
 	private void goToDescription(){
 		// if no port is selected
-		String namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
-		if(namePort.equals(getResources().getString(R.string.menu_port))){
+		//String namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
+		if(this.port.equals(getResources().getString(R.string.menu_port))){
 			Toast.makeText(this, R.string.error_missing_port, Toast.LENGTH_SHORT).show();
 			return;
 		}

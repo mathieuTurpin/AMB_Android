@@ -92,10 +92,10 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 		accountManager = new AccountManager(this);
 
 		String idPoi = Integer.toString(idCentreInteret);
-		
+
 		Map<String,String> params = new HashMap<String, String>();
 		params.put(ChargementCommentairesAsyncTask.KEY_ID_POI, idPoi);
-		
+
 		new ChargementCommentairesAsyncTask(ForumActivity.this,"Chargement de la liste des commentaires",false).execute(params);
 	}
 
@@ -112,6 +112,13 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 		// Inflate the menu; this adds items to the action bar if it is present.
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.forum, menu);
+
+		//Add an arrow
+		String menuMode = getResources().getString(R.string.menu_forum);
+		menu.findItem(R.id.menu_mode).setTitle(menuMode + MyActivity.ARROW);
+		
+		String menuComment = getResources().getString(R.string.menu_all_comment);
+		menu.findItem(R.id.menu_affichage).setTitle(menuComment + MyActivity.ARROW);
 
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -138,17 +145,18 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 
 	@SuppressWarnings("unchecked")
 	public void startChargementCommentaires(boolean myComment,int id){
-		_menu.findItem(R.id.menu_affichage).setTitle(getResources().getString(id));
+		String nameMenu = getResources().getString(id);
+		_menu.findItem(R.id.menu_affichage).setTitle(nameMenu + MyActivity.ARROW);
 		_menu.findItem(R.id.menu_all_comment).setEnabled(myComment);
 		_menu.findItem(R.id.menu_my_comment).setEnabled(!myComment);
-		
+
 		String idPoi = Integer.toString(idCentreInteret);
 		String idUtilisateur = Integer.toString(accountManager.getId());
-		
+
 		Map<String,String> params = new HashMap<String, String>();
 		params.put(ChargementCommentairesAsyncTask.KEY_ID_POI, idPoi);
 		params.put(ChargementCommentairesAsyncTask.KEY_ID_USER, idUtilisateur);
-		
+
 		new ChargementCommentairesAsyncTask(ForumActivity.this,"Chargement de la liste des commentaires",myComment).execute(params);
 	}
 

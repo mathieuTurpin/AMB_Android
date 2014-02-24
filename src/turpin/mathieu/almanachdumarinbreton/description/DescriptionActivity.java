@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import turpin.mathieu.almanachdumarinbreton.MyActivity;
 import turpin.mathieu.almanachdumarinbreton.R;
 import android.annotation.SuppressLint;
@@ -38,7 +39,7 @@ public abstract class DescriptionActivity extends MyActivity{
 			initIntentForActivity(intent);
 		}
 	}
-	
+
 	@Override
 	protected void initIntentForActivity(Intent intent){
 		super.initIntentForActivity(intent);
@@ -46,22 +47,27 @@ public abstract class DescriptionActivity extends MyActivity{
 			this.modeDescription = intent.getIntExtra(EXTRA_MODE_DESCRIPTION, R.id.menu_details);
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.description, menu);
 
+		//Add an arrow
+		String menuMode = getResources().getString(R.string.menu_description);
+		menu.findItem(R.id.menu_mode).setTitle(menuMode + MyActivity.ARROW);
+
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	protected void initMenu(){
 		super.initMenu();
-		
+
+		MenuItem item = _menu.findItem(modeDescription);
+		_menu.findItem(R.id.menu_affichage).setTitle(item.getTitle() + MyActivity.ARROW);
+
 		if(modeDescription != R.id.menu_details){
-			MenuItem item = _menu.findItem(modeDescription);
-			_menu.findItem(R.id.menu_affichage).setTitle(item.getTitle());
 			_menu.findItem(R.id.menu_details).setEnabled(true);
 			item.setEnabled(false);
 		}
@@ -69,7 +75,7 @@ public abstract class DescriptionActivity extends MyActivity{
 			_menu.findItem(R.id.menu_connexion).setEnabled(false);
 		}
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
@@ -108,7 +114,7 @@ public abstract class DescriptionActivity extends MyActivity{
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	private void goToWebDescription(int id_mode_description,String url){
 		Intent intent = new Intent(this, DescriptionActivityWeb.class);
 		initIntent(intent);
@@ -132,7 +138,7 @@ public abstract class DescriptionActivity extends MyActivity{
 		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		startActivity(intent);
 	}
-	
+
 	private void displayPdf(String nameFile){
 		if(copyReadPdfAssets(nameFile)){
 			Intent intent = new Intent(Intent.ACTION_VIEW);

@@ -1,72 +1,83 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/menu_port"
-        android:showAsAction="ifRoom"
-        android:title="">
+        android:showAsAction="always"
+        android:title="Menu">
         <menu>
             <item
-                android:id="@+id/menu_marina"
-                android:title="@string/menu_marina"/>
+                android:id="@+id/menu_port"
+                android:showAsAction="ifRoom"
+                android:title="">
+                <menu>
+                    <item
+                        android:id="@+id/menu_marina"
+                        android:title="@string/menu_marina"/>
+                </menu>
+            </item>
+            <item
+                android:id="@+id/menu_mode"
+                android:showAsAction="ifRoom"
+                android:title="@string/menu_description">
+                <menu>
+                    <item
+                        android:id="@+id/map"
+                        android:title="@string/map"/>
+                    <item
+                        android:id="@+id/map_description"
+                        android:enabled="false"
+                        android:title="@string/menu_description"/>
+                    <item
+                        android:id="@+id/menu_forum"
+                        android:title="@string/menu_forum"/>
+                </menu>
+            </item>
+            <item
+                android:id="@+id/menu_affichage"
+                android:showAsAction="ifRoom"
+                android:title="@string/menu_details">
+                <menu>
+                    <group>
+                        <item
+                            android:id="@+id/menu_details"
+                            android:enabled="false"
+                            android:title="@string/menu_details"/>
+                        <item
+                            android:id="@+id/menu_courant"
+                            android:title="@string/menu_courant"/>
+                        <item
+                            android:id="@+id/menu_marees"
+                            android:title="@string/menu_marees"/>
+                        <item
+                            android:id="@+id/menu_meteo"
+                            android:title="@string/menu_meteo"/>
+                    </group>
+                </menu>
+            </item>
         </menu>
     </item>
     <item
-        android:id="@+id/menu_mode"
         android:showAsAction="ifRoom"
-        android:title="@string/menu_description">
+        android:title="Paramètres">
         <menu>
             <item
-                android:id="@+id/map"
-                android:title="@string/map"/>
+                android:id="@+id/menu_connexion"
+                android:showAsAction="ifRoom"
+                android:title="@string/menu_offline">
+                <menu>
+                    <item
+                        android:id="@+id/map_online"
+                        android:title="@string/menu_online"/>
+                    <item
+                        android:id="@+id/map_offline"
+                        android:enabled="false"
+                        android:title="@string/menu_offline"/>
+                </menu>
+            </item>
             <item
-                android:id="@+id/map_description"
-                android:enabled="false"
-                android:title="@string/menu_description"/>
-            <item
-                android:id="@+id/menu_forum"
-                android:title="@string/menu_forum"/>
-            
+                android:id="@+id/menu_compte"
+                android:showAsAction="ifRoom"
+                android:title="@string/menu_login"/>
         </menu>
     </item>
-    <item
-        android:id="@+id/menu_connexion"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_offline">
-        <menu>
-            <item
-                android:id="@+id/map_online"
-                android:title="@string/menu_online"/>
-            <item
-                android:id="@+id/map_offline"
-                android:enabled="false"
-                android:title="@string/menu_offline"/>
-        </menu>
-    </item>
-    <item
-        android:id="@+id/menu_affichage"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_details">
-        <menu>
-            <group>
-                <item
-                    android:id="@+id/menu_details"
-                    android:enabled="false"
-                    android:title="@string/menu_details"/>
-                <item
-                    android:id="@+id/menu_courant"
-                    android:title="@string/menu_courant"/>
-                <item
-                    android:id="@+id/menu_marees"
-                    android:title="@string/menu_marees"/>
-                <item
-                    android:id="@+id/menu_meteo"
-                    android:title="@string/menu_meteo"/>
-            </group>
-        </menu>
-    </item>
-    <item
-        android:id="@+id/menu_compte"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_login"/>
 
 </menu>

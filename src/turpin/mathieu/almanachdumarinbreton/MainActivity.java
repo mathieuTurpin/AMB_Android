@@ -167,7 +167,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		
 		//Add an arrow
 		String menuMode = getResources().getString(R.string.map);
-		_menu.findItem(R.id.menu_mode).setTitle(menuMode + " ->");
+		_menu.findItem(R.id.menu_mode).setTitle(menuMode + MyActivity.ARROW);
 		
 		initMenu();
 
@@ -177,14 +177,14 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	private void initMenu(){
 		if(this.mode == R.id.map_online){
 			String mode = getResources().getString(R.string.menu_online);
-			_menu.findItem(R.id.menu_connexion).setTitle(mode + " ->");
+			_menu.findItem(R.id.menu_connexion).setTitle(mode + MyActivity.ARROW);
 			
 			_menu.findItem(R.id.map_online).setEnabled(false);
 			_menu.findItem(R.id.map_offline).setEnabled(true);
 		}
 		else{
 			String mode = getResources().getString(R.string.menu_offline);
-			_menu.findItem(R.id.menu_connexion).setTitle(mode + " ->");
+			_menu.findItem(R.id.menu_connexion).setTitle(mode + MyActivity.ARROW);
 			
 			_menu.findItem(R.id.map_online).setEnabled(true);
 			_menu.findItem(R.id.map_offline).setEnabled(false);
@@ -225,7 +225,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
-		savedInstanceState.putString(MyActivity.EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
+		savedInstanceState.putString(MyActivity.EXTRA_PORT, this.port); //_menu.findItem(R.id.menu_port).getTitle().toString()
 		savedInstanceState.putString(MyActivity.EXTRA_COURT_PORT, this.courtNamePort);
 		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
 		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
@@ -234,10 +234,10 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	}
 
 	private void initIntent(Intent intent){
-		intent.putExtra(MyActivity.EXTRA_PORT, _menu.findItem(R.id.menu_port).getTitle().toString());
+		intent.putExtra(MyActivity.EXTRA_PORT, this.port); //_menu.findItem(R.id.menu_port).getTitle().toString()
 		intent.putExtra(MyActivity.EXTRA_COURT_PORT, this.courtNamePort);
 		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+		if(mode_connexion.equals(getResources().getString(R.string.menu_online) + MyActivity.ARROW)){
 			intent.putExtra(MyActivity.EXTRA_MODE_MAP, R.id.map_online);
 		}
 	}
@@ -453,10 +453,10 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 
 	private void goToPort(int idPort){
 		String namePort = _menu.findItem(idPort).getTitle().toString();
-		_menu.findItem(R.id.menu_port).setTitle(namePort + " ->");
+		this.port = namePort;
+		_menu.findItem(R.id.menu_port).setTitle(namePort + MyActivity.ARROW);
 		switch(idPort){
 		case R.id.menu_marina:
-			this.port = namePort;
 			this.courtNamePort = getResources().getString(R.string.name_marina);
 			this.mapView.getController().setZoom(16);
 			this.mapView.setCenter(new GeoPoint(48.377972, -4.491666));
@@ -466,8 +466,8 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 
 	private void goToDescription(){
 		// if no port is selected
-		String namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
-		if(namePort.equals(getResources().getString(R.string.menu_port))){
+		//String namePort = _menu.findItem(R.id.menu_port).getTitle().toString();
+		if(this.port.equals(getResources().getString(R.string.menu_port))){
 			Toast.makeText(this, R.string.error_missing_port, Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -487,7 +487,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	private void setConnectionMode(boolean online,CharSequence title){
 		_menu.findItem(R.id.map_online).setEnabled(!online);
 		_menu.findItem(R.id.map_offline).setEnabled(online);
-		_menu.findItem(R.id.menu_connexion).setTitle(title + " ->");
+		_menu.findItem(R.id.menu_connexion).setTitle(title + MyActivity.ARROW);
 		if(online){
 			this.mapView.setMapGenerator(new MapnikTileDownloader());
 		}
@@ -514,7 +514,6 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		Intent afficheListeCommentaires = new Intent(this, ForumActivity.class);
 		afficheListeCommentaires.putExtra(ForumActivity.EXTRA_ID_CENTRE, id);
 		startActivity(afficheListeCommentaires);
-
 	}
 
 	@Override
