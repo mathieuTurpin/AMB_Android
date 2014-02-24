@@ -4,14 +4,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/nom_complet_utilisateur"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="2dip"
-        android:paddingTop="6dip"
-        android:text="nom complet"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-  
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/blueAMB"
+            android:contentDescription="Avatar"
+            android:layout_marginRight="@dimen/my_marginRight"
+            android:src="@drawable/ic_action_person" />
+
+        <TextView
+            android:id="@+id/nom_complet_utilisateur"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="2dip"
+            android:paddingTop="6dip"
+            android:text="nom complet"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
 </LinearLayout>
