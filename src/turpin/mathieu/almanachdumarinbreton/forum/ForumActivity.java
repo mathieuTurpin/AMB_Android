@@ -48,6 +48,7 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 	private static final String TAG_NOM = "nom_commentaire";
 	private static final String TAG_ID_USER = "id_user";
 	private static final String TAG_DATE = "date";
+	private static final String TAG_AVATAR = "avatar";
 	private static final String TAG_IMG_TYPE_COMMENT = "img_type_comment";
 	//-----------------------------------------------------------------------------
 
@@ -189,25 +190,26 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 				params.put(UtilisateurController.KEY_ID, Integer.toString(idUser));
 
 				new GetUserByIdAsyncTask(ForumActivity.this,"Recherche info utilisateur",index).execute(params);
-				
+
 				params = new HashMap<String, String>();
 				Integer idPoi = commentaire.getPointId();
 				params.put(PoiController.KEY_ID, Integer.toString(idPoi));
 				new GetServiceByIdAsyncTask(ForumActivity.this,"Recherche info poi",index).execute(params);
-
+				
+				commentaireAffichage.put(TAG_AVATAR, Integer.toString(R.drawable.ic_action_person));
 				commentaireAffichage.put(TAG_NOM, commentaire.getContenu());
 				commentaireAffichage.put(TAG_DATE, commentaire.getDatePublication().toLocaleString());
-								
+
 				listeAffichageCommentaires.add(commentaireAffichage);
 			}
-			ListAdapter adapter = new SimpleAdapter(ForumActivity.this, 
+			ListAdapter adapter = new SimpleAdapter(ForumActivity.this,
 					listeAffichageCommentaires,
 					R.layout.list_item_commentaire,
-					new String[] {TAG_ID_USER,TAG_NOM,TAG_DATE,TAG_IMG_TYPE_COMMENT}, 
-					new int[] { R.id.id_user,R.id.nom_commentaire,R.id.date,R.id.type_comment});
+					new String[] {TAG_AVATAR,TAG_ID_USER,TAG_NOM,TAG_DATE,TAG_IMG_TYPE_COMMENT},
+					new int[] { R.id.avatar,R.id.id_user,R.id.nom_commentaire,R.id.date,R.id.type_comment});
 
 			lv.setAdapter(adapter);
-			
+
 		}
 		else{
 			Toast.makeText(ForumActivity.this, "Aucun commentaire", Toast.LENGTH_LONG).show();
@@ -220,18 +222,23 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 		HashMap<String,String> commentaireAffichage = (HashMap<String, String>) lv.getAdapter().getItem(index);
 		commentaireAffichage.put(TAG_ID_USER, user.getNom() + " " + user.getPrenom());
 		
+		if(user.getUrlAvatar() != null){
+			//Donwload the avatar and add update commentaireAffichage
+			
+		}
+		
 		((BaseAdapter) lv.getAdapter()).notifyDataSetChanged();
 	}
 
 	private void setTypeComment(String type, int index){
-		
+
 		int idDrawable = MyXmlParser.getInstance().getDrawablePoiByType(type);
-		
+
 		if(idDrawable != -1){
 			@SuppressWarnings("unchecked")
 			HashMap<String,String> commentaireAffichage = (HashMap<String, String>) lv.getAdapter().getItem(index);
 			commentaireAffichage.put(TAG_IMG_TYPE_COMMENT, Integer.toString(idDrawable));
-			
+
 			((BaseAdapter) lv.getAdapter()).notifyDataSetChanged();
 		}
 	}

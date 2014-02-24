@@ -194,6 +194,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			goToPort(R.id.menu_marina);
 		}
 		else{
+			this.port = getResources().getString(R.string.menu_port);
 			_menu.findItem(R.id.menu_port).setTitle(R.string.menu_port);
 		}
 
