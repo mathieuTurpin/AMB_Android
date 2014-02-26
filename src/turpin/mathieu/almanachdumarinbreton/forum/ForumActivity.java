@@ -42,6 +42,9 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 
 	public static final String EXTRA_ID_CENTRE = "id_centre";
 	private int idCentreInteret;
+	private double latitudeCentreInteret;
+	private double longitudeCentreInteret;
+	private String nomCentreInteret;
 	private AccountManager accountManager;
 
 	//-----------------------------------------------------------------------------
@@ -64,6 +67,12 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 		//Orientation change
 		if (savedInstanceState != null) {
 			this.idCentreInteret = savedInstanceState.getInt(EXTRA_ID_CENTRE, -1);
+			String idPoi = Integer.toString(idCentreInteret);
+
+			Map<String,String> params = new HashMap<String, String>();
+			params.put(ChargementCommentairesAsyncTask.KEY_ID_POI, idPoi);
+
+			new ChargementCommentairesAsyncTask(ForumActivity.this,"Chargement de la liste des commentaires",false).execute(params);
 		}
 		else{
 			initIntentForActivity(intent);
@@ -71,40 +80,53 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 
 		lv = (ListView) findViewById(android.R.id.list);
 
+		accountManager = new AccountManager(this);
+		
 		Button addComment = (Button) findViewById(R.id.boutonAdd);
 		addComment.setOnClickListener(new OnClickListener()
 		{
-
+			
 			@Override
 			public void onClick(View v)
 			{
-				// Use the Builder class for convenient dialog construction
-				AlertDialog.Builder builder = new AlertDialog.Builder(ForumActivity.this);
-				// Set the dialog title
-				builder.setTitle("Aide");
-				builder.setMessage("Faite un clic long sur la carte pour ajouter un commentaire");
+				if(idCentreInteret == -1){
+					// Use the Builder class for convenient dialog construction
+					AlertDialog.Builder builder = new AlertDialog.Builder(ForumActivity.this);
+					// Set the dialog title
+					builder.setTitle("Aide");
+					builder.setMessage("Faite un clic long sur la carte pour ajouter un commentaire");
 
-				// Add action buttons
-				builder.setPositiveButton("Voir la carte", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						//Go to map activity
-						Intent intent = new Intent(ForumActivity.this, MainActivity.class);
-						initIntent(intent);
-						intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-						startActivity(intent);
-					}
-				})
-				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						// User cancelled the dialog
-					}
-				});
+					// Add action buttons
+					builder.setPositiveButton("Voir la carte", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							//Go to map activity
+							Intent intent = new Intent(ForumActivity.this, MainActivity.class);
+							initIntent(intent);
+							intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+							startActivity(intent);
+						}
+					})
+					.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							// User cancelled the dialog
+						}
+					});
 
-				builder.create().show();
+					builder.create().show();
+				}
+				else{
+					if(accountManager.isLoggedIn()){
+						AddCommentDialog dialog = AddCommentDialog.getInstance(accountManager.getId(),idCentreInteret,latitudeCentreInteret,longitudeCentreInteret,nomCentreInteret);
+						dialog.show(getFragmentManager(), "AddCommentDialog");
+					}
+					else{
+						Toast.makeText(ForumActivity.this, "Veuillez vous connecter", Toast.LENGTH_SHORT).show();
+					}
+				}
+				
 			}
 		});
-		accountManager = new AccountManager(this);
-
+		
 		String idPoi = Integer.toString(idCentreInteret);
 
 		Map<String,String> params = new HashMap<String, String>();
@@ -113,12 +135,19 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 		new ChargementCommentairesAsyncTask(ForumActivity.this,"Chargement de la liste des commentaires",false).execute(params);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void initIntentForActivity(Intent intent){
 		super.initIntentForActivity(intent);
 		if (intent != null) {
 			this.idCentreInteret = intent.getIntExtra(EXTRA_ID_CENTRE, -1);
 		}
+		String idPoi = Integer.toString(idCentreInteret);
+
+		Map<String,String> params = new HashMap<String, String>();
+		params.put(ChargementCommentairesAsyncTask.KEY_ID_POI, idPoi);
+
+		new ChargementCommentairesAsyncTask(ForumActivity.this,"Chargement de la liste des commentaires",false).execute(params);
 	}
 
 	@Override
@@ -170,6 +199,8 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 		Map<String,String> params = new HashMap<String, String>();
 		params.put(ChargementCommentairesAsyncTask.KEY_ID_POI, idPoi);
 		params.put(ChargementCommentairesAsyncTask.KEY_ID_USER, idUtilisateur);
+		
+		//if(myComment) idCentreInteret = -1;
 
 		new ChargementCommentairesAsyncTask(ForumActivity.this,"Chargement de la liste des commentaires",myComment).execute(params);
 	}
@@ -177,7 +208,6 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 	@SuppressWarnings("unchecked")
 	@Override
 	public void chargementCommentaires(CommentairesDTOList commentaires) {
-		idCentreInteret = -1;
 		if(commentaires!=null){
 			ArrayList<HashMap<String, String>> listeAffichageCommentaires = new ArrayList<HashMap<String,String>>();
 			for(int index = 0; index < commentaires.size(); index++)
@@ -207,6 +237,7 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 					R.layout.list_item_commentaire,
 					new String[] {TAG_AVATAR,TAG_ID_USER,TAG_NOM,TAG_DATE,TAG_IMG_TYPE_COMMENT},
 					new int[] { R.id.avatar,R.id.id_user,R.id.nom_commentaire,R.id.date,R.id.type_comment});
+					
 
 			lv.setAdapter(adapter);
 
@@ -230,7 +261,7 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 		((BaseAdapter) lv.getAdapter()).notifyDataSetChanged();
 	}
 
-	private void setTypeComment(String type, int index){
+	private void setTypeComment(String type, int index,double latitude, double longitude,String nomCentreInteret){
 
 		int idDrawable = MyXmlParser.getInstance().getDrawablePoiByType(type);
 
@@ -241,15 +272,19 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 
 			((BaseAdapter) lv.getAdapter()).notifyDataSetChanged();
 		}
+		
+		this.latitudeCentreInteret = latitude;
+		this.longitudeCentreInteret = longitude;
+		this.nomCentreInteret = nomCentreInteret;
 	}
 
 	@Override
 	public void setPoi(PoiDTO poi,int index) {
-		setTypeComment(poi.getType(),index);
+		setTypeComment(poi.getType(),index, Double.parseDouble(poi.getLatitude()),Double.parseDouble(poi.getLongitude()),poi.getType());
 	}
 
 	@Override
 	public void setPoi(ServiceDTO poi,int index) {
-		setTypeComment(poi.getType(),index);
+		setTypeComment(poi.getType(),index, Double.parseDouble(poi.getLatitude()),Double.parseDouble(poi.getLongitude()),poi.getDescription());
 	}
 }

@@ -365,7 +365,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 
 	@Override
 	public void setIsLogin() {
-		Toast.makeText(this, "Authenfication réussie", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Authenfication rï¿½ussie", Toast.LENGTH_SHORT).show();
 		_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);
 	}
 
@@ -511,13 +511,6 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	}
 
 	@Override
-	public void commentByIdCentreInteret(int id) {
-		Intent afficheListeCommentaires = new Intent(this, ForumActivity.class);
-		afficheListeCommentaires.putExtra(ForumActivity.EXTRA_ID_CENTRE, id);
-		startActivity(afficheListeCommentaires);
-	}
-
-	@Override
 	public void addPoi(PoiDTO poi,String contenu) {
 		OverlayItem item = new OverlayItem();
 
@@ -535,5 +528,12 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		item.setSnippet(contenu);
 		item.setTitle(type);
 		this.mapView.addPoi(item);
+	}
+
+	@Override
+	public void commentByIdCentreInteret(int id) {
+		Intent afficheListeCommentaires = new Intent(this, ForumActivity.class);
+		afficheListeCommentaires.putExtra(ForumActivity.EXTRA_ID_CENTRE, id);
+		startActivity(afficheListeCommentaires);
 	}
 }

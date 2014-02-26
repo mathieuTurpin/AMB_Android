@@ -30,7 +30,7 @@ public class GetPoiInfoAsyncTask extends AsyncTask<String,Void,String>
 				CommentairesDTOList commentaires = poiController.listeDesCommentairesPourUnPoint(id);
 				
 				//get contenu
-				String contenu = commentaires.get(0).getContenu();
+				String contenu = commentaires.get(commentaires.size()-1).getContenu();
 				return contenu;
 			}
 		}
