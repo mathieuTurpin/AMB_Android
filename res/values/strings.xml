@@ -50,4 +50,30 @@
     <string name="menu_my_comment">Mes commentaires</string>
     <string name="menu_comment">Commentaire</string>
     
+    <string name="streamTime0">PM-6</string>
+    <string name="streamTime1">PM-5</string>
+    <string name="streamTime2">PM-4</string>
+    <string name="streamTime3">PM-3</string>
+    <string name="streamTime4">PM-2</string>
+    <string name="streamTime5">PM-1</string>
+    <string name="streamTime6">PM</string>
+    <string name="streamTime7">PM+1</string>
+    <string name="streamTime8">PM+2</string>
+    <string name="streamTime9">PM+3</string>
+    <string name="streamTime10">PM+4</string>
+    <string name="streamTime11">PM+5</string>
+    <string name="streamTime12">PM+6</string>
+    
+    
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
 </resources>
