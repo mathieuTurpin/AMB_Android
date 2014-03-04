@@ -122,7 +122,7 @@ public class LoginDialog extends DialogFragment implements AuthentificationListe
 	@Override
 	public void setAuthentification(UtilisateurDTO user) {
 		//Save parameters of this user
-		AccountManager accountManager = new AccountManager(activity);
+		MyAccountManager accountManager = new MyAccountManager(activity);
 		accountManager.logIn(user);
 
 		//Give result to activity

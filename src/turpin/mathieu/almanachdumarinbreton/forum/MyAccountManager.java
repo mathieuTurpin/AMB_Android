@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-public class AccountManager {
+public class MyAccountManager {
 	// Shared Preferences
 	private final SharedPreferences pref;
 
@@ -50,7 +50,7 @@ public class AccountManager {
 
 	// Constructor
 	@SuppressLint("CommitPrefEdits")
-	public AccountManager(Context context){
+	public MyAccountManager(Context context){
 		this._context = context;
 		pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
 		editor = pref.edit();

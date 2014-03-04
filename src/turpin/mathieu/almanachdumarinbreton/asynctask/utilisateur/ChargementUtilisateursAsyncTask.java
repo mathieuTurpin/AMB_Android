@@ -6,6 +6,7 @@ import java.util.Map;
 import turpin.mathieu.almanachdumarinbreton.asynctask.MyAsyncTask;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.UtilisateurController;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.UtilisateursDTOList;
 
@@ -39,9 +40,14 @@ public class ChargementUtilisateursAsyncTask extends MyAsyncTask
 	protected void onPostExecute(Object object)
 	{
 		super.onPostExecute(object);
-		UtilisateursDTOList utilisateurs = (UtilisateursDTOList) object;
-		
-		ChargementUtilisateurListener listener = (ChargementUtilisateurListener) context;
-		listener.chargementUtilisateur(utilisateurs);
+		if(object != null){
+			UtilisateursDTOList utilisateurs = (UtilisateursDTOList) object;
+			
+			ChargementUtilisateurListener listener = (ChargementUtilisateurListener) context;
+			listener.chargementUtilisateur(utilisateurs);
+		}
+		else{
+			Toast.makeText(context, "Erreur lors du chargement de la liste d'utilisateur", Toast.LENGTH_SHORT).show();
+		}
 	}
 }

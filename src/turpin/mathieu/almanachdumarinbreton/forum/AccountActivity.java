@@ -111,23 +111,23 @@ public class AccountActivity extends MyActivity implements ChargementUtilisateur
 	private int getSharedModeByButton(int id){
 		switch(id){
 		case R.id.radioNoPartage:
-			return AccountManager.NO_PARTAGE;
+			return MyAccountManager.NO_PARTAGE;
 		case R.id.radioPartagePublic:
-			return AccountManager.PARTAGE_PUBLIC;
+			return MyAccountManager.PARTAGE_PUBLIC;
 		case R.id.radioPartagePrivate:
-			return AccountManager.PARTAGE_PRIVATE;
+			return MyAccountManager.PARTAGE_PRIVATE;
 		default:
-			return AccountManager.NO_PARTAGE;
+			return MyAccountManager.NO_PARTAGE;
 		}
 	}
 
 	private RadioButton getShareButtonByMode(int sharedMode){
 		switch(sharedMode){
-		case AccountManager.NO_PARTAGE:
+		case MyAccountManager.NO_PARTAGE:
 			return (RadioButton) findViewById(R.id.radioNoPartage);
-		case AccountManager.PARTAGE_PUBLIC:
+		case MyAccountManager.PARTAGE_PUBLIC:
 			return (RadioButton) findViewById(R.id.radioPartagePublic);
-		case AccountManager.PARTAGE_PRIVATE:
+		case MyAccountManager.PARTAGE_PRIVATE:
 			return (RadioButton) findViewById(R.id.radioPartagePrivate);
 		default:
 			return null;
