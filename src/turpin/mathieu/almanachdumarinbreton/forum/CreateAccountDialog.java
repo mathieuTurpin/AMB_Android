@@ -98,7 +98,7 @@ public class CreateAccountDialog extends DialogFragment implements CreateAccount
 	@Override
 	public void createAccount(UtilisateurDTO user) {
 		//Save parameters of this user
-		AccountManager accountManager = new AccountManager(activity);
+		MyAccountManager accountManager = new MyAccountManager(activity);
 		accountManager.logIn(user);
 
 		//Give result to activity

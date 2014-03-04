@@ -8,8 +8,8 @@ import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.ServiceDTO;
 import turpin.mathieu.almanachdumarinbreton.asynctask.poi.AddCommentListener;
 import turpin.mathieu.almanachdumarinbreton.asynctask.poi.AddCommentServiceAsyncTask;
 import turpin.mathieu.almanachdumarinbreton.asynctask.poi.CommentByIdServiceAsyncTask;
-import turpin.mathieu.almanachdumarinbreton.forum.AccountManager;
 import turpin.mathieu.almanachdumarinbreton.forum.AddCommentDialog;
+import turpin.mathieu.almanachdumarinbreton.forum.MyAccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -27,7 +27,7 @@ public class InfoOverlayItemDialog extends DialogFragment implements AddCommentL
 	private Activity activity;
 	private double latitude;
 	private double longitude;
-	private AccountManager accountManager;
+	private MyAccountManager accountManager;
 
 	public static InfoOverlayItemDialog getInstance(String title, String message,double latitude, double longitude) {
 		InfoOverlayItemDialog dialog = new InfoOverlayItemDialog();
@@ -43,7 +43,7 @@ public class InfoOverlayItemDialog extends DialogFragment implements AddCommentL
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		this.activity = getActivity();
-		accountManager = new AccountManager(activity);
+		accountManager = new MyAccountManager(activity);
 
 		//Get argument
 		String title = getArguments().getString("title");
@@ -69,7 +69,7 @@ public class InfoOverlayItemDialog extends DialogFragment implements AddCommentL
 		.setNegativeButton("Ajouter un commentaire", new DialogInterface.OnClickListener() {
 			@SuppressWarnings("unchecked")
 			public void onClick(DialogInterface dialog, int id) {
-				accountManager = new AccountManager(activity);
+				accountManager = new MyAccountManager(activity);
 				if(accountManager.isLoggedIn()){
 					Map<String,String> params = PoiController.getInstance().prepareGetByPosition(Double.toString(latitude), Double.toString(longitude));
 					new AddCommentServiceAsyncTask(activity,"Contact serveur",InfoOverlayItemDialog.this).execute(params);

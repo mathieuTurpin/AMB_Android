@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import turpin.mathieu.almanachdumarinbreton.asynctask.MyAsyncTask;
-
 import android.content.Context;
-
+import android.widget.Toast;
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.PoiController;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.CommentairesDTOList;
 
@@ -60,9 +59,14 @@ public class ChargementCommentairesAsyncTask extends MyAsyncTask
 	protected void onPostExecute(Object object)
 	{
 		super.onPostExecute(object);
-		CommentairesDTOList commentaires = (CommentairesDTOList) object;
+		if(object != null){
+			CommentairesDTOList commentaires = (CommentairesDTOList) object;
 
-		ChargementCommentairesListener listener = (ChargementCommentairesListener) context;
-		listener.chargementCommentaires(commentaires);
+			ChargementCommentairesListener listener = (ChargementCommentairesListener) context;
+			listener.chargementCommentaires(commentaires);
+		}
+		else{
+			Toast.makeText(context, "Erreur lors du chargement des commentaires", Toast.LENGTH_SHORT).show();
+		}
 	}
 }
