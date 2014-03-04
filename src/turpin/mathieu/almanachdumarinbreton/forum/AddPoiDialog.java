@@ -47,7 +47,7 @@ public class AddPoiDialog extends DialogFragment{
 		//Get argument
 		final double lat = getArguments().getDouble("lat");
 		final double lon = getArguments().getDouble("lon");
-		final AccountManager acc = new AccountManager(context);
+		final MyAccountManager acc = new MyAccountManager(context);
 
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

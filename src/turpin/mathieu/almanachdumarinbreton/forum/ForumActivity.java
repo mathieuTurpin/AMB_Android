@@ -45,7 +45,7 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 	private double latitudeCentreInteret;
 	private double longitudeCentreInteret;
 	private String nomCentreInteret;
-	private AccountManager accountManager;
+	private MyAccountManager accountManager;
 
 	//-----------------------------------------------------------------------------
 	private static final String TAG_NOM = "nom_commentaire";
@@ -80,7 +80,7 @@ public class ForumActivity extends MyActivity implements ChargementCommentairesL
 
 		lv = (ListView) findViewById(android.R.id.list);
 
-		accountManager = new AccountManager(this);
+		accountManager = new MyAccountManager(this);
 		
 		Button addComment = (Button) findViewById(R.id.boutonAdd);
 		addComment.setOnClickListener(new OnClickListener()

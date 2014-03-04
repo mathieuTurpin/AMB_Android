@@ -12,12 +12,13 @@ import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.mapsforge.core.GeoPoint;
 
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.PoiDTO;
+import turpin.mathieu.almanachdumarinbreton.asynctask.GetMapAsyncTask.GetMapListener;
 import turpin.mathieu.almanachdumarinbreton.asynctask.poi.AddPoiAsyncTask.AddPoiListener;
 import turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityWebLocal;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountActivity;
-import turpin.mathieu.almanachdumarinbreton.forum.AccountManager;
 import turpin.mathieu.almanachdumarinbreton.forum.ForumActivity;
 import turpin.mathieu.almanachdumarinbreton.forum.LoginDialog;
+import turpin.mathieu.almanachdumarinbreton.forum.MyAccountManager;
 import turpin.mathieu.almanachdumarinbreton.overlay.InfoOverlayItemDialog.InfoOverlayItemDialogListener;
 import android.app.Activity;
 import android.content.Context;
@@ -39,14 +40,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class MainActivity extends MapActivity implements LoginDialog.LoginDialogListener, InfoOverlayItemDialogListener, AddPoiListener{
+public class MainActivity extends MapActivity implements GetMapListener, LoginDialog.LoginDialogListener, InfoOverlayItemDialogListener, AddPoiListener{
 	private static final int DIALOG_LOCATION_PROVIDER_DISABLED = 2;
+	public static final String PATH_MAP_FILE = "/Android/data/org.mapsforge.android.maps/map/bretagne.map";
+	public static final String URL_BRETAGNE_MAP = "http://ftp.mapsforge.org/maps/europe/france/bretagne.map";
+
 
 	public MyMapView mapView;
 	private LocationManager locationManager;
 	private MyLocationListener myLocationListener;
 
-	private String cacheDirectoryPath;
+	private File mapFile;
 
 	OverlayCircle overlayCircle;
 	OverlayItem myPositionItem;
@@ -69,7 +73,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	private String courtNamePort ="";
 	private String port ="";
 
-	private AccountManager accountManager;
+	private MyAccountManager accountManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +87,12 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		RelativeLayout relative = (RelativeLayout) findViewById(R.id.mapViewLayout);
 
 		this.mapView = new MyMapView(this);
+
 		String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
-		cacheDirectoryPath = externalStorageDirectory + "/Android/data/org.mapsforge.android.maps/map/bretagne.map";
-		this.mapView.setMapFile(new File(cacheDirectoryPath));		
+		String cacheDirectoryPath = externalStorageDirectory + PATH_MAP_FILE;
+		mapFile = new File(cacheDirectoryPath);
+		this.mapView.setMapFile(mapFile);
+
 		this.mapView.getFileSystemTileCache().setPersistent(false);
 
 		boolean showMyLocation = true;
@@ -135,11 +142,20 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 	}
 
 	private void initActivity(){
-		if(this.mode == R.id.map_online){
-			this.mapView.setMapGenerator(new MapnikTileDownloader());
+		if(mapFile.exists()){
+			if(this.mode == R.id.map_online){
+				this.mapView.setMapGenerator(new MapnikTileDownloader());
+			}
+			else{
+				this.mapView.setMapGenerator(new DatabaseRenderer());
+			}
 		}
 		else{
-			this.mapView.setMapGenerator(new DatabaseRenderer());
+			// Create an instance of the dialog fragment and show it
+			GetMapDialog dialog = new GetMapDialog();
+			dialog.show(getFragmentManager(), "GetMapDialog");
+			this.mode = R.id.map_online;
+			this.mapView = new MyMapView(this,new MapnikTileDownloader());
 		}
 	}
 
@@ -164,11 +180,11 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		if(_menu.findItem(R.id.menu_comment).isChecked()){
 			this.mapView.showPoi();
 		}
-		
+
 		//Add an arrow
 		String menuMode = getResources().getString(R.string.map);
 		_menu.findItem(R.id.menu_mode).setTitle(menuMode + MyActivity.ARROW);
-		
+
 		initMenu();
 
 		return true;
@@ -178,14 +194,14 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		if(this.mode == R.id.map_online){
 			String mode = getResources().getString(R.string.menu_online);
 			_menu.findItem(R.id.menu_connexion).setTitle(mode + MyActivity.ARROW);
-			
+
 			_menu.findItem(R.id.map_online).setEnabled(false);
 			_menu.findItem(R.id.map_offline).setEnabled(true);
 		}
 		else{
 			String mode = getResources().getString(R.string.menu_offline);
 			_menu.findItem(R.id.menu_connexion).setTitle(mode + MyActivity.ARROW);
-			
+
 			_menu.findItem(R.id.map_online).setEnabled(true);
 			_menu.findItem(R.id.map_offline).setEnabled(false);
 		}
@@ -198,7 +214,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			_menu.findItem(R.id.menu_port).setTitle(R.string.menu_port);
 		}
 
-		accountManager = new AccountManager(getApplicationContext());
+		accountManager = new MyAccountManager(getApplicationContext());
 
 		if(accountManager.isLoggedIn()){
 			_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);
@@ -382,11 +398,9 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 			goToForum();
 			return true;
 		case R.id.map_offline:
-			this.mode = R.id.map_offline;
 			setConnectionMode(false,item.getTitle());
 			return true;
 		case R.id.map_online:
-			this.mode = R.id.map_online;
 			setConnectionMode(true,item.getTitle());
 			return true;
 		case R.id.menu_compte:
@@ -485,15 +499,26 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		startActivity(intent);
 	}
 
-	private void setConnectionMode(boolean online,CharSequence title){
-		_menu.findItem(R.id.map_online).setEnabled(!online);
-		_menu.findItem(R.id.map_offline).setEnabled(online);
-		_menu.findItem(R.id.menu_connexion).setTitle(title + MyActivity.ARROW);
-		if(online){
-			this.mapView.setMapGenerator(new MapnikTileDownloader());
+	private void setConnectionMode(boolean online,CharSequence title){		
+		if(mapFile.exists()){
+			_menu.findItem(R.id.map_online).setEnabled(!online);
+			_menu.findItem(R.id.map_offline).setEnabled(online);
+			_menu.findItem(R.id.menu_connexion).setTitle(title + MyActivity.ARROW);
+			if(online){
+				this.mode = R.id.map_online;
+				this.mapView.setMapGenerator(new MapnikTileDownloader());
+			}
+			else{
+				this.mode = R.id.map_offline;
+				this.mapView.setMapGenerator(new DatabaseRenderer());
+			}
 		}
 		else{
-			this.mapView.setMapGenerator(new DatabaseRenderer());
+			// Create an instance of the dialog fragment and show it
+			GetMapDialog dialog = new GetMapDialog();
+			dialog.show(getFragmentManager(), "GetMapDialog");
+			this.mapView.setMapGenerator(new MapnikTileDownloader());
+			//Ouvrir un dialogue pour proposer de télécharger la map
 		}
 	}
 
@@ -520,7 +545,7 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 
 		String type = poi.getType();
 		int idDrawable = MyXmlParser.getInstance().getDrawablePoiByType(type);
-		
+
 		if(idDrawable != -1){
 			item.setMarker(ItemizedOverlay.boundCenter(getResources().getDrawable(idDrawable)));
 		}
@@ -535,5 +560,18 @@ public class MainActivity extends MapActivity implements LoginDialog.LoginDialog
 		Intent afficheListeCommentaires = new Intent(this, ForumActivity.class);
 		afficheListeCommentaires.putExtra(ForumActivity.EXTRA_ID_CENTRE, id);
 		startActivity(afficheListeCommentaires);
+	}
+
+	@Override
+	public void setConnectionOffline() {
+		mapFile = new File(mapFile.getPath());
+		this.mapView.setMapGenerator(new DatabaseRenderer());
+		this.mapView.setMapFile(mapFile);
+		
+		String title = getResources().getString(R.id.map_offline);
+		_menu.findItem(R.id.map_online).setEnabled(true);
+		_menu.findItem(R.id.map_offline).setEnabled(false);
+		_menu.findItem(R.id.menu_connexion).setTitle(title + MyActivity.ARROW);
+		this.mode = R.id.map_offline;
 	}
 }

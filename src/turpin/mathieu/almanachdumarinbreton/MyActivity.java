@@ -2,9 +2,9 @@ package turpin.mathieu.almanachdumarinbreton;
 
 import turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityWebLocal;
 import turpin.mathieu.almanachdumarinbreton.forum.AccountActivity;
-import turpin.mathieu.almanachdumarinbreton.forum.AccountManager;
 import turpin.mathieu.almanachdumarinbreton.forum.ForumActivity;
 import turpin.mathieu.almanachdumarinbreton.forum.LoginDialog;
+import turpin.mathieu.almanachdumarinbreton.forum.MyAccountManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,12 +28,12 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 
 	protected Menu _menu;
 
-	protected AccountManager accountManager;
+	protected MyAccountManager accountManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		accountManager = new AccountManager(getApplicationContext());
+		accountManager = new MyAccountManager(getApplicationContext());
 
 		Intent intent = getIntent();
 		//Orientation change

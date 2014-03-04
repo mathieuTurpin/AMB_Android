@@ -166,11 +166,11 @@ public class MyMapView extends MapView implements GetPoiListener{
 		this.mapWorkerOpenSeaMap = new MyMapWorker(this);
 		this.mapWorkerOpenSeaMap.setMapGeneratorOpenSeaMap(OpenSeaMapTileDownloader.getInstance());
 		this.mapWorkerOpenSeaMap.start();
-				
+
 		//Initialize overlay that gets tiles from OpenSeaMap Server
 		overlayOpenSeaMap = new MyArrayItemizedOverlay(this.getContext(),null);
 		this.getOverlays().add(MyMapView.DEFAULT_OVERLAY,overlayOpenSeaMap);
-		
+
 		//Get po from server
 		new GetPoiAsyncTask(this).execute();
 
@@ -178,7 +178,7 @@ public class MyMapView extends MapView implements GetPoiListener{
 		ArrayList<OverlayItem> serviceOverlay = MyXmlParser.getInstance().getService(context);
 		overlayOpenSeaMap.initItemsService(serviceOverlay);
 		//overlayOpenSeaMap.addItemsService(serviceOverlay);
-		
+
 		this.overlayDraw = new ArrayDrawOverlay();
 		this.getOverlays().add(overlayDraw);
 
@@ -235,7 +235,7 @@ public class MyMapView extends MapView implements GetPoiListener{
 						this.overlayOpenSeaMap.hiddenService();
 					}
 				}
-				
+
 				if(this.isEnableShowPoi){
 					//Display service
 					if(mapPosition.zoomLevel >= 16 && this.zoomCache<16){
@@ -461,21 +461,21 @@ public class MyMapView extends MapView implements GetPoiListener{
 		pixelLeft -= this.getWidth() >> 1;
 					pixelTop -= this.getHeight() >> 1;
 
-		// Get the correct position to display the tile
-		int left = (int) (tile.getPixelX() - pixelLeft +256/2);
-		int top =  (int) (tile.getPixelY() - pixelTop+256);
-		GeoPoint geoPointTile = this.getProjection().fromPixels(left, top);
+					// Get the correct position to display the tile
+					int left = (int) (tile.getPixelX() - pixelLeft +256/2);
+					int top =  (int) (tile.getPixelY() - pixelTop+256);
+					GeoPoint geoPointTile = this.getProjection().fromPixels(left, top);
 
-		// Create a item that contains the tile
-		Drawable tileMarker = new BitmapDrawable(getResources(),tileBitmap);
-		ItemizedOverlay.boundCenterBottom(tileMarker);
-		OverlayItem item = new OverlayItem();
-		item.setPoint(geoPointTile);
-		item.setSnippet("noTap");
-		item.setTitle(tile.toString());
-		item.setMarker(tileMarker);
+					// Create a item that contains the tile
+					Drawable tileMarker = new BitmapDrawable(getResources(),tileBitmap);
+					ItemizedOverlay.boundCenterBottom(tileMarker);
+					OverlayItem item = new OverlayItem();
+					item.setPoint(geoPointTile);
+					item.setSnippet("noTap");
+					item.setTitle(tile.toString());
+					item.setMarker(tileMarker);
 
-		return item;
+					return item;
 	}
 
 	public JobQueue getJobQueueOpenSeaMap(){
@@ -527,7 +527,7 @@ public class MyMapView extends MapView implements GetPoiListener{
 		this.isEnableShowService = false;
 		this.overlayOpenSeaMap.hiddenService();
 	}
-	
+
 	public void showPoi(){
 		MapPosition mapPosition = this.getMapPosition().getMapPosition();
 		if (mapPosition == null) {
@@ -598,27 +598,27 @@ public class MyMapView extends MapView implements GetPoiListener{
 		OverlayItem baliseItem = new OverlayItem(positionBalise,"","noTap",ItemizedOverlay.boundCenter(baliseIcon));
 		overlayOpenSeaMap.addItemOSM(baliseItem);
 	}
-	
+
 	public void setPoi(PoisDTOList poiList){
 		ArrayList<OverlayItem> poiOverlay = new ArrayList<OverlayItem>();
 		for(int i=0; i<poiList.size(); i++){
 			PoiDTO poi = poiList.get(i);
-			
+
 			OverlayItem item = new OverlayItem();
-			
+
 			double latitude = Double.parseDouble(poi.getLatitude());
 			double longitude = Double.parseDouble(poi.getLongitude());
-			
+
 			int idDrawable = R.drawable.bon_plan;
 			String type = poi.getType();
-			
+
 			if(type.equals("peche")){
-        		idDrawable = R.drawable.poisson;
-        	}
-        	else if(type.equals("securite")){
-        		idDrawable = R.drawable.attention;
-        	}
-			
+				idDrawable = R.drawable.poisson;
+			}
+			else if(type.equals("securite")){
+				idDrawable = R.drawable.attention;
+			}
+
 			item.setMarker(ItemizedOverlay.boundCenter(getContext().getResources().getDrawable(idDrawable)));
 			//save id in snippet
 			item.setSnippet(poi.getId().toString());

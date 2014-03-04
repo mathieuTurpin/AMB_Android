@@ -5,6 +5,7 @@ import java.util.Map;
 
 import turpin.mathieu.almanachdumarinbreton.asynctask.MyAsyncTask;
 import android.content.Context;
+import android.widget.Toast;
 import eu.telecom_bretagne.ambSocialNetwork.data.controller.UtilisateurController;
 import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.UtilisateurDTO;
 
@@ -41,9 +42,15 @@ public class UpdateUtilisateurAsyncTask extends MyAsyncTask
 	@Override
 	protected void onPostExecute (Object object) {
 		super.onPostExecute(object);
-		UtilisateurDTO user = (UtilisateurDTO) object;
+		if(object != null){
+			UtilisateurDTO user = (UtilisateurDTO) object;
+			
+			UpdateUtilisateurListener listener = (UpdateUtilisateurListener) context;
+			listener.updateUtilisateur(user);
+		}
+		else{
+			Toast.makeText(context, "Erreur lors de la modification du compte", Toast.LENGTH_SHORT).show();
+		}
 		
-		UpdateUtilisateurListener listener = (UpdateUtilisateurListener) context;
-		listener.updateUtilisateur(user);
 	}
 }
