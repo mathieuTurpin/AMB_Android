@@ -97,7 +97,7 @@ public abstract class DescriptionActivity extends MyActivity{
 				goToWebDescription(R.id.menu_marees,getString(R.string.url_marees));
 			}
 			else{
-				String nameFile = "maree.pdf";
+				String nameFile = "mareeNew.pdf";
 				displayPdf(nameFile);
 			}
 			return true;
