@@ -94,8 +94,12 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 		this.mapView.setMapFile(mapFile);
 
 		this.mapView.getFileSystemTileCache().setPersistent(false);
-
-		boolean showMyLocation = true;
+		
+		this.mode = R.id.map_online; //Par défaut (Pour le test du 06/03/2014)
+		
+		//boolean showMyLocation = true;
+		boolean showMyLocation = false; // pour la démo (Pour le test du 06/03/2014)
+		
 		Intent intent = getIntent();
 		//Orientation change
 		if (savedInstanceState != null) {
@@ -125,13 +129,13 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 					enableSnapToLocation();
 				}
 			}
-		});
+		});		
 	}
 
 	private void initIntentForActivity(Intent intent){
 		if (intent != null) {
 			//Get parameters
-			this.mode = intent.getIntExtra(MyActivity.EXTRA_MODE_MAP,R.id.map_offline);
+			this.mode = intent.getIntExtra(MyActivity.EXTRA_MODE_MAP,R.id.map_online);
 			this.courtNamePort = intent.getStringExtra(MyActivity.EXTRA_COURT_PORT);
 			this.port = intent.getStringExtra(MyActivity.EXTRA_PORT);
 			initActivity();
@@ -186,6 +190,7 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 		_menu.findItem(R.id.menu_mode).setTitle(menuMode + MyActivity.ARROW);
 
 		initMenu();
+		goToPort(R.id.menu_marina);
 
 		return true;
 	}

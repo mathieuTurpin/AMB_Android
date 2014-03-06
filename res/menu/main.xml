@@ -40,19 +40,19 @@
                         <item
                             android:id="@+id/menu_OSM"
                             android:checkable="true"
-                            android:checked="true"
+                            android:checked="false"
                             android:title="@string/menu_OSM"
                             android:titleCondensed="OSM"/>
                         <item
                             android:id="@+id/menu_service"
                             android:checkable="true"
-                            android:checked="true"
+                            android:checked="false"
                             android:title="@string/menu_service"
                             android:titleCondensed="Service"/>
                         <item
                             android:id="@+id/menu_ponton"
                             android:checkable="true"
-                            android:checked="true"
+                            android:checked="false"
                             android:title="@string/menu_ponton"
                             android:titleCondensed="Ponton"/>
                         <item
@@ -64,7 +64,7 @@
                         <item
                             android:id="@+id/menu_comment"
                             android:checkable="true"
-                            android:checked="true"
+                            android:checked="false"
                             android:title="@string/menu_comment"
                             android:titleCondensed="Commentaire"/>
                     </group>
@@ -79,7 +79,7 @@
             <item
                 android:id="@+id/menu_connexion"
                 android:showAsAction="ifRoom"
-                android:title="@string/menu_offline">
+                android:title="@string/menu_online">
                 <menu>
                     <item
                         android:id="@+id/map_online"

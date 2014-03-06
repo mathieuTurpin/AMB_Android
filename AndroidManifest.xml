@@ -38,6 +38,7 @@
             android:label="" />
         <activity
             android:name=".description.DescriptionActivityStream"
+            android:screenOrientation="portrait"
             android:label="" />
         <activity
             android:name=".forum.AccountActivity"
