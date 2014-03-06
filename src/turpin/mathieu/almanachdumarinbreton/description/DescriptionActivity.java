@@ -93,26 +93,33 @@ public abstract class DescriptionActivity extends MyActivity{
 			goToImageDescription(R.id.menu_courant);
 			return true;
 		case R.id.menu_marees:
-			//String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-			//if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-				//goToWebDescription(R.id.menu_marees,getString(R.string.url_marees));
-				Intent i;
-		        try {
-		            i = getPackageManager().getLaunchIntentForPackage("fr.aperto.android.tides");
-		            if (i == null)
-		                throw new PackageManager.NameNotFoundException();
-		            i.addCategory(Intent.CATEGORY_LAUNCHER);
-		            startActivity(i);
-		        } catch (PackageManager.NameNotFoundException e) {
-		        	String nameFile = "mareeNew.pdf";
-		        	displayPdf(nameFile);
-		        }
-			//}
-			//else{
-				//String nameFile = "mareeNew.pdf";
-				//displayPdf(nameFile);
-			//}
-			return true;
+			Intent i;
+	        try {
+	            i = getPackageManager().getLaunchIntentForPackage("fr.aperto.android.tides");
+	            if (i == null)
+	                throw new PackageManager.NameNotFoundException();
+	            i.addCategory(Intent.CATEGORY_LAUNCHER);
+	            startActivity(i);
+	        } catch (PackageManager.NameNotFoundException e) {
+	        	String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+	        	if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=fr.aperto.android.tides" /*+ appPackageName)*/)));	
+	        	}
+				else{
+					String nameFile = "mareeNew.pdf";
+					displayPdf(nameFile);
+				}
+		}
+		return true;
+			/*String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+			if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+				goToWebDescription(R.id.menu_marees,getString(R.string.url_marees));
+			}
+			else{
+				String nameFile = "mareeNew.pdf";
+				displayPdf(nameFile);
+			}
+			return true;*/
 		case R.id.menu_meteo:
 			String connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
 			if(connexion.equals(getResources().getString(R.string.menu_online))){
