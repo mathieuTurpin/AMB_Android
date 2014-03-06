@@ -286,7 +286,7 @@ public class MyArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	
 	public void displayPoi(){
 		if(overlayPoi == null || this.overlayItemsDisplay.containsAll(overlayPoi)) return;
-		this.addItemsService(overlayPoi);
+		this.addItemsPoi(overlayPoi);
 	}
 
 	public void hiddenPoi(){
