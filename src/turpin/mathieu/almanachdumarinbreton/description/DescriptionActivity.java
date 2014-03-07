@@ -101,9 +101,10 @@ public abstract class DescriptionActivity extends MyActivity{
 	            i.addCategory(Intent.CATEGORY_LAUNCHER);
 	            startActivity(i);
 	        } catch (PackageManager.NameNotFoundException e) {
-	        	String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-	        	if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=fr.aperto.android.tides" /*+ appPackageName)*/)));	
+	        	//String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+	        	//if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+				if(this.mode == R.id.map_online){
+	        		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=fr.aperto.android.tides" /*+ appPackageName)*/)));	
 	        	}
 				else{
 					String nameFile = "mareeNew.pdf";
@@ -121,8 +122,9 @@ public abstract class DescriptionActivity extends MyActivity{
 			}
 			return true;*/
 		case R.id.menu_meteo:
-			String connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-			if(connexion.equals(getResources().getString(R.string.menu_online))){
+			//String connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+			//if(connexion.equals(getResources().getString(R.string.menu_online))){
+			if(this.mode == R.id.map_online){
 				goToWebDescription(R.id.menu_meteo,getString(R.string.url_meteo));
 			}
 			else{

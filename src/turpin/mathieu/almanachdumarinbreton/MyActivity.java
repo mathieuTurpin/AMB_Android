@@ -50,9 +50,12 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 	protected void initIntentForActivity(Intent intent){
 		if (intent != null) {
 			//Get parameters
-			this.mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_offline);
+			this.mode = intent.getIntExtra(EXTRA_MODE_MAP,R.id.map_online);
 			this.courtNamePort = intent.getStringExtra(EXTRA_COURT_PORT);
 			this.port = intent.getStringExtra(EXTRA_PORT);
+		}
+		else{
+			this.mode = R.id.map_online;
 		}
 	}
 
@@ -111,19 +114,19 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 		super.onSaveInstanceState(savedInstanceState);
 		savedInstanceState.putString(EXTRA_PORT, this.port);
 		savedInstanceState.putString(EXTRA_COURT_PORT, this.courtNamePort);
-		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-			savedInstanceState.putInt(EXTRA_MODE_MAP, R.id.map_online);
-		}
+		//String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+		//if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+			savedInstanceState.putInt(EXTRA_MODE_MAP, this.mode);
+		//}
 	}
 
 	protected void initIntent(Intent intent){
 		intent.putExtra(EXTRA_PORT, this.port);
 		intent.putExtra(EXTRA_COURT_PORT, this.courtNamePort);
-		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-		if(mode_connexion.equals(getResources().getString(R.string.menu_online) + MyActivity.ARROW)){
-			intent.putExtra(EXTRA_MODE_MAP, R.id.map_online);
-		}
+		//String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+		//if(mode_connexion.equals(getResources().getString(R.string.menu_online) + MyActivity.ARROW)){
+			intent.putExtra(EXTRA_MODE_MAP, this.mode);
+		//}
 	}
 
 	@Override
@@ -227,7 +230,13 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 	private void setConnectionMode(boolean online,CharSequence title){
 		_menu.findItem(R.id.map_online).setEnabled(!online);
 		_menu.findItem(R.id.map_offline).setEnabled(online);
-		_menu.findItem(R.id.menu_connexion).setTitle(title);
+		_menu.findItem(R.id.menu_connexion).setTitle(title + MyActivity.ARROW);
+		if(online){
+			this.mode = R.id.map_online;
+		}
+		else{
+			this.mode = R.id.map_offline;
+		}
 	}
 
 	private void goToAccount(){

@@ -141,6 +141,7 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 			initActivity();
 		}
 		else{
+			this.mode = R.id.map_online;
 			this.mapView.setMapGenerator(new DatabaseRenderer());
 		}
 	}
@@ -249,19 +250,19 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 		super.onSaveInstanceState(savedInstanceState);
 		savedInstanceState.putString(MyActivity.EXTRA_PORT, this.port); //_menu.findItem(R.id.menu_port).getTitle().toString()
 		savedInstanceState.putString(MyActivity.EXTRA_COURT_PORT, this.courtNamePort);
-		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-		if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
-			savedInstanceState.putInt(MyActivity.EXTRA_MODE_MAP, R.id.map_online);
-		}
+		//String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+		//if(mode_connexion.equals(getResources().getString(R.string.menu_online))){
+			savedInstanceState.putInt(MyActivity.EXTRA_MODE_MAP, this.mode);
+		//}
 	}
 
 	private void initIntent(Intent intent){
 		intent.putExtra(MyActivity.EXTRA_PORT, this.port); //_menu.findItem(R.id.menu_port).getTitle().toString()
 		intent.putExtra(MyActivity.EXTRA_COURT_PORT, this.courtNamePort);
-		String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
-		if(mode_connexion.equals(getResources().getString(R.string.menu_online) + MyActivity.ARROW)){
-			intent.putExtra(MyActivity.EXTRA_MODE_MAP, R.id.map_online);
-		}
+		//String mode_connexion = _menu.findItem(R.id.menu_connexion).getTitle().toString();
+		//if(mode_connexion.equals(getResources().getString(R.string.menu_online) + MyActivity.ARROW)){
+			intent.putExtra(MyActivity.EXTRA_MODE_MAP, this.mode);
+		//}
 	}
 
 	@Override
