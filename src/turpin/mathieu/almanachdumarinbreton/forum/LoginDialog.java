@@ -97,25 +97,6 @@ public class LoginDialog extends DialogFragment implements AuthentificationListe
 					new AuthentificationAsyncTask(activity,"Autentification",myDialog).execute(params);
 				}
 			});
-			
-			
-			Button negativeButton = (Button) d.getButton(Dialog.BUTTON_NEGATIVE);
-			negativeButton.setOnClickListener(new View.OnClickListener()
-			{
-				@SuppressWarnings("unchecked")
-				@Override
-				public void onClick(View v)
-				{
-					String emailText = emailaddr.getText().toString();
-					String passwordText = password.getText().toString();
-
-					//String emailText = "mathieu.turpin@telecom-bretagne.eu";
-					//String passwordText = "amb";
-
-					Map<String,String> params = UtilisateurController.getInstance().prepareLogin(emailText, passwordText);					
-					new AuthentificationAsyncTask(activity,"Autentification",myDialog).execute(params);
-				}
-			});
 		}
 	}
 

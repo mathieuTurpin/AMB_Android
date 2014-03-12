@@ -29,7 +29,7 @@ public class DescriptionActivityWebLocal extends DescriptionActivity{
 
 	}
 
-	public String LoadData(String inFile) {
+	private String LoadData(String inFile) {
 		String tContents = "";
 
 		try {

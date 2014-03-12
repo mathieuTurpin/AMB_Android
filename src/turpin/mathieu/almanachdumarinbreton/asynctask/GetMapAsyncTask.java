@@ -150,7 +150,11 @@ public class GetMapAsyncTask extends AsyncTask<String, Integer, String>
 		}
 	}
 	
-	//Vérifie que tout le fichier a été téléchargé sinon le supprimer
+	/**
+	 * Vérifie que tout le fichier a été téléchargé sinon le supprimer
+	 * @return
+	 * 		null si le fichier a été téléchargé sinon un message d'erreur
+	 */
 	private String checkFileDownload(){
 		File file = new File(this.pathFile);
 		long length = file.length();

@@ -15,14 +15,14 @@ import eu.telecom_bretagne.ambSocialNetwork.data.model.dto.UtilisateursDTOList;
 public class UtilisateurController extends Controller
 {
 	public static final String KEY_ID = "id";
-	private static final String KEY_NOM = "nom";
-	private static final String KEY_PRENOM = "prenom";
-	private static final String KEY_EMAIL = "email";
-	private static final String KEY_PASSWORD = "mot_de_passe";
-	private static final String KEY_URL_AVATAR = "url_avatar";
-	private static final String KEY_DESCRIPTION = "description";
-	private static final String KEY_PARTAGE_POSITION = "partage_position";
-	private static final String KEY_PARTAGE_POSITION_PUBLIC = "partage_position_public";
+	public static final String KEY_NOM = "nom";
+	public static final String KEY_PRENOM = "prenom";
+	public static final String KEY_EMAIL = "email";
+	public static final String KEY_PASSWORD = "mot_de_passe";
+	public static final String KEY_URL_AVATAR = "url_avatar";
+	public static final String KEY_DESCRIPTION = "description";
+	public static final String KEY_PARTAGE_POSITION = "partage_position";
+	public static final String KEY_PARTAGE_POSITION_PUBLIC = "partage_position_public";
 
 	//-----------------------------------------------------------------------------
 	private static UtilisateurController instance = null;

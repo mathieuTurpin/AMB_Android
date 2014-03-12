@@ -171,7 +171,7 @@ public class MyMapView extends MapView implements GetPoiListener{
 		overlayOpenSeaMap = new MyArrayItemizedOverlay(this.getContext(),null);
 		this.getOverlays().add(MyMapView.DEFAULT_OVERLAY,overlayOpenSeaMap);
 
-		//Get po from server
+		//Get poi from server
 		new GetPoiAsyncTask(this).execute();
 
 		//Get service
@@ -599,6 +599,11 @@ public class MyMapView extends MapView implements GetPoiListener{
 		overlayOpenSeaMap.addItemOSM(baliseItem);
 	}
 
+	/**
+	 * Convert poiList to an ArrayList<OverlayItem>
+	 * @param poiList
+	 *           {@link PoisDTOList} to display.
+	 */
 	public void setPoi(PoisDTOList poiList){
 		ArrayList<OverlayItem> poiOverlay = new ArrayList<OverlayItem>();
 		for(int i=0; i<poiList.size(); i++){
@@ -624,6 +629,7 @@ public class MyMapView extends MapView implements GetPoiListener{
 			item.setSnippet(poi.getId().toString());
 			item.setTitle(type);
 			item.setPoint(new GeoPoint(latitude,longitude));
+			//Get information from server
 			new GetPoiInfoAsyncTask(item).execute(poi.getId().toString());
 			poiOverlay.add(item);
 		}

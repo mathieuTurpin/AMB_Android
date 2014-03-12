@@ -60,8 +60,10 @@ public class GetMapDialog extends DialogFragment implements GetMapListener{
 				@Override
 				public void onClick(View v)
 				{
+					//Get Path
 					String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
 					String cacheDirectoryPath = externalStorageDirectory + MainActivity.PATH_MAP_FILE;
+					//Execute an AsyncTask to download the map from a server
 					new GetMapAsyncTask(activity,myDialog).execute(MainActivity.URL_BRETAGNE_MAP,cacheDirectoryPath);
 				}
 			});

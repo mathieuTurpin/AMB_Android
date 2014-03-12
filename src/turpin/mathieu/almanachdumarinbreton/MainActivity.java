@@ -45,7 +45,6 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 	public static final String PATH_MAP_FILE = "/Android/data/org.mapsforge.android.maps/map/bretagne.map";
 	public static final String URL_BRETAGNE_MAP = "http://ftp.mapsforge.org/maps/europe/france/bretagne.map";
 
-
 	public MyMapView mapView;
 	private LocationManager locationManager;
 	private MyLocationListener myLocationListener;
@@ -69,6 +68,7 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 	private ToggleButton snapToLocationView;
 	private Menu _menu;
 
+	//Params to save the global state of the application
 	private int mode;
 	private String courtNamePort ="";
 	private String port ="";
@@ -106,8 +106,8 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 			this.mode = savedInstanceState.getInt(MyActivity.EXTRA_MODE_MAP,R.id.map_offline);
 			this.courtNamePort = savedInstanceState.getString(MyActivity.EXTRA_COURT_PORT);
 			this.port = savedInstanceState.getString(MyActivity.EXTRA_PORT);
-			initActivity();
-			showMyLocation = false;
+			initMapActivity();
+			//showMyLocation = false;
 		}
 		else{
 			initIntentForActivity(intent);
@@ -132,21 +132,25 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 		});		
 	}
 
+	/**
+	 * Initialize an Activity with information from an {@link Intent}
+	 * @param intent
+	 */
 	private void initIntentForActivity(Intent intent){
 		if (intent != null) {
 			//Get parameters
 			this.mode = intent.getIntExtra(MyActivity.EXTRA_MODE_MAP,R.id.map_online);
 			this.courtNamePort = intent.getStringExtra(MyActivity.EXTRA_COURT_PORT);
 			this.port = intent.getStringExtra(MyActivity.EXTRA_PORT);
-			initActivity();
 		}
 		else{
 			this.mode = R.id.map_online;
-			this.mapView.setMapGenerator(new DatabaseRenderer());
 		}
+		initMapActivity();
+		
 	}
 
-	private void initActivity(){
+	private void initMapActivity(){
 		if(mapFile.exists()){
 			if(this.mode == R.id.map_online){
 				this.mapView.setMapGenerator(new MapnikTileDownloader());
@@ -159,8 +163,7 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 			// Create an instance of the dialog fragment and show it
 			GetMapDialog dialog = new GetMapDialog();
 			dialog.show(getFragmentManager(), "GetMapDialog");
-			this.mode = R.id.map_online;
-			this.mapView = new MyMapView(this,new MapnikTileDownloader());
+			this.mapView.setMapGenerator(new MapnikTileDownloader());
 		}
 	}
 
@@ -191,6 +194,7 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 		_menu.findItem(R.id.menu_mode).setTitle(menuMode + MyActivity.ARROW);
 
 		initMenu();
+		//By default the map is center to Marina du Chateau
 		goToPort(R.id.menu_marina);
 
 		return true;
@@ -236,6 +240,16 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 		super.onNewIntent(intent);
 		initIntentForActivity(intent);
 	}
+	
+	@Override
+	public void onRestart() {
+		super.onRestart();
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+	}
 
 	@Override
 	public void onResume() {
@@ -243,6 +257,16 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 		if(_menu != null){
 			initMenu();
 		}
+	}
+	
+	@Override 
+	public void onPause(){
+		super.onPause();
+	}
+	
+	@Override 
+	public void onStop(){
+		super.onStop();
 	}
 
 	@Override
@@ -387,7 +411,7 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 
 	@Override
 	public void setIsLogin() {
-		Toast.makeText(this, "Authenfication rï¿½ussie", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Authenfication réussie", Toast.LENGTH_SHORT).show();
 		_menu.findItem(R.id.menu_compte).setTitle(R.string.menu_compte);
 	}
 
@@ -541,6 +565,9 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 		dialog.show(getFragmentManager(), "LoginDialog");
 	}
 
+	/**
+	 * Create an OverlayItem and add it on the MapView
+	 */
 	@Override
 	public void addPoi(PoiDTO poi,String contenu) {
 		OverlayItem item = new OverlayItem();
@@ -561,6 +588,9 @@ public class MainActivity extends MapActivity implements GetMapListener, LoginDi
 		this.mapView.addPoi(item);
 	}
 
+	/**
+	 * Démarre ForumActivity en passant l'id d'un centre d'activité
+	 */
 	@Override
 	public void commentByIdCentreInteret(int id) {
 		Intent afficheListeCommentaires = new Intent(this, ForumActivity.class);

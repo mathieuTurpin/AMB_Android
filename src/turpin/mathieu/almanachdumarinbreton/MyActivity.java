@@ -22,6 +22,7 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 	
 	public static final String ARROW = " ->";
 
+	//Params to save the global state of the application
 	protected int mode;
 	protected String courtNamePort ="";
 	protected String port ="";
@@ -104,6 +105,11 @@ public abstract class MyActivity extends Activity implements LoginDialog.LoginDi
 		super.onNewIntent(intent);
 
 		initIntentForActivity(intent);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
 		if(_menu != null){
 			initMenu();
 		}

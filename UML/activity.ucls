@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.5" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="turpin.mathieu.almanachdumarinbreton.MyActivity" project="AlmanachDuMarinBreton" 
+    file="/AlmanachDuMarinBreton/src/turpin/mathieu/almanachdumarinbreton/MyActivity.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="59" width="333" x="787" y="137"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="turpin.mathieu.almanachdumarinbreton.forum.ForumActivity" 
+    project="AlmanachDuMarinBreton" 
+    file="/AlmanachDuMarinBreton/src/turpin/mathieu/almanachdumarinbreton/forum/ForumActivity.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="60" width="387" x="885" y="236"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="turpin.mathieu.almanachdumarinbreton.forum.AccountActivity" 
+    project="AlmanachDuMarinBreton" 
+    file="/AlmanachDuMarinBreton/src/turpin/mathieu/almanachdumarinbreton/forum/AccountActivity.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="60" width="387" x="1312" y="236"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="turpin.mathieu.almanachdumarinbreton.description.DescriptionActivity" 
+    project="AlmanachDuMarinBreton" 
+    file="/AlmanachDuMarinBreton/src/turpin/mathieu/almanachdumarinbreton/description/DescriptionActivity.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="59" width="431" x="414" y="236"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityStream" 
+    project="AlmanachDuMarinBreton" 
+    file="/AlmanachDuMarinBreton/src/turpin/mathieu/almanachdumarinbreton/description/DescriptionActivityStream.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="60" width="431" x="41" y="336"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityWeb" 
+    project="AlmanachDuMarinBreton" 
+    file="/AlmanachDuMarinBreton/src/turpin/mathieu/almanachdumarinbreton/description/DescriptionActivityWeb.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="60" width="431" x="512" y="336"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="turpin.mathieu.almanachdumarinbreton.description.DescriptionActivityWebLocal" 
+    project="AlmanachDuMarinBreton" 
+    file="/AlmanachDuMarinBreton/src/turpin/mathieu/almanachdumarinbreton/description/DescriptionActivityWebLocal.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="60" width="431" x="983" y="336"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="turpin.mathieu.almanachdumarinbreton.MainActivity" project="AlmanachDuMarinBreton" 
+    file="/AlmanachDuMarinBreton/src/turpin/mathieu/almanachdumarinbreton/MainActivity.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="60" width="333" x="41" y="236"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="org.mapsforge.android.maps.MapActivity" project="AlmanachDuMarinBreton" 
+    file="C:/Users/Mathieu/git/AMB_Android/libs/mapsforge-map-0.3.0-jar-with-dependencies.jar" binary="true" 
+    corner="BOTTOM_RIGHT">    
+    <position height="59" width="255" x="289" y="137"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="android.app.Activity" project="AlmanachDuMarinBreton" 
+    file="C:/Users/Mathieu/android-sdks/platforms/android-14/android.jar" binary="true" corner="BOTTOM_RIGHT">    
+    <position height="60" width="110" x="538" y="37"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <generalization id="11">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="12">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="13">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="14">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="15">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="16">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="17">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="18">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="19">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

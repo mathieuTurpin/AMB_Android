@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.5" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="turpin.mathieu.almanachdumarinbreton.overlay.ArrayDrawOverlay" 
+    project="AlmanachDuMarinBreton" 
+    file="/AlmanachDuMarinBreton/src/turpin/mathieu/almanachdumarinbreton/overlay/ArrayDrawOverlay.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="60" width="398" x="401" y="136"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="turpin.mathieu.almanachdumarinbreton.overlay.MyArrayTextOverlay" 
+    project="AlmanachDuMarinBreton" 
+    file="/AlmanachDuMarinBreton/src/turpin/mathieu/almanachdumarinbreton/overlay/MyArrayTextOverlay.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="60" width="398" x="401" y="236"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="turpin.mathieu.almanachdumarinbreton.overlay.MyArrayItemizedOverlay" 
+    project="AlmanachDuMarinBreton" 
+    file="/AlmanachDuMarinBreton/src/turpin/mathieu/almanachdumarinbreton/overlay/MyArrayItemizedOverlay.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="60" width="398" x="1277" y="236"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="turpin.mathieu.almanachdumarinbreton.overlay.MyDrawable" 
+    project="AlmanachDuMarinBreton" 
+    file="/AlmanachDuMarinBreton/src/turpin/mathieu/almanachdumarinbreton/overlay/MyDrawable.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="59" width="398" x="839" y="236"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="turpin.mathieu.almanachdumarinbreton.overlay.OverlayText" 
+    project="AlmanachDuMarinBreton" 
+    file="/AlmanachDuMarinBreton/src/turpin/mathieu/almanachdumarinbreton/overlay/OverlayText.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="60" width="398" x="620" y="336"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="org.mapsforge.android.maps.overlay.MyArrayCircleOverlay" 
+    project="AlmanachDuMarinBreton" 
+    file="/AlmanachDuMarinBreton/src/org/mapsforge/android/maps/overlay/MyArrayCircleOverlay.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="60" width="320" x="41" y="236"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="org.mapsforge.android.maps.overlay.ItemizedOverlay" 
+    project="AlmanachDuMarinBreton" 
+    file="C:/Users/Mathieu/git/AMB_Android/libs/mapsforge-map-0.3.0-jar-with-dependencies.jar" binary="true" 
+    corner="BOTTOM_RIGHT">    
+    <position height="59" width="320" x="984" y="136"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="org.mapsforge.android.maps.overlay.OverlayCircle" project="AlmanachDuMarinBreton" 
+    file="C:/Users/Mathieu/git/AMB_Android/libs/mapsforge-map-0.3.0-jar-with-dependencies.jar" binary="true" 
+    corner="BOTTOM_RIGHT">    
+    <position height="60" width="320" x="41" y="336"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="org.mapsforge.android.maps.overlay.OverlayItem" project="AlmanachDuMarinBreton" 
+    file="C:/Users/Mathieu/git/AMB_Android/libs/mapsforge-map-0.3.0-jar-with-dependencies.jar" binary="true" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1460" y="546"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="org.mapsforge.android.maps.overlay.Overlay" project="AlmanachDuMarinBreton" 
+    file="C:/Users/Mathieu/git/AMB_Android/libs/mapsforge-map-0.3.0-jar-with-dependencies.jar" binary="true" 
+    corner="BOTTOM_RIGHT">    
+    <position height="59" width="320" x="692" y="37"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <association id="11">    
+    <bendpoint x="1738" y="470"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="12" name="overlayService"/>      
+      <multiplicity id="13" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="14">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="15" name="textOverlays"/>      
+      <multiplicity id="16" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="17">    
+    <bendpoint x="1227" y="423"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="18" name="overlayOSM"/>      
+      <multiplicity id="19" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="20">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="21">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <association id="22">    
+    <bendpoint x="1850" y="500"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="23" name="overlayPoi"/>      
+      <multiplicity id="24" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="25">    
+    <bendpoint x="1079" y="504"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="26" name="overlayItemsDisplay"/>      
+      <multiplicity id="27" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="28">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="29" name="circleOverlays"/>      
+      <multiplicity id="30" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="31">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="32">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <association id="33">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="34" name="overlayCircles"/>      
+      <multiplicity id="35" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="36">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="37" name="overlayTexts"/>      
+      <multiplicity id="38" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
